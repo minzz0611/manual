@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"><style>*{box-sizing:border-box}body{margin:0;background:#f4f6f7;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;color:#16202a;-webkit-font-smoothing:antialiased}a{color:#1C90FB;text-decoration:none}a:hover{color:#0B72D6}input,select,button{font-family:inherit}</style></helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+
+<sc-if value="{{ notAuthed }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:grid;place-items:center;padding:40px 24px;background:#f0f3f5">
+<div style="width:380px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;gap:11px">
+<div style="width:9px;height:26px;background:linear-gradient(180deg,#0CAAFF,#8168FF);border-radius:2px"></div>
+<h1 style="margin:0;font-size:19px;font-weight:700;letter-spacing:-.02em">Amaranth 10 매뉴얼 제작</h1>
+</div>
+<p style="margin:0 0 0 20px;font-size:12.5px;color:rgba(16,24,32,.5)">사번과 비밀번호로 로그인하세요.</p>
+</div>
+<div style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:9px;padding:22px;display:flex;flex-direction:column;gap:13px;box-shadow:0 2px 10px rgba(16,24,32,.05)">
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">사번</span>
+<input value="{{ loginId }}" onChange="{{ setLoginId }}" onKeyDown="{{ onLoginKey }}" placeholder="admin" style="height:38px;padding:0 11px;font-size:13px;border:1px solid rgba(16,24,32,.16);border-radius:6px" /></label>
+<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">비밀번호</span>
+<input type="password" value="{{ loginPw }}" onChange="{{ setLoginPw }}" onKeyDown="{{ onLoginKey }}" placeholder="••••••" style="height:38px;padding:0 11px;font-size:13px;border:1px solid rgba(16,24,32,.16);border-radius:6px" /></label>
+<span style="{{ loginErrStyle }}">{{ loginErr }}</span>
+<button onClick="{{ doLogin }}" style="height:40px;font-size:13px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;color:#fff;border-radius:6px;cursor:pointer;margin-top:3px" style-hover="background:#0B72D6">로그인</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:7px">
+<span style="font-size:11px;color:rgba(16,24,32,.42)">데모 계정 — 클릭하면 자동 입력됩니다</span>
+<sc-for list="{{ demoAccounts }}" as="a" hint-placeholder-count="3">
+<button onClick="{{ a.onClick }}" style="{{ a.style }}"><span style="font-weight:600;color:#16202a">{{ a.id }}</span><span>{{ a.name }} · {{ a.role }}</span></button>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
+<header style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 24px;height:58px;background:#fff;border-bottom:1px solid rgba(16,24,32,.11);position:sticky;top:0;z-index:20">
+<div style="display:flex;align-items:center;gap:14px">
+<div style="width:9px;height:22px;background:linear-gradient(180deg,#0CAAFF,#8168FF);border-radius:2px"></div>
+<h1 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-.01em">Amaranth 10 매뉴얼 제작</h1>
+<span style="font:500 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45);padding:5px 7px;background:rgba(16,24,32,.05);border-radius:4px">MNL-ADM-001</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">내 권한</span>
+<sc-if value="{{ canManageRole }}" hint-placeholder-val="{{ true }}">
+<button onClick="{{ goPerm }}" style="height:30px;padding:0 12px;font-size:12.5px;font-weight:500;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.72);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">권한 관리</button>
+<select value="{{ role }}" onChange="{{ setRole }}" style="height:30px;padding:0 26px 0 9px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff;color:#16202a">
+<sc-for list="{{ roleList }}" as="r" hint-placeholder-count="4"><option value="{{ r }}">{{ r }}</option></sc-for>
+</select>
+</sc-if>
+<sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ false }}">
+<span style="{{ roleBadgeStyle }}" title="{{ roleHint }}">{{ role }}<span style="font-size:10px;opacity:.5">잠김</span></span>
+</sc-if>
+<div style="display:flex;align-items:center;gap:8px;padding-left:12px;margin-left:2px;border-left:1px solid rgba(16,24,32,.11)">
+<div style="width:26px;height:26px;border-radius:50%;background:#E8F3FE;color:#0B72D6;display:grid;place-items:center;font-size:11.5px;font-weight:600">{{ meInitial }}</div>
+<span style="font-size:12.5px">{{ me }}</span>
+<button onClick="{{ doLogout }}" style="height:28px;padding:0 10px;margin-left:4px;font-size:11.5px;border:1px solid rgba(16,24,32,.16);background:#fff;border-radius:5px;color:rgba(16,24,32,.6);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">로그아웃</button>
+</div>
+</div>
+</header>
+</sc-if>
+
+<sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+<main style="flex:1;padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px">
+
+<section style="display:grid;grid-template-columns:repeat(9,minmax(108px,1fr));gap:8px;overflow-x:auto;padding-bottom:2px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7">
+<button onClick="{{ t.onClick }}" style="{{ t.style }}">
+<span style="font-size:12px;font-weight:500;letter-spacing:-.01em;white-space:nowrap">{{ t.label }}</span>
+<span style="{{ t.countStyle }}">{{ t.count }}</span>
+<span style="{{ t.barStyle }}"></span>
+</button>
+</sc-for>
+</section>
+
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:14px 16px 16px">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+<h2 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">조회조건</h2>
+<div style="display:flex;gap:7px">
+<button onClick="{{ reset }}" style="height:30px;padding:0 14px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">초기화</button>
+<button onClick="{{ search }}" style="height:30px;padding:0 18px;font-size:12.5px;font-weight:500;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer" style-hover="background:#0B72D6">조회</button>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px 14px">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">커스텀 여부</span>
+<select value="{{ fCustom }}" onChange="{{ setCustom }}" style="height:32px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ customOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">모듈</span>
+<select value="{{ fModule }}" onChange="{{ setModule }}" style="height:32px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ moduleOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">대분류</span>
+<select value="{{ fMajor }}" onChange="{{ setMajor }}" style="height:32px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ majorOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">중분류</span>
+<select value="{{ fMinor }}" onChange="{{ setMinor }}" style="height:32px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ minorOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">메뉴</span>
+<input value="{{ fMenu }}" onChange="{{ setMenu }}" placeholder="메뉴명 또는 메뉴코드" style="height:32px;padding:0 9px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff" /></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">작성 담당자</span>
+<input value="{{ fWriter }}" onChange="{{ setWriter }}" placeholder="이름 입력" style="height:32px;padding:0 9px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff" /></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">검수 담당자</span>
+<input value="{{ fChecker }}" onChange="{{ setChecker }}" placeholder="이름 입력" style="height:32px;padding:0 9px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff" /></label>
+</div>
+</section>
+
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(16,24,32,.09)">
+<div style="display:flex;align-items:baseline;gap:8px">
+<h2 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">매뉴얼 목록</h2>
+<span style="font:500 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">{{ countLabel }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font-size:11.5px;color:rgba(16,24,32,.42)">컬럼 헤더를 클릭하면 정렬됩니다</span>
+<button onClick="{{ dlBtnClick }}" title="{{ dlBtnTip }}" style="{{ dlBtnStyle }}">일괄 내려받기</button>
+</div>
+</div>
+
+<div style="overflow-x:auto"><div style="min-width:1290px">
+<div style="display:grid;grid-template-columns:44px 96px 104px 110px 104px minmax(180px,1fr) 72px 58px 84px 92px 92px 96px 270px;align-items:center;padding:0 16px;height:38px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.11);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)">
+<sc-for list="{{ cols }}" as="c" hint-placeholder-count="12"><button onClick="{{ c.onClick }}" style="{{ c.style }}">{{ c.label }}<span style="{{ c.arrowStyle }}">{{ c.arrow }}</span></button></sc-for>
+</div>
+
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+<div style="display:grid;grid-template-columns:44px 96px 104px 110px 104px minmax(180px,1fr) 72px 58px 84px 92px 92px 96px 270px;align-items:center;padding:0 16px;height:42px;border-bottom:1px solid rgba(16,24,32,.06);font-size:12.5px" style-hover="background:#F7FBFF">
+<div style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">{{ r.no }}</div>
+<div style="color:rgba(16,24,32,.8)">{{ r.module }}</div>
+<div style="color:rgba(16,24,32,.8)">{{ r.major }}</div>
+<div style="color:rgba(16,24,32,.8)">{{ r.minor }}</div>
+<div style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ r.code }}</div>
+<div style="font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.name }}</div>
+<div style="display:flex;justify-content:center"><button onClick="{{ r.toggleCustom }}" title="{{ r.customTip }}" style="{{ r.customStyle }}">{{ r.customLabel }}</button></div>
+<div style="text-align:center;font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.6)">{{ r.version }}</div>
+<div style="display:flex;justify-content:center"><span style="{{ r.badgeStyle }}">{{ r.status }}</span></div>
+<div style="text-align:center;color:rgba(16,24,32,.75)">{{ r.writer }}</div>
+<div style="text-align:center;color:rgba(16,24,32,.75)">{{ r.checker }}</div>
+<div style="text-align:center;font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.55)">{{ r.updated }}</div>
+<div style="display:flex;gap:5px;justify-content:center">
+<button onClick="{{ r.onEdit }}" disabled="{{ r.editOff }}" title="{{ r.editTip }}" style="{{ r.editStyle }}">편집</button>
+<button onClick="{{ r.onPreview }}" disabled="{{ r.previewOff }}" title="{{ r.previewTip }}" style="{{ r.previewStyle }}">미리보기</button>
+<button onClick="{{ r.onDiff }}" disabled="{{ r.diffOff }}" title="{{ r.diffTip }}" style="{{ r.diffStyle }}">변경사항</button>
+<button onClick="{{ r.onDownload }}" disabled="{{ r.dlOff }}" title="{{ r.dlTip }}" style="{{ r.rowDlStyle }}">내려받기</button>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:56px 0;text-align:center;font-size:12.5px;color:rgba(16,24,32,.45)">조회 결과가 없습니다.</div>
+</sc-if>
+</div></div>
+
+<div style="display:flex;align-items:center;justify-content:flex-end;padding:10px 16px;background:#fafbfb;border-top:1px solid rgba(16,24,32,.09)">
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">{{ countLabel }}</span>
+</div>
+</section>
+</main>
+</sc-if>
+
+<div style="{{ toastStyle }}" onClick="{{ clearToast }}">{{ toast }}</div>
+
+<sc-if value="{{ isPerm }}" hint-placeholder-val="{{ false }}">
+<main style="flex:1;padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:12px">
+<button onClick="{{ back }}" style="height:30px;padding:0 13px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">← 목록</button>
+<h2 style="margin:0;font-size:15px;font-weight:600">권한 관리</h2>
+<span style="font-size:12px;color:rgba(16,24,32,.5)">관리자만 사용자 권한과 담당 모듈을 지정할 수 있습니다</span>
+</div>
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid rgba(16,24,32,.09)">
+<h3 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">사용자 권한</h3>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="{{ savedStyle }}">{{ savedNote }}</span>
+<button onClick="{{ saveUsers }}" style="height:30px;padding:0 18px;font-size:12.5px;font-weight:500;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">저장</button>
+</div>
+</div>
+<div style="overflow-x:auto"><div style="min-width:1000px">
+<div style="display:grid;grid-template-columns:44px 168px 140px 108px 1fr 84px;align-items:center;padding:0 16px;height:38px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.11);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)">
+<div>No</div><div>사용자</div><div>부서</div><div>권한</div><div>담당 모듈</div><div style="text-align:center">사용여부</div>
+</div>
+<sc-for list="{{ users }}" as="u" hint-placeholder-count="8">
+<div style="display:grid;grid-template-columns:44px 168px 140px 108px 1fr 84px;align-items:center;padding:9px 16px;border-bottom:1px solid rgba(16,24,32,.06);font-size:12.5px">
+<div style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">{{ u.no }}</div>
+<div style="display:flex;align-items:center;gap:9px"><div style="{{ u.avatarStyle }}">{{ u.initial }}</div><span style="font-weight:500">{{ u.name }}</span></div>
+<div style="color:rgba(16,24,32,.7)">{{ u.dept }}</div>
+<div><select value="{{ u.role }}" onChange="{{ u.setRole }}" style="height:30px;width:92px;padding:0 7px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ roleOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select></div>
+<div>
+<span style="{{ u.modsFixedStyle }}">{{ u.modsFixedLabel }}</span>
+<div style="{{ u.modsListStyle }}">
+<sc-for list="{{ u.mods }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.onClick }}" style="{{ m.style }}">{{ m.label }}</button></sc-for>
+</div>
+</div>
+<div style="display:flex;justify-content:center"><button onClick="{{ u.toggleActive }}" style="{{ u.activeStyle }}">{{ u.activeLabel }}</button></div>
+</div>
+</sc-for>
+</div></div>
+</section>
+<p style="margin:0;font-size:11.5px;line-height:1.7;color:rgba(16,24,32,.5)">작성자는 담당 모듈의 본인 배정 문서만 편집할 수 있고, 검수자는 전체 모듈을 검수하며 검수 단계에서 담당자로 지정됩니다. 관리자는 전체 권한을 가집니다.</p>
+</main>
+</sc-if>
+
+<sc-if value="{{ dlOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;background:rgba(16,24,32,.42);display:flex;align-items:flex-start;justify-content:center;padding:48px 24px;z-index:40;overflow:auto">
+<div style="width:840px;background:#fff;border-radius:9px;box-shadow:0 12px 40px rgba(16,24,32,.22);overflow:hidden">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:15px 20px;border-bottom:1px solid rgba(16,24,32,.09)">
+<div style="display:flex;align-items:baseline;gap:9px"><h3 style="margin:0;font-size:14px;font-weight:600">일괄 내려받기</h3><span style="font-size:11.5px;color:rgba(16,24,32,.5)">고객 전달용 전체 매뉴얼 — 모듈별 1권, 메뉴 트리 순서</span></div>
+<button onClick="{{ closeDl }}" style="width:28px;height:28px;border:none;background:transparent;font-size:15px;color:rgba(16,24,32,.45);cursor:pointer">✕</button>
+</div>
+<div style="padding:18px 20px;display:flex;flex-direction:column;gap:18px;max-height:62vh;overflow:auto">
+<div style="display:flex;flex-direction:column;gap:9px">
+<div style="display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:12px;font-weight:600;color:rgba(16,24,32,.72)">모듈 선택 — 모듈별로 파일 1개가 생성됩니다</span>
+<div style="display:flex;gap:6px">
+<button onClick="{{ dlAll }}" style="height:26px;padding:0 10px;font-size:11.5px;border:1px solid rgba(16,24,32,.16);background:#fff;border-radius:4px;color:rgba(16,24,32,.6);cursor:pointer">전체 선택</button>
+<button onClick="{{ dlNone }}" style="height:26px;padding:0 10px;font-size:11.5px;border:1px solid rgba(16,24,32,.16);background:#fff;border-radius:4px;color:rgba(16,24,32,.6);cursor:pointer">전체 해제</button>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:7px">
+<sc-for list="{{ dlModChips }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.onClick }}" style="{{ m.style }}">{{ m.label }}<span style="{{ m.countStyle }}">{{ m.count }}</span></button></sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 260px;gap:20px">
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font-size:12px;font-weight:600;color:rgba(16,24,32,.72)">포함 항목</span>
+<button onClick="{{ toggleCover }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;font-size:12.5px;color:#16202a;cursor:pointer"><span style="{{ coverStyle }}">{{ coverMark }}</span>표지 — 모듈명 · 버전 · 발행일</button>
+<button onClick="{{ toggleToc }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;font-size:12.5px;color:#16202a;cursor:pointer"><span style="{{ tocStyle }}">{{ tocMark }}</span>목차 — 메뉴 트리 순서</button>
+<span style="font-size:12px;font-weight:600;color:rgba(16,24,32,.72);padding-top:6px">커스텀 여부</span>
+<button onClick="{{ toggleStd }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;font-size:12.5px;color:#16202a;cursor:pointer"><span style="{{ stdStyle }}">{{ stdMark }}</span>표준 메뉴 포함</button>
+<button onClick="{{ toggleCustom }}" style="display:flex;align-items:center;gap:9px;padding:0;border:none;background:transparent;font-size:12.5px;color:#16202a;cursor:pointer"><span style="{{ customChkStyle }}">{{ customMark }}</span>커스텀 메뉴 포함</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font-size:12px;font-weight:600;color:rgba(16,24,32,.72)">파일 형식</span>
+<div style="display:flex;gap:6px"><sc-for list="{{ formatOpts }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}</button></sc-for></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px">
+<span style="font-size:12px;font-weight:600;color:rgba(16,24,32,.72)">생성될 파일 구조</span>
+<div style="border:1px solid rgba(16,24,32,.13);border-radius:6px;overflow:hidden">
+<sc-for list="{{ dlFiles }}" as="d" hint-placeholder-count="3">
+<div style="border-bottom:1px solid rgba(16,24,32,.07)">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#fafbfb">
+<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6">{{ d.file }}</span>
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">{{ d.summary }}</span>
+</div>
+<div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px">
+<div style="{{ coverRowStyle }}">01 · 표지</div>
+<div style="{{ tocRowStyle }}">02 · 목차</div>
+<sc-for list="{{ d.tree }}" as="maj" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:8px;margin-top:7px;padding:6px 9px;background:#F1F8FF;border-left:3px solid #1C90FB;border-radius:0 4px 4px 0">
+<span style="font:500 10.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6">{{ maj.no }}</span>
+<span style="font-size:12px;font-weight:600">{{ maj.divider }}</span>
+<span style="font-size:11px;color:rgba(16,24,32,.45)">{{ maj.count }}건</span>
+</div>
+<sc-for list="{{ maj.minors }}" as="min" hint-placeholder-count="2">
+<div style="font-size:11.5px;font-weight:500;color:rgba(16,24,32,.6);padding:3px 0 1px 12px">{{ min.minor }}</div>
+<sc-for list="{{ min.menus }}" as="mn" hint-placeholder-count="2">
+<div style="display:flex;align-items:baseline;gap:8px;padding-left:26px;font-size:11.5px;color:rgba(16,24,32,.75)"><span style="font:400 10.5px/1.5 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.4)">{{ mn.code }}</span>{{ mn.name }}<span style="font:400 10.5px/1.5 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.35)">{{ mn.version }}</span><span style="{{ mn.tagStyle }}">{{ mn.tag }}</span></div>
+</sc-for>
+</sc-for>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid rgba(16,24,32,.09);background:#fafbfb">
+<span style="font-size:11.5px;color:rgba(16,24,32,.55)">{{ dlSummary }}</span>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="{{ dlDoneStyle }}">{{ dlDoneNote }}</span>
+<button onClick="{{ closeDl }}" style="height:34px;padding:0 15px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer">닫기</button>
+<button onClick="{{ dlStart }}" style="{{ dlStartStyle }}">내려받기</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSub }}" hint-placeholder-val="{{ false }}">
+<main style="flex:1;padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:12px">
+<button onClick="{{ back }}" style="height:30px;padding:0 13px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">← 목록</button>
+<div style="display:flex;align-items:baseline;gap:9px">
+<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ cur.code }}</span>
+<h2 style="margin:0;font-size:15px;font-weight:600">{{ cur.name }}</h2>
+<span style="{{ cur.badgeStyle }}">{{ cur.status }}</span>
+<span style="font-size:12px;color:rgba(16,24,32,.5)">{{ cur.path }}</span>
+</div>
+</div>
+
+<div style="display:flex;gap:6px;border-bottom:1px solid rgba(16,24,32,.11);padding-bottom:0">
+<sc-for list="{{ subTabs }}" as="s" hint-placeholder-count="3"><button onClick="{{ s.onClick }}" style="{{ s.style }}">{{ s.label }}</button></sc-for>
+</div>
+
+<sc-if value="{{ isNotDiff }}" hint-placeholder-val="{{ true }}">
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:14px 16px;display:flex;flex-direction:column;gap:13px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+<div style="display:flex;align-items:center;gap:16px">
+<h3 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">검수</h3>
+<label style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(16,24,32,.55)">검수 담당자
+<select value="{{ curReviewer }}" onChange="{{ setReviewerSel }}" disabled="{{ reviewerLocked }}" style="height:30px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff;color:#16202a">
+<sc-for list="{{ reviewerOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<span style="font-size:11.5px;color:rgba(16,24,32,.45)">{{ commentCount }}</span>
+</div>
+<div style="display:flex;gap:7px">
+<button onClick="{{ requestFix }}" style="{{ requestFixStyle }}">수정 요청</button>
+<button onClick="{{ toDeploy }}" style="{{ toDeployStyle }}">배포 대기로 이동</button>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 300px;gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:7px">
+<textarea value="{{ draft }}" onChange="{{ setDraft }}" placeholder="수정 요청 코멘트를 입력하세요 (예: 03 첨부파일 탭 표 2번 항목 문구 수정 필요)" style="min-height:62px;padding:10px;font-size:12.5px;line-height:1.7;border:1px solid rgba(16,24,32,.16);border-radius:5px;resize:vertical"></textarea>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+<span style="font-size:11px;color:rgba(16,24,32,.42)">{{ reviewNote }}</span>
+<button onClick="{{ addComment }}" style="height:30px;padding:0 14px;font-size:12.5px;font-weight:500;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.72);cursor:pointer">코멘트 등록</button>
+</div>
+</div>
+<div style="border:1px solid rgba(16,24,32,.11);border-radius:6px;overflow:hidden">
+<div style="padding:8px 11px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.09);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)">수정요청 코멘트</div>
+<sc-for list="{{ comments }}" as="c" hint-placeholder-count="2">
+<div style="padding:9px 11px;border-bottom:1px solid rgba(16,24,32,.06);display:flex;flex-direction:column;gap:3px">
+<div style="display:flex;gap:7px;align-items:baseline"><span style="font-size:11.5px;font-weight:600">{{ c.who }}</span><span style="font-size:10.5px;color:rgba(16,24,32,.4)">{{ c.at }}</span></div>
+<span style="font-size:12px;line-height:1.65;color:rgba(16,24,32,.75)">{{ c.text }}</span>
+</div>
+</sc-for>
+<sc-if value="{{ noComments }}" hint-placeholder-val="{{ true }}">
+<div style="padding:18px 11px;text-align:center;font-size:11.5px;color:rgba(16,24,32,.38)">등록된 코멘트가 없습니다</div>
+</sc-if>
+</div>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
+<section style="display:grid;grid-template-columns:1fr 300px;gap:14px">
+<div style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:18px 20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">메뉴명 <span style="font-size:10.5px;color:rgba(16,24,32,.35)">고정</span></span>
+<div style="height:34px;display:flex;align-items:center;padding:0 10px;font-size:12.5px;font-weight:500;background:rgba(16,24,32,.035);border:1px solid rgba(16,24,32,.1);border-radius:5px">{{ cur.name }}</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">메뉴경로 <span style="font-size:10.5px;color:rgba(16,24,32,.35)">고정</span></span>
+<div style="height:34px;display:flex;align-items:center;padding:0 10px;font-size:12.5px;color:rgba(16,24,32,.7);background:rgba(16,24,32,.035);border:1px solid rgba(16,24,32,.1);border-radius:5px">{{ cur.path }}</div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">메뉴 개요</span>
+<textarea value="{{ overview }}" onChange="{{ setOverview }}" style="min-height:70px;padding:10px;font-size:12.5px;line-height:1.7;border:1px solid rgba(16,24,32,.16);border-radius:5px;resize:vertical"></textarea></div>
+
+<div style="height:1px;background:rgba(16,24,32,.09)"></div>
+
+<div style="display:flex;align-items:center;justify-content:space-between">
+<span style="font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">탭 구성</span>
+<button onClick="{{ addTab }}" style="height:28px;padding:0 12px;font-size:12px;font-weight:500;border:1px solid #1C90FB;background:#fff;border-radius:5px;color:#0B72D6;cursor:pointer">+ 탭 추가</button>
+</div>
+<div style="display:grid;grid-template-columns:212px 1fr;gap:14px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:6px">
+<sc-for list="{{ tabList }}" as="t" hint-placeholder-count="3">
+<div draggable="true" onDragStart="{{ t.onDragStart }}" onDragOver="{{ t.onDragOver }}" onDrop="{{ t.onDrop }}" onDragEnd="{{ t.onDragEnd }}" style="{{ t.rowStyle }}">
+<div style="{{ t.gripStyle }}" title="드래그하여 순서 변경"><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div></div>
+<button onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="{{ t.orderStyle }}">{{ t.order }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</span></button>
+<button onClick="{{ t.del }}" disabled="{{ t.delOff }}" title="탭 삭제" style="{{ t.delStyle }}">✕</button>
+</div>
+</sc-for>
+<span style="font-size:11px;color:rgba(16,24,32,.4);padding-top:2px">좌측 손잡이를 드래그해 탭 순서를 변경합니다</span>
+</div>
+
+<div style="border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:15px 16px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font:500 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.4)">{{ curTabLabel }}</span>
+<input value="{{ curTab.name }}" onChange="{{ setTabName }}" placeholder="탭명" style="flex:1;height:32px;padding:0 10px;font-size:12.5px;font-weight:500;border:1px solid rgba(16,24,32,.16);border-radius:5px" />
+</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">이미지</span>
+<div style="height:184px;border:1px dashed rgba(16,24,32,.22);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px">
+<span style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">tab screen capture — 1440×900</span>
+<button style="height:28px;padding:0 13px;font-size:12px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer">이미지 등록</button>
+</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">탭 개요</span>
+<textarea value="{{ curTab.overview }}" onChange="{{ setTabOverview }}" style="min-height:58px;padding:10px;font-size:12.5px;line-height:1.7;border:1px solid rgba(16,24,32,.16);border-radius:5px;resize:vertical"></textarea></div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:11.5px;color:rgba(16,24,32,.55)">표 — 번호 · 내용</span>
+<button onClick="{{ addRow }}" style="height:26px;padding:0 10px;font-size:11.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:4px;color:rgba(16,24,32,.7);cursor:pointer">+ 행 추가</button></div>
+<div style="border:1px solid rgba(16,24,32,.13);border-radius:5px;overflow:hidden">
+<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:center;height:32px;padding:0 10px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.1);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)"><span>번호</span><span>내용</span><span></span></div>
+<sc-for list="{{ tabRows }}" as="row" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid rgba(16,24,32,.06)">
+<span style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">{{ row.no }}</span>
+<input value="{{ row.content }}" onChange="{{ row.set }}" style="height:30px;padding:0 9px;font-size:12.5px;border:1px solid rgba(16,24,32,.13);border-radius:4px" />
+<button onClick="{{ row.del }}" title="행 삭제" style="width:24px;height:24px;display:grid;place-items:center;border:1px solid rgba(16,24,32,.13);background:#fff;border-radius:4px;font-size:10px;color:rgba(16,24,32,.5);cursor:pointer">✕</button>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</div>
+<div style="display:flex;gap:7px;justify-content:flex-end;padding-top:2px">
+<button style="height:32px;padding:0 15px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;cursor:pointer">임시저장</button>
+<button style="{{ submitStyle }}">검수 요청</button>
+</div>
+</div>
+<aside style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:16px;display:flex;flex-direction:column;gap:13px;align-self:start">
+<h3 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">문서 정보</h3>
+<sc-for list="{{ meta }}" as="m" hint-placeholder-count="6">
+<div style="display:flex;justify-content:space-between;gap:10px;font-size:12.5px"><span style="color:rgba(16,24,32,.5)">{{ m.k }}</span><span style="font-weight:500">{{ m.v }}</span></div>
+</sc-for>
+<div style="height:1px;background:rgba(16,24,32,.09)"></div>
+<p style="margin:0;font-size:11.5px;line-height:1.7;color:rgba(16,24,32,.55)">GS인증 검수 기준에 따라 화면 캡처, 항목 설명, 오류 메시지 항목이 모두 채워져야 검수 요청이 가능합니다.</p>
+</aside>
+</section>
+</sc-if>
+
+<sc-if value="{{ isPreview }}" hint-placeholder-val="{{ false }}">
+<section style="display:grid;place-items:start center;padding:6px 0">
+<div style="width:800px;background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;padding:56px 64px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #1C90FB;padding-bottom:12px">
+<span style="font-size:12px;color:rgba(16,24,32,.5)">{{ cur.path }}</span>
+<span style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.5)">{{ cur.version }}</span>
+</div>
+<h2 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-.02em">{{ cur.name }}</h2>
+<p style="margin:0;font-size:13.5px;line-height:1.85;color:rgba(16,24,32,.78);text-wrap:pretty">{{ overview }}</p>
+<sc-for list="{{ pvTabs }}" as="t" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:14px;padding-top:14px;border-top:1px solid rgba(16,24,32,.1)">
+<div style="display:flex;align-items:baseline;gap:9px"><span style="font:500 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ t.order }}</span><h3 style="margin:0;font-size:16px;font-weight:600">{{ t.name }}</h3></div>
+<div style="height:230px;border:1px dashed rgba(16,24,32,.22);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:grid;place-items:center"><span style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">tab screen capture — 1440×900</span></div>
+<p style="margin:0;font-size:13px;line-height:1.8;color:rgba(16,24,32,.75);text-wrap:pretty">{{ t.overview }}</p>
+<div style="border-top:1px solid rgba(16,24,32,.13)">
+<div style="display:grid;grid-template-columns:56px 1fr;gap:12px;padding:8px 2px;border-bottom:1px solid rgba(16,24,32,.1);font-size:12px;font-weight:600;color:rgba(16,24,32,.6)"><span>번호</span><span>내용</span></div>
+<sc-for list="{{ t.rows }}" as="row" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:56px 1fr;gap:12px;padding:10px 2px;border-bottom:1px solid rgba(16,24,32,.07);font-size:13px"><span style="font:400 12px/1.5 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.45)">{{ row.no }}</span><span style="color:rgba(16,24,32,.78);line-height:1.65">{{ row.content }}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isDiff }}" hint-placeholder-val="{{ false }}">
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;overflow:hidden;margin-bottom:14px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 16px;border-bottom:1px solid rgba(16,24,32,.09)">
+<div style="display:flex;align-items:center;gap:9px">
+<h3 style="margin:0;font-size:12.5px;font-weight:600;color:rgba(16,24,32,.72)">버전 비교</h3>
+<select value="{{ cmpVersion }}" onChange="{{ setCmpVersion }}" style="height:30px;padding:0 8px;font-size:12.5px;border:1px solid rgba(16,24,32,.16);border-radius:5px;background:#fff">
+<sc-for list="{{ cmpVersionOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select>
+<span style="font-size:12px;color:rgba(16,24,32,.45)">↔ {{ cmpRightLabel }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">{{ cmpStat }}</span>
+<div style="display:flex;align-items:center;gap:9px;font-size:11px;color:rgba(16,24,32,.5)">
+<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#FF8787"></span>이전</span>
+<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:#20C997"></span>현재</span>
+</div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;align-items:center;height:36px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.11);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)">
+<div style="padding:0 22px;border-right:1px solid rgba(16,24,32,.09)">{{ cmpLeftLabel }}</div><div style="padding:0 22px">{{ cmpRightLabel }}</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;align-items:start">
+<div style="padding:22px 24px 28px;border-right:1px solid rgba(16,24,32,.09);display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:7px;border-bottom:2px solid rgba(16,24,32,.85);padding-bottom:10px">
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">{{ cur.path }}</span>
+<h3 style="margin:0;font-size:19px;font-weight:600">{{ cur.name }}</h3>
+</div>
+<p style="margin:0;font-size:12.5px;line-height:1.85;text-wrap:pretty"><span style="{{ cmpLeft.overviewMark.style }}">{{ cmpLeft.overviewMark.text }}</span></p>
+<sc-for list="{{ cmpLeft.tabs }}" as="t" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:13px;border-top:1px solid rgba(16,24,32,.1)">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:500 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ t.order }}</span><span style="font-size:14px;font-weight:600"><span style="{{ t.nameMark.style }}">{{ t.nameMark.text }}</span></span><span style="{{ t.removedStyle }}">{{ t.removedLabel }}</span></div>
+<div style="height:118px;border:1px dashed rgba(16,24,32,.2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:grid;place-items:center"><span style="font-size:10.5px;color:rgba(16,24,32,.4)">tab screen capture</span></div>
+<p style="margin:0;font-size:12px;line-height:1.75"><span style="{{ t.ovMark.style }}">{{ t.ovMark.text }}</span></p>
+<div style="border-top:1px solid rgba(16,24,32,.12)">
+<div style="display:grid;grid-template-columns:44px 1fr;gap:10px;padding:7px 2px;border-bottom:1px solid rgba(16,24,32,.1);font-size:11px;font-weight:600;color:rgba(16,24,32,.55)"><span>번호</span><span>내용</span></div>
+<sc-for list="{{ t.rows }}" as="row" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(16,24,32,.07);font-size:12px;align-items:start"><span style="color:rgba(16,24,32,.45)">{{ row.no }}</span><span style="line-height:1.7"><span style="{{ row.style }}">{{ row.text }}</span></span></div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="padding:22px 24px 28px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:7px;border-bottom:2px solid #1C90FB;padding-bottom:10px">
+<span style="font-size:11.5px;color:rgba(16,24,32,.5)">{{ cur.path }}</span>
+<h3 style="margin:0;font-size:19px;font-weight:600">{{ cur.name }}</h3>
+</div>
+<p style="margin:0;font-size:12.5px;line-height:1.85;text-wrap:pretty"><span style="{{ cmpRight.overviewMark.style }}">{{ cmpRight.overviewMark.text }}</span></p>
+<sc-for list="{{ cmpRight.tabs }}" as="t" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;gap:10px;padding-top:13px;border-top:1px solid rgba(16,24,32,.1)">
+<div style="display:flex;align-items:baseline;gap:8px"><span style="font:500 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ t.order }}</span><span style="font-size:14px;font-weight:600"><span style="{{ t.nameMark.style }}">{{ t.nameMark.text }}</span></span><span style="{{ t.removedStyle }}">{{ t.removedLabel }}</span></div>
+<div style="height:118px;border:1px dashed rgba(16,24,32,.2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:grid;place-items:center"><span style="font-size:10.5px;color:rgba(16,24,32,.4)">tab screen capture</span></div>
+<p style="margin:0;font-size:12px;line-height:1.75"><span style="{{ t.ovMark.style }}">{{ t.ovMark.text }}</span></p>
+<div style="border-top:1px solid rgba(16,24,32,.12)">
+<div style="display:grid;grid-template-columns:44px 1fr;gap:10px;padding:7px 2px;border-bottom:1px solid rgba(16,24,32,.1);font-size:11px;font-weight:600;color:rgba(16,24,32,.55)"><span>번호</span><span>내용</span></div>
+<sc-for list="{{ t.rows }}" as="row" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px 2px;border-bottom:1px solid rgba(16,24,32,.07);font-size:12px;align-items:start"><span style="color:rgba(16,24,32,.45)">{{ row.no }}</span><span style="line-height:1.7"><span style="{{ row.style }}">{{ row.text }}</span></span></div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+<section style="background:#fff;border:1px solid rgba(16,24,32,.11);border-radius:7px;overflow:hidden">
+<div style="display:grid;grid-template-columns:72px 108px 96px 92px 1fr 110px;align-items:center;padding:0 16px;height:38px;background:#fafbfb;border-bottom:1px solid rgba(16,24,32,.11);font-size:11.5px;font-weight:600;color:rgba(16,24,32,.6)">
+<div>버전</div><div>일시</div><div>작업자</div><div style="text-align:center">구분</div><div>변경 내용</div><div style="text-align:center">비교</div>
+</div>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="5">
+<div style="display:grid;grid-template-columns:72px 108px 96px 92px 1fr 110px;align-items:center;padding:0 16px;height:44px;border-bottom:1px solid rgba(16,24,32,.06);font-size:12.5px">
+<div style="font:500 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ h.version }}</div>
+<div style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(16,24,32,.55)">{{ h.at }}</div>
+<div style="color:rgba(16,24,32,.78)">{{ h.who }}</div>
+<div style="display:flex;justify-content:center"><span style="{{ h.kindStyle }}">{{ h.kind }}</span></div>
+<div style="color:rgba(16,24,32,.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ h.what }}</div>
+<div style="display:flex;justify-content:center"><button style="height:26px;padding:0 11px;font-size:11.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:4px;color:rgba(16,24,32,.7);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">이전 버전 비교</button></div>
+</div>
+</sc-for>
+</section>
+</sc-if>
+</main>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const TREE = {
+  '회계': { '전표관리': ['일반전표', '매입매출전표'], '결산': ['월결산', '연결산'] },
+  '인사': { '인사기본': ['사원등록', '발령관리'], '근태': ['근태집계', '휴가관리'] },
+  '영업': { '수주': ['견적관리', '수주등록'], '출하': ['출하지시', '매출마감'] },
+  '구매자재': { '구매': ['발주관리', '입고검사'], '재고': ['재고실사', '재고이동'] },
+  '생산': { '생산계획': ['기준생산계획', '작업지시'], '실적': ['생산실적', '불량관리'] },
+  '시스템': { '기준정보': ['공통코드', '거래처'], '권한': ['사용자', '메뉴권한'] }
+};
+const STATUSES = ['작성대기', '작성중', '작성완료', '검수중', '검수반려', '검수완료', '배포대기', '배포완료'];
+const SC = {
+  '작성대기': ['#F1F2F4', '#7A828C'],
+  '작성중': ['#E8F3FE', '#1C7FD6'],
+  '작성완료': ['#EFEBFF', '#6B4FE0'],
+  '검수중': ['#FDF4DA', '#A67C08'],
+  '검수반려': ['#FFECEC', '#D95555'],
+  '검수완료': ['#E3F6F5', '#1E8F89'],
+  '배포대기': ['#E6F4F9', '#2489A6'],
+  '배포완료': ['#E2F7EE', '#159A6E']
+};
+const PEOPLE = ['김서준', '이도윤', '박하은', '최지우', '정민재', '강수아', '윤예린', '임지호'];
+const PREFIX = { '회계': 'AC', '인사': 'HR', '영업': 'SL', '구매자재': 'MM', '생산': 'PP', '시스템': 'SY' };
+const ROLE_ME = { '관리자': '시스템관리자', '작성자': '김서준', '검수자': '이도윤' };
+const ACCOUNTS = {
+  admin: { role: '관리자', name: '시스템관리자', dept: '경영정보팀' },
+  kimsj: { role: '작성자', name: '김서준', dept: '경영정보팀' },
+  leedy: { role: '검수자', name: '이도윤', dept: '경영정보팀' }
+};
+
+function badge(status, small) {
+  const c = SC[status] || SC['작성대기'];
+  return `display:inline-flex;align-items:center;height:${small ? 20 : 22}px;padding:0 9px;border-radius:11px;background:${c[0]};color:${c[1]};font-size:11.5px;font-weight:500;white-space:nowrap`;
+}
+function iconBtn(on) {
+  return `width:22px;height:22px;flex:none;display:grid;place-items:center;border:1px solid ${on ? 'rgba(16,24,32,.16)' : 'rgba(16,24,32,.07)'};background:#fff;border-radius:4px;font-size:10px;color:${on ? 'rgba(16,24,32,.6)' : 'rgba(16,24,32,.22)'};cursor:${on ? 'pointer' : 'not-allowed'}`;
+}
+function chk(on) {
+  return `width:17px;height:17px;flex:none;border-radius:4px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.22)'};background:${on ? '#1C90FB' : '#fff'};color:#fff;display:grid;place-items:center;font-size:11px;line-height:1`;
+}
+function btn(enabled) {
+  return enabled
+    ? 'height:26px;padding:0 10px;font-size:11.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:4px;color:rgba(16,24,32,.78);cursor:pointer'
+    : 'height:26px;padding:0 10px;font-size:11.5px;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);border-radius:4px;color:rgba(16,24,32,.3);cursor:not-allowed';
+}
+
+class Component extends DCLogic {
+  state = {
+    role: '작성자', status: '전체', module: '전체', major: '전체', minor: '전체',
+    menu: '', writer: '', checker: '', page: 1, screen: 'list', cur: null,
+    sortKey: '', sortDir: 'asc',
+    users: [
+      { name: '김서준', dept: '경영정보팀', role: '작성자', mods: ['회계', '시스템'], active: true },
+      { name: '이도윤', dept: '경영정보팀', role: '검수자', mods: Object.keys(TREE), active: true },
+      { name: '박하은', dept: 'ERP컨설팅1팀', role: '작성자', mods: ['영업', '구매자재'], active: true },
+      { name: '최지우', dept: 'ERP컨설팅1팀', role: '작성자', mods: ['생산'], active: true },
+      { name: '정민재', dept: 'ERP컨설팅2팀', role: '검수자', mods: Object.keys(TREE), active: true },
+      { name: '강수아', dept: '품질보증팀', role: '작성자', mods: ['인사'], active: true },
+      { name: '윤예린', dept: '품질보증팀', role: '작성자', mods: ['회계'], active: false },
+      { name: '시스템관리자', dept: '경영정보팀', role: '관리자', mods: Object.keys(TREE), active: true }
+    ],
+    saved: false,
+    overview: '해당 업무의 기준정보를 등록·수정·조회하는 화면입니다. 조회조건을 입력한 후 조회 버튼을 클릭하면 하단 그리드에 결과가 표시됩니다.',
+    tabIdx: 0,
+    docTabs: [
+      { name: '기본정보', overview: '기본정보 탭에서는 조회조건 입력과 목록 조회를 수행합니다.', rows: ['조회기간 : 조회할 기간을 시작일~종료일로 입력합니다. 기본값은 당월 1일부터 오늘까지입니다.', '사업장 : 로그인 사용자에게 권한이 부여된 사업장만 선택할 수 있습니다.', '사용여부 : 사용 / 미사용 / 전체 중 선택합니다.'] },
+      { name: '상세내역', overview: '선택한 항목의 상세 내역을 확인하고 수정합니다.', rows: ['거래처 : 코드 또는 거래처명 일부를 입력하면 검색 팝업이 표시됩니다.', '비고 : 최대 200자까지 입력할 수 있습니다.'] },
+      { name: '첨부파일', overview: '증빙 파일을 등록·삭제합니다.', rows: ['파일 : 1건당 20MB, 최대 10건까지 첨부할 수 있습니다.'] }
+    ],
+    custom: '전체', overrides: {}, toast: '', dragIdx: null, overIdx: null, cmpVersion: 'v1.3',
+    statusOv: {}, reviewerOv: {}, comments: {}, draft: '',
+    authed: false, loginId: '', loginPw: '', loginErr: '',
+    dlOpen: false, dlMods: Object.keys(TREE), dlCover: true, dlToc: true, dlStd: true, dlCustom: true, dlFormat: 'PDF', dlDone: false
+  };
+
+  login() {
+    const id = (this.state.loginId || '').trim().toLowerCase();
+    const acc = ACCOUNTS[id];
+    if (!acc) return this.setState({ loginErr: '등록되지 않은 사번입니다. (admin / kimsj / leedy)' });
+    if (!this.state.loginPw) return this.setState({ loginErr: '비밀번호를 입력하세요.' });
+    this.setState({ authed: true, role: acc.role, loginErr: '', loginPw: '', screen: 'list' });
+  }
+  logout() { this.setState({ authed: false, loginId: '', loginPw: '', screen: 'list', dlOpen: false }); }
+
+  patchUser(i, patch) {
+    const users = this.state.users.map((u, k) => k === i ? Object.assign({}, u, patch) : u);
+    this.setState({ users, saved: false });
+  }
+  toggleMod(i, mod) {
+    const u = this.state.users[i];
+    const mods = u.mods.indexOf(mod) >= 0 ? u.mods.filter(m => m !== mod) : u.mods.concat([mod]);
+    this.patchUser(i, { mods });
+  }
+  patchTab(i, patch) {
+    this.setState({ docTabs: this.state.docTabs.map((t, k) => k === i ? Object.assign({}, t, patch) : t) });
+  }
+  addTab() {
+    const docTabs = this.state.docTabs.concat([{ name: '새 탭', overview: '', rows: [''] }]);
+    this.setState({ docTabs, tabIdx: docTabs.length - 1 });
+  }
+  removeTab(i) {
+    const docTabs = this.state.docTabs.filter((t, k) => k !== i);
+    this.setState({ docTabs, tabIdx: Math.max(0, Math.min(this.state.tabIdx, docTabs.length - 1)) });
+  }
+  dropTab(target) {
+    const from = this.state.dragIdx;
+    if (from === null || from === undefined || from === target) return this.setState({ dragIdx: null, overIdx: null });
+    const docTabs = this.state.docTabs.slice();
+    const [moved] = docTabs.splice(from, 1);
+    docTabs.splice(target, 0, moved);
+    this.setState({ docTabs, tabIdx: target, dragIdx: null, overIdx: null });
+  }
+  moveTab(i, d) {
+    const j = i + d, docTabs = this.state.docTabs.slice();
+    if (j < 0 || j >= docTabs.length) return;
+    const t = docTabs[i]; docTabs[i] = docTabs[j]; docTabs[j] = t;
+    this.setState({ docTabs, tabIdx: j });
+  }
+  setRow(i, k, v) {
+    const rows = this.state.docTabs[i].rows.slice(); rows[k] = v; this.patchTab(i, { rows });
+  }
+  addRow(i) { this.patchTab(i, { rows: this.state.docTabs[i].rows.concat(['']) }); }
+  delRow(i, k) { this.patchTab(i, { rows: this.state.docTabs[i].rows.filter((r, x) => x !== k) }); }
+  toggleDlMod(mod) {
+    const on = this.state.dlMods.indexOf(mod) >= 0;
+    this.setState({ dlMods: on ? this.state.dlMods.filter(m => m !== mod) : this.state.dlMods.concat([mod]), dlDone: false });
+  }
+
+  toggleSort(key) {
+    const s = this.state;
+    if (s.sortKey !== key) return this.setState({ sortKey: key, sortDir: 'asc' });
+    if (s.sortDir === 'asc') return this.setState({ sortDir: 'desc' });
+    this.setState({ sortKey: '', sortDir: 'asc' });
+  }
+
+  data() {
+    if (this._d) return this._d;
+    const out = []; let i = 0;
+    Object.keys(TREE).forEach(mod => {
+      Object.keys(TREE[mod]).forEach(maj => {
+        TREE[mod][maj].forEach(min => {
+          for (let k = 0; k < 2; k++) {
+            const st = STATUSES[i % STATUSES.length];
+            out.push({
+              module: mod, major: maj, minor: min,
+              code: PREFIX[mod] + String(100 + i * 7).slice(0, 3) + String(k + 1) + '0',
+              name: min + (k === 0 ? ' 등록' : ' 현황'),
+              version: 'v' + (1 + (i % 3)) + '.' + (i % 5),
+              status: st, custom: i % 4 === 1, writer: PEOPLE[i % PEOPLE.length], checker: PEOPLE[(i + 3) % PEOPLE.length],
+              updated: '2026-0' + (6 + (i % 3)) + '-' + String(2 + (i % 26)).padStart(2, '0')
+            });
+            i++;
+          }
+        });
+      });
+    });
+    this._d = out;
+    return out;
+  }
+
+  bookCss() {
+    return `@page{size:A4;margin:18mm 16mm}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;color:#16202a;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{page-break-after:always;break-after:page;min-height:243mm;display:flex;flex-direction:column}
+.page:last-child{page-break-after:auto}
+.cover{justify-content:flex-start;gap:14px;border-top:6px solid #1C90FB;padding-top:60mm}
+.cover .kicker{font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.14em;color:#6b7785}
+.cover h1{margin:0;font-size:38px;font-weight:700;letter-spacing:-.02em}
+.cover h2{margin:0;font-size:19px;font-weight:500;color:#4a5764}
+.cover .meta{margin-top:34mm;font-size:12.5px;color:#6b7785;line-height:2}
+h3.sec{margin:0 0 14px;font-size:20px;font-weight:700;border-bottom:2px solid #1C90FB;padding-bottom:8px}
+.toc-row{display:flex;gap:10px;align-items:baseline;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px dotted #d6dbe0}
+.toc-row .maj{font-weight:600}
+.toc-row .ind{padding-left:14px;color:#4a5764}
+.toc-row .code{font:400 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
+.divider{justify-content:flex-start;align-items:flex-start;gap:12px;background:#f2f6fb;padding:70mm 0 0 12mm;border-left:8px solid #1C90FB}
+.divider .no{font:500 13px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.12em;color:#1C90FB}
+.divider h2{margin:0;font-size:30px;font-weight:700}
+.divider p{margin:0;font-size:13px;color:#4a5764}
+.mn-head{border-bottom:2px solid #16202a;padding-bottom:9px;margin-bottom:14px}
+.mn-head .path{font-size:11.5px;color:#6b7785}
+.mn-head h2{margin:4px 0 0;font-size:23px;font-weight:700}
+.mn-head .code{font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
+.ov{font-size:12.5px;line-height:1.85;color:#2c3742;margin:0 0 16px}
+.tab{margin:0 0 20px;page-break-inside:avoid}
+.tab .th{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.tab .th .no{font:500 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB}
+.tab .th h4{margin:0;font-size:15px;font-weight:700}
+.shot{height:62mm;border:1px dashed #b7c0c9;background:repeating-linear-gradient(135deg,#f4f6f8 0 8px,#fff 8px 16px);display:flex;align-items:center;justify-content:center;font:400 11px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1;margin-bottom:9px}
+.tab p{margin:0 0 9px;font-size:12px;line-height:1.75;color:#2c3742}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th,td{border:1px solid #cfd6dd;padding:6px 8px;text-align:left;vertical-align:top}
+th{background:#eef2f7;font-weight:600}
+td.n{width:34px;text-align:center;font-family:'Pretendard Variable',Pretendard,sans-serif;color:#6b7785}
+.pf{margin-top:auto;padding-top:8px;font-size:10px;color:#8b95a1;display:flex;justify-content:space-between;border-top:1px solid #e2e6ea}`;
+  }
+
+  esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  menuPage(r) {
+    const s = this.state, E = t => this.esc(t);
+    const tabs = s.docTabs.map((t, i) => `<div class="tab"><div class="th"><span class="no">TAB ${String(i + 1).padStart(2, '0')}</span><h4>${E(t.name)}</h4></div>
+<div class="shot">tab screen capture — ${E(t.name)}</div>
+<p>${E(t.overview)}</p>
+<table><thead><tr><th class="n">번호</th><th>내용</th></tr></thead><tbody>${t.rows.map((row, k) => `<tr><td class="n">${k + 1}</td><td>${E(row)}</td></tr>`).join('')}</tbody></table></div>`).join('');
+    return `<section class="page"><div class="mn-head"><div class="path">${E([r.module, r.major, r.minor].join(' › '))}</div><h2>${E(r.name)}</h2><span class="code">${E(r.code)} · ${E(r.version)} · ${r.custom ? '커스텀' : '표준'}</span></div>
+<p class="ov">${E(s.overview)}</p>${tabs}
+<div class="pf"><span>Amaranth 10 매뉴얼</span><span>${E(r.code)}</span></div></section>`;
+  }
+
+  openBook(title, mods, rowsByMod) {
+    const s = this.state, E = t => this.esc(t), today = '2026-08-26';
+    let pages = '';
+    if (s.dlCover) {
+      pages += `<section class="page cover"><div class="kicker">AMARANTH 10 USER MANUAL</div><h1>${E(title)}</h1><h2>${mods.length > 1 ? '전체 매뉴얼 집' : E(mods[0]) + ' 모듈'}</h2>
+<div class="meta">발행일 ${today}<br/>대상 모듈 ${E(mods.join(', '))}<br/>수록 메뉴 ${mods.reduce((a, m) => a + rowsByMod[m].length, 0)}건<br/>발행 경영정보팀</div></section>`;
+    }
+    if (s.dlToc) {
+      let toc = '';
+      mods.forEach(mod => Object.keys(TREE[mod]).forEach(maj => {
+        const rows = rowsByMod[mod].filter(r => r.major === maj);
+        if (!rows.length) return;
+        toc += `<div class="toc-row"><span class="maj">${E(mod)} · ${E(maj)}</span><span class="code">${rows.length}건</span></div>`;
+        rows.forEach(r => { toc += `<div class="toc-row"><span class="ind">${E(r.minor)} — ${E(r.name)}</span><span class="code">${E(r.code)}</span></div>`; });
+      }));
+      pages += `<section class="page"><h3 class="sec">목차</h3>${toc}<div class="pf"><span>Amaranth 10 매뉴얼</span><span>${today}</span></div></section>`;
+    }
+    mods.forEach(mod => Object.keys(TREE[mod]).forEach((maj, i) => {
+      const rows = rowsByMod[mod].filter(r => r.major === maj);
+      if (!rows.length) return;
+      pages += `<section class="page divider"><span class="no">SECTION ${String(i + 1).padStart(2, '0')}</span><h2>${E(maj)}</h2><p>${E(mod)} 모듈 · ${rows.length}개 메뉴</p></section>`;
+      rows.forEach(r => { pages += this.menuPage(r); });
+    }));
+    const css = '<style>' + this.bookCss() + '</style>';
+    const head = '<meta charset="utf-8"><title>' + E(title) + '</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">' + css;
+    const w = window.open('', '_blank');
+    if (!w) { this.setState({ toast: '팝업이 차단되었습니다. 팝업 허용 후 다시 시도하세요' }); return false; }
+    w.document.open();
+    w.document.write('<!doctype html><html lang="ko"><head>' + head + '</head><body>' + pages + '</body></html>');
+    w.document.close();
+    setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 900);
+    return true;
+  }
+
+  downloadOne(r) {
+    const by = {}; by[r.module] = [r];
+    if (this.openBook('A10 매뉴얼 · ' + r.name, [r.module], by)) this.setState({ toast: r.code + ' 매뉴얼 PDF를 생성했습니다' });
+  }
+
+  downloadBatch() {
+    const s = this.state, all = this.items();
+    const mods = s.dlMods.filter(m => all.some(r => r.module === m && (r.custom ? s.dlCustom : s.dlStd)));
+    if (!mods.length) return;
+    const by = {};
+    mods.forEach(m => { by[m] = all.filter(r => r.module === m && (r.custom ? s.dlCustom : s.dlStd)); });
+    if (this.openBook('Amaranth 10 사용자 매뉴얼', mods, by)) this.setState({ dlDone: true });
+  }
+
+  versionsBelow(v) {
+    const m = /^v(\d+)\.(\d+)$/.exec(v || 'v1.0');
+    let maj = m ? +m[1] : 1, min = m ? +m[2] : 0;
+    const out = [];
+    while (out.length < 4) {
+      if (min > 0) min--; else if (maj > 1) { maj--; min = 4; } else break;
+      out.push('v' + maj + '.' + min);
+    }
+    return out;
+  }
+
+  prevDoc() {
+    return {
+      overview: '해당 업무의 기준정보를 등록·조회하는 화면입니다. 조회조건을 입력한 후 조회 버튼을 클릭하면 결과가 표시됩니다.',
+      tabs: [
+        { name: '기본정보', overview: '기본정보 탭에서는 조회조건 입력과 목록 조회를 수행합니다.', rows: ['조회기간 : 조회할 기간을 입력합니다.', '사업장 : 로그인 사용자에게 권한이 부여된 사업장만 선택할 수 있습니다.'] },
+        { name: '상세', overview: '선택한 항목의 상세 내역을 확인합니다.', rows: ['거래처 : 코드 또는 거래처명을 입력합니다.', '비고 : 최대 100자까지 입력할 수 있습니다.'] }
+      ]
+    };
+  }
+
+  diffRows() {
+    const nowDoc = { overview: this.state.overview, tabs: this.state.docTabs };
+    const prev = this.prevDoc();
+    const out = [];
+    const push = (section, label, l, r) => {
+      const kind = l === r ? 'same' : (l === undefined || l === '' ? 'added' : (r === undefined || r === '' ? 'removed' : 'changed'));
+      out.push({ section, label, left: l === undefined ? '' : l, right: r === undefined ? '' : r, kind });
+    };
+    push('메뉴 개요', '개요', prev.overview, nowDoc.overview);
+    const n = Math.max(prev.tabs.length, nowDoc.tabs.length);
+    for (let i = 0; i < n; i++) {
+      const p = prev.tabs[i], c = nowDoc.tabs[i];
+      const sec = '탭 ' + String(i + 1).padStart(2, '0');
+      push(sec, '탭명', p && p.name, c && c.name);
+      push(sec, '탭 개요', p && p.overview, c && c.overview);
+      const rn = Math.max(p ? p.rows.length : 0, c ? c.rows.length : 0);
+      for (let k = 0; k < rn; k++) push(sec, '표 ' + (k + 1), p && p.rows[k], c && c.rows[k]);
+    }
+    const tint = {
+      same: ['transparent', 'rgba(16,24,32,.72)'],
+      changed: ['oklch(0.96 0.045 85)', 'oklch(0.38 0.1 60)'],
+      added: ['oklch(0.955 0.04 165)', 'oklch(0.36 0.1 165)'],
+      removed: ['oklch(0.96 0.035 25)', 'oklch(0.42 0.13 25)']
+    };
+    return out.map(d => {
+      const t = tint[d.kind];
+      const cell = (has, side) => {
+        if (d.kind === 'same') return 'padding:9px 11px;font-size:12.5px;line-height:1.7;color:rgba(16,24,32,.7)';
+        const showTint = d.kind === 'changed' || (d.kind === 'added' && side === 'r') || (d.kind === 'removed' && side === 'l');
+        const bg = showTint ? (d.kind === 'changed' ? (side === 'l' ? 'oklch(0.96 0.035 25)' : 'oklch(0.955 0.04 165)') : t[0]) : 'transparent';
+        const fg = showTint ? (d.kind === 'changed' ? (side === 'l' ? 'oklch(0.42 0.13 25)' : 'oklch(0.34 0.1 165)') : t[1]) : 'rgba(16,24,32,.32)';
+        return `padding:9px 11px;font-size:12.5px;line-height:1.7;background:${bg};color:${fg};font-weight:${showTint ? 500 : 400}`;
+      };
+      return Object.assign({}, d, {
+        leftText: d.left || '—', rightText: d.right || '—',
+        leftStyle: cell(!!d.left, 'l'), rightStyle: cell(!!d.right, 'r'),
+        kindLabel: d.kind === 'same' ? '' : d.kind === 'changed' ? '변경' : d.kind === 'added' ? '추가' : '삭제',
+        kindStyle: d.kind === 'same'
+          ? 'display:none'
+          : `display:inline-flex;align-items:center;height:19px;padding:0 7px;border-radius:4px;font-size:10.5px;font-weight:600;background:${tint[d.kind][0]};color:${tint[d.kind][1]}`
+      });
+    });
+  }
+
+  cmpDocs() {
+    const prev = this.prevDoc();
+    const now = { overview: this.state.overview, tabs: this.state.docTabs };
+    const L = '#FFECEC', LT = '#D14343';
+    const R = '#E2F7EE', RT = '#12805C';
+    const mark = (mine, other, side) => {
+      if (mine === undefined || mine === null) return { text: '(없음)', style: 'padding:2px 0;color:rgba(16,24,32,.3)' };
+      if (mine === other) return { text: mine, style: 'padding:2px 0;color:rgba(16,24,32,.75)' };
+      const bg = side === 'l' ? L : R, fg = side === 'l' ? LT : RT;
+      return { text: mine, style: `padding:2px 5px;margin:0 -5px;border-radius:3px;background:${bg};color:${fg};font-weight:500` };
+    };
+    const build = (doc, other, side) => {
+      const n = Math.max(doc.tabs.length, other.tabs.length);
+      const tabs = [];
+      for (let i = 0; i < n; i++) {
+        const t = doc.tabs[i], o = other.tabs[i];
+        if (!t) continue;
+        const oRows = o ? o.rows : [];
+        tabs.push({
+          order: String(i + 1).padStart(2, '0'),
+          nameMark: mark(t.name, o && o.name, side),
+          ovMark: mark(t.overview, o && o.overview, side),
+          removed: !o,
+          removedStyle: !o ? `font-size:10.5px;font-weight:600;color:${side === 'l' ? LT : RT}` : 'display:none',
+          removedLabel: side === 'l' ? '삭제된 탭' : '추가된 탭',
+          rows: t.rows.map((r, k) => Object.assign({ no: k + 1 }, mark(r, oRows[k], side)))
+        });
+      }
+      return { overviewMark: mark(doc.overview, other.overview, side), tabs };
+    };
+    return { left: build(prev, now, 'l'), right: build(now, prev, 'r') };
+  }
+
+  items() {
+    const s = this.state, ov = s.overrides || {}, sv = s.statusOv || {}, rv = s.reviewerOv || {};
+    return this.data().map(r => {
+      const patch = {};
+      if (ov[r.code] !== undefined) patch.custom = ov[r.code];
+      if (sv[r.code] !== undefined) patch.status = sv[r.code];
+      const stat = patch.status || r.status;
+      if (rv[r.code] !== undefined) patch.checker = rv[r.code];
+      else if (['작성대기', '작성중', '작성완료'].indexOf(stat) >= 0) patch.checker = '미지정';
+      return Object.keys(patch).length ? Object.assign({}, r, patch) : r;
+    });
+  }
+
+  setStatus(code, status) {
+    this.setState({ statusOv: Object.assign({}, this.state.statusOv, { [code]: status }) });
+    const cur = this.state.cur;
+    if (cur && cur.code === code) this.setState({ cur: Object.assign({}, cur, { status }) });
+  }
+  setReviewer(code, name) {
+    this.setState({ reviewerOv: Object.assign({}, this.state.reviewerOv, { [code]: name }) });
+    const cur = this.state.cur;
+    if (cur && cur.code === code) this.setState({ cur: Object.assign({}, cur, { checker: name }) });
+  }
+  addComment(code, text) {
+    if (!text.trim()) return;
+    const list = (this.state.comments[code] || []).concat([{ who: ROLE_ME[this.state.role], at: '2026-08-26 11:20', text: text.trim() }]);
+    this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), draft: '' });
+  }
+
+  perm(row) {
+    const r = this.state.role, me = ROLE_ME[r];
+    if (r === '관리자') return { edit: true, preview: true, diff: true };
+    if (r === '작성자') return {
+      edit: row.writer === me && ['작성대기', '작성중', '검수반려'].indexOf(row.status) >= 0,
+      preview: true, diff: true
+    };
+    return { edit: false, preview: true, diff: true };
+  }
+  tip(ok, kind) {
+    if (ok) return '';
+    if (this.state.role === '작성자') return '본인이 작성 담당자인 미완료 문서만 편집할 수 있습니다';
+    return kind === 'edit' ? '검수자는 편집 권한이 없습니다' : '권한이 없습니다';
+  }
+
+  filtered() {
+    const s = this.state;
+    return this.items().filter(r =>
+      (s.status === '전체' || r.status === s.status) &&
+      (s.custom === '전체' || (s.custom === '커스텀' ? r.custom : !r.custom)) &&
+      (s.module === '전체' || r.module === s.module) &&
+      (s.major === '전체' || r.major === s.major) &&
+      (s.minor === '전체' || r.minor === s.minor) &&
+      (!s.menu || r.name.indexOf(s.menu) >= 0 || r.code.toUpperCase().indexOf(s.menu.toUpperCase()) >= 0) &&
+      (!s.writer || r.writer.indexOf(s.writer) >= 0) &&
+      (!s.checker || r.checker.indexOf(s.checker) >= 0)
+    );
+  }
+
+  set(k) { return e => this.setState({ [k]: e.target.value, page: 1 }); }
+
+  renderVals() {
+    const s = this.state, me = ROLE_ME[s.role];
+    const all = this.items();
+    let list = this.filtered();
+    if (s.sortKey) {
+      const k = s.sortKey, dir = s.sortDir === 'desc' ? -1 : 1;
+      const order = s.sortKey === 'status' ? STATUSES : null;
+      list = list.slice().sort((a, b) => {
+        const av = order ? order.indexOf(a[k]) : a[k], bv = order ? order.indexOf(b[k]) : b[k];
+        return (av > bv ? 1 : av < bv ? -1 : 0) * dir;
+      });
+    }
+    const slice = list;
+    const page = 1, PAGE = 0, maxPage = 1;
+    const COLS = [
+      { key: '', label: 'No', w: '44px', align: 'left' },
+      { key: 'module', label: '모듈', w: '96px', align: 'left' },
+      { key: 'major', label: '대분류', w: '104px', align: 'left' },
+      { key: 'minor', label: '중분류', w: '110px', align: 'left' },
+      { key: 'code', label: '메뉴코드', w: '104px', align: 'left' },
+      { key: 'name', label: '메뉴명', w: 'minmax(180px,1fr)', align: 'left' },
+      { key: 'custom', label: '구분', w: '72px', align: 'center' },
+      { key: 'version', label: '버전', w: '58px', align: 'center' },
+      { key: 'status', label: '상태', w: '84px', align: 'center' },
+      { key: 'writer', label: '작성 담당자', w: '92px', align: 'center' },
+      { key: 'checker', label: '검수 담당자', w: '92px', align: 'center' },
+      { key: 'updated', label: '수정일', w: '96px', align: 'center' },
+      { key: '', label: '작업', w: '196px', align: 'center' }
+    ];
+    const cols = COLS.map(c => {
+      const on = c.key && s.sortKey === c.key;
+      return {
+        label: c.label,
+        arrow: on ? (s.sortDir === 'asc' ? '▲' : '▼') : (c.key ? '↕' : ''),
+        onClick: c.key ? () => this.toggleSort(c.key) : undefined,
+        style: `display:flex;align-items:center;gap:4px;justify-content:${c.align === 'center' ? 'center' : 'flex-start'};height:100%;padding:0;border:none;background:transparent;font:inherit;color:${on ? '#0B72D6' : 'rgba(16,24,32,.6)'};cursor:${c.key ? 'pointer' : 'default'}`,
+        arrowStyle: `font-size:8.5px;opacity:${on ? 1 : .32}`
+      };
+    });
+
+    const tabBase = (on) => `display:flex;flex-direction:column;align-items:flex-start;gap:5px;position:relative;padding:11px 13px 12px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.11)'};background:#fff;border-radius:7px;cursor:pointer;text-align:left;overflow:hidden;box-shadow:${on ? '0 1px 4px oklch(0.52 0.13 245/.18)' : 'none'}`;
+    const tabs = ['전체'].concat(STATUSES).map(key => {
+      const on = s.status === key;
+      const count = key === '전체' ? all.length : all.filter(r => r.status === key).length;
+      const c = key === '전체' ? ['', '#1C90FB'] : SC[key];
+      return {
+        label: key, count, onClick: () => this.setState({ status: key, page: 1 }),
+        style: tabBase(on),
+        countStyle: `font:600 20px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:-.02em;color:${on ? '#0B72D6' : 'rgba(16,24,32,.85)'}`,
+        barStyle: `position:absolute;left:0;top:0;bottom:0;width:3px;background:${c[1]};opacity:${on ? 1 : .35}`
+      };
+    });
+
+    const majorOpts = ['전체'].concat(s.module === '전체'
+      ? Array.from(new Set(all.map(r => r.major)))
+      : Object.keys(TREE[s.module]));
+    const minorOpts = ['전체'].concat(all
+      .filter(r => (s.module === '전체' || r.module === s.module) && (s.major === '전체' || r.major === s.major))
+      .map(r => r.minor).filter((v, i, a) => a.indexOf(v) === i));
+
+    const canRowDl = true;
+    const rows = slice.map((r, i) => {
+      const p = this.perm(r);
+      return Object.assign({}, r, {
+        customLabel: r.custom ? '커스텀' : '표준',
+        customStyle: r.custom
+          ? 'padding:0;border:none;background:transparent;font:500 12px/1 inherit;color:#6B4FE0;cursor:pointer'
+          : 'padding:0;border:none;background:transparent;font:400 12px/1 inherit;color:rgba(16,24,32,.5);cursor:pointer',
+        toggleCustom: s.role === '관리자' ? () => this.setState({ overrides: Object.assign({}, s.overrides, { [r.code]: !r.custom }) }) : undefined,
+        customTip: s.role === '관리자' ? '클릭하여 표준/커스텀 전환' : '커스텀 여부는 관리자만 변경할 수 있습니다',
+        rowDlStyle: btn(canRowDl), dlOff: !canRowDl,
+        dlTip: r.code + ' 매뉴얼 1건 내려받기',
+        onDownload: canRowDl ? () => this.downloadOne(r) : undefined,
+        no: (page - 1) * PAGE + i + 1,
+        badgeStyle: badge(r.status, true),
+        editOff: !p.edit, previewOff: !p.preview, diffOff: !p.diff,
+        editStyle: btn(p.edit), previewStyle: btn(p.preview), diffStyle: btn(p.diff),
+        editTip: this.tip(p.edit, 'edit'), previewTip: this.tip(p.preview, 'preview'), diffTip: this.tip(p.diff, 'diff'),
+        onEdit: p.edit ? () => this.setState({ screen: 'edit', cur: r }) : undefined,
+        onPreview: p.preview ? () => this.setState({ screen: 'preview', cur: r }) : undefined,
+        onDiff: p.diff ? () => this.setState({ screen: 'diff', cur: r }) : undefined
+      });
+    });
+
+    const pgBtn = (on, dis) => `min-width:28px;height:28px;padding:0 8px;font-size:12px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.16)'};background:${on ? '#1C90FB' : '#fff'};color:${on ? '#fff' : dis ? 'rgba(16,24,32,.3)' : 'rgba(16,24,32,.7)'};border-radius:4px;cursor:${dis ? 'not-allowed' : 'pointer'}`;
+    const pages = Array.from({ length: maxPage }, (_, i) => i + 1)
+      .filter(n => Math.abs(n - page) <= 2 || n === 1 || n === maxPage)
+      .map(n => ({ n, style: pgBtn(n === page, false), onClick: () => this.setState({ page: n }) }));
+
+    const cur = s.cur || {};
+    const curVer = cur.version || 'v1.0';
+    const prevVers = this.versionsBelow(curVer);
+    const cmpVer = prevVers.indexOf(s.cmpVersion) >= 0 ? s.cmpVersion : (prevVers[0] || curVer);
+    const canExport = s.role === '관리자' || s.role === '검수자';
+    const subTab = (key, label) => ({
+      label, onClick: () => this.setState({ screen: key }),
+      style: `height:34px;padding:0 15px;font-size:12.5px;font-weight:${s.screen === key ? 600 : 400};border:none;border-bottom:2px solid ${s.screen === key ? '#1C90FB' : 'transparent'};background:transparent;color:${s.screen === key ? '#0B72D6' : 'rgba(16,24,32,.6)'};cursor:pointer;margin-bottom:-1px`
+    });
+
+    return {
+      role: s.role, roleList: Object.keys(ROLE_ME), setRole: e => this.setState({ role: e.target.value, page: 1 }),
+      cols,
+      isPerm: s.authed && s.screen === 'perm',
+      goPerm: () => this.setState({ screen: 'perm' }),
+      users: s.users.map((u, i) => ({
+        no: i + 1, name: u.name, dept: u.dept, role: u.role,
+        initial: u.name.slice(0, 1),
+        avatarStyle: `width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:600;background:${u.active ? '#E8F3FE' : 'rgba(16,24,32,.06)'};color:${u.active ? '#0B72D6' : 'rgba(16,24,32,.4)'}`,
+        setRole: e => {
+          const role = e.target.value;
+          this.patchUser(i, role === '작성자' ? { role } : { role, mods: role === '조회자' ? [] : Object.keys(TREE) });
+        },
+        modsFixed: u.role !== '작성자',
+        modsFixedLabel: u.role === '조회자' ? '해당 없음 (조회 전용)' : '전체 모듈 (고정)',
+        modsFixedStyle: u.role === '작성자' ? 'display:none' : 'font-size:12px;color:rgba(16,24,32,.5)',
+        modsListStyle: u.role === '작성자' ? 'display:flex;flex-wrap:wrap;gap:5px' : 'display:none',
+        mods: Object.keys(TREE).map(mod => {
+          const on = u.mods.indexOf(mod) >= 0;
+          return {
+            label: mod, onClick: () => this.toggleMod(i, mod),
+            style: `height:24px;padding:0 9px;border-radius:12px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.14)'};background:${on ? '#E8F3FE' : '#fff'};color:${on ? '#0B72D6' : 'rgba(16,24,32,.45)'};font-size:11.5px;font-weight:500;cursor:pointer;white-space:nowrap`
+          };
+        }),
+        activeLabel: u.active ? '사용' : '중지',
+        activeStyle: `height:24px;padding:0 10px;border-radius:5px;border:1px solid ${u.active ? '#9DDBD7' : 'rgba(16,24,32,.14)'};background:${u.active ? '#E3F6F5' : '#fff'};color:${u.active ? '#1E8F89' : 'rgba(16,24,32,.45)'};font-size:11.5px;font-weight:500;cursor:pointer`,
+        toggleActive: () => this.patchUser(i, { active: !u.active })
+      })),
+      roleOpts: Object.keys(ROLE_ME),
+      saveUsers: () => this.setState({ saved: true }),
+      savedNote: s.saved ? '저장되었습니다' : '',
+      savedStyle: s.saved ? 'font-size:11.5px;color:#1E8F89' : 'display:none',
+      dlOpen: s.dlOpen,
+      openDl: () => this.setState({ dlOpen: true, dlDone: false }),
+      closeDl: () => this.setState({ dlOpen: false }),
+      dlModChips: Object.keys(TREE).map(mod => {
+        const on = s.dlMods.indexOf(mod) >= 0;
+        const cnt = all.filter(r => r.module === mod).length;
+        return {
+          label: mod, count: cnt + '건', onClick: () => this.toggleDlMod(mod),
+          style: `display:flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:6px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.14)'};background:${on ? 'oklch(0.96 0.02 245)' : '#fff'};color:${on ? 'oklch(0.4 0.13 245)' : 'rgba(16,24,32,.55)'};font-size:12.5px;font-weight:500;cursor:pointer`,
+          countStyle: `font:400 11px/1 'Pretendard Variable',Pretendard,sans-serif;opacity:.6`
+        };
+      }),
+      dlAll: () => this.setState({ dlMods: Object.keys(TREE), dlDone: false }),
+      dlNone: () => this.setState({ dlMods: [], dlDone: false }),
+      dlCover: s.dlCover, dlToc: s.dlToc,
+      toggleCover: () => this.setState({ dlCover: !s.dlCover }),
+      toggleToc: () => this.setState({ dlToc: !s.dlToc }),
+      toggleStd: () => this.setState({ dlStd: !s.dlStd, dlDone: false }),
+      toggleCustom: () => this.setState({ dlCustom: !s.dlCustom, dlDone: false }),
+      coverStyle: chk(s.dlCover), tocStyle: chk(s.dlToc), stdStyle: chk(s.dlStd), customChkStyle: chk(s.dlCustom),
+      coverMark: s.dlCover ? '✓' : '', tocMark: s.dlToc ? '✓' : '', stdMark: s.dlStd ? '✓' : '', customMark: s.dlCustom ? '✓' : '',
+      fCustom: s.custom, customOpts: ['전체', '표준', '커스텀'],
+      setCustom: e => this.setState({ custom: e.target.value, page: 1 }),
+      formatOpts: ['PDF', 'DOCX', 'HTML'].map(f => ({
+        label: f, onClick: () => this.setState({ dlFormat: f }),
+        style: `height:30px;padding:0 14px;font-size:12.5px;font-weight:500;border:1px solid ${s.dlFormat === f ? '#1C90FB' : 'rgba(16,24,32,.14)'};background:${s.dlFormat === f ? '#1C90FB' : '#fff'};color:${s.dlFormat === f ? '#fff' : 'rgba(16,24,32,.6)'};border-radius:5px;cursor:pointer`
+      })),
+      dlFiles: s.dlMods.map(mod => {
+        const rows = all.filter(r => r.module === mod && (r.custom ? s.dlCustom : s.dlStd));
+        let sec = s.dlCover ? 1 : 0;
+        sec += s.dlToc ? 1 : 0;
+        const tree = Object.keys(TREE[mod]).map(maj => {
+          const minors = TREE[mod][maj].map(min => ({
+            minor: min,
+            menus: rows.filter(r => r.minor === min).map(r => ({
+              name: r.name, code: r.code, version: r.version,
+              tag: r.custom ? '커스텀' : '',
+              tagStyle: r.custom ? 'font-size:10px;color:oklch(0.5 0.12 45)' : 'display:none'
+            }))
+          })).filter(m => m.menus.length);
+          return { major: maj, minors, divider: '간지 — ' + maj, count: minors.reduce((a, m) => a + m.menus.length, 0) };
+        }).filter(t => t.minors.length).map((t, i) => Object.assign(t, { no: String(sec + i + 1).padStart(2, '0') }));
+        return {
+          file: 'A10_매뉴얼_' + mod + '_2026-08-26.' + s.dlFormat.toLowerCase(),
+          summary: rows.length + '개 메뉴 · 간지 ' + tree.length + '개',
+          tree
+        };
+      }).filter(f => f.tree.length),
+      toast: s.toast || '',
+      toastStyle: s.toast
+        ? 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);padding:11px 18px;background:#16202a;color:#fff;border-radius:6px;font-size:12.5px;box-shadow:0 6px 20px rgba(16,24,32,.25);z-index:50'
+        : 'display:none',
+      clearToast: () => this.setState({ toast: '' }),
+      dlSummary: s.dlMods.length
+        ? '파일 ' + s.dlMods.length + '개 · 메뉴 ' + all.filter(r => s.dlMods.indexOf(r.module) >= 0 && (r.custom ? s.dlCustom : s.dlStd)).length + '건 · ' + s.dlFormat + ' · 표지 → 목차 → 대분류 간지 → 매뉴얼 순'
+        : '모듈을 1개 이상 선택하세요',
+      dlDoneNote: s.dlDone ? '내려받기를 시작했습니다' : '',
+      dlDoneStyle: s.dlDone ? 'font-size:11.5px;color:#1E8F89' : 'display:none',
+      coverRowStyle: s.dlCover ? 'font:400 11px/1.5 "IBM Plex Mono",monospace' : 'display:none',
+      tocRowStyle: s.dlToc ? 'font:400 11px/1.5 "IBM Plex Mono",monospace' : 'display:none',
+      dlStart: () => this.downloadBatch(),
+      dlDone: s.dlDone,
+      dlStartStyle: s.dlMods.length
+        ? 'height:34px;padding:0 20px;font-size:12.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;color:#fff;border-radius:5px;cursor:pointer'
+        : 'height:34px;padding:0 20px;font-size:12.5px;font-weight:600;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);color:rgba(16,24,32,.3);border-radius:5px;cursor:not-allowed',
+      canDl: s.role === '관리자' || s.role === '검수자',
+      dlBtnStyle: (s.role === '관리자' || s.role === '검수자')
+        ? 'height:30px;padding:0 13px;font-size:12.5px;font-weight:500;border:1px solid #1C90FB;background:#fff;border-radius:5px;color:#0B72D6;cursor:pointer'
+        : 'height:30px;padding:0 13px;font-size:12.5px;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);border-radius:5px;color:rgba(16,24,32,.3);cursor:not-allowed',
+      dlBtnTip: (s.role === '관리자' || s.role === '검수자') ? '' : '일괄 내려받기는 관리자·검수자만 가능합니다',
+      dlBtnClick: (s.role === '관리자' || s.role === '검수자') ? () => this.setState({ dlOpen: true, dlDone: false }) : undefined,
+      canManageRole: s.role === '관리자',
+      isRestricted: s.role !== '관리자',
+      roleBadgeStyle: 'display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:5px;background:rgba(16,24,32,.05);color:rgba(16,24,32,.7);font-size:12.5px;font-weight:500',
+      roleHint: '권한 변경은 관리자만 가능합니다',
+      demoBack: () => this.setState({ role: '관리자', page: 1 }),
+      me, meInitial: me.slice(0, 1),
+      authed: s.authed, notAuthed: !s.authed,
+      loginId: s.loginId, loginPw: s.loginPw, loginErr: s.loginErr,
+      loginErrStyle: s.loginErr ? 'font-size:11.5px;color:#D14343' : 'display:none',
+      setLoginId: e => this.setState({ loginId: e.target.value, loginErr: '' }),
+      setLoginPw: e => this.setState({ loginPw: e.target.value, loginErr: '' }),
+      onLoginKey: e => { if (e.key === 'Enter') this.login(); },
+      doLogin: () => this.login(),
+      doLogout: () => this.logout(),
+      demoAccounts: Object.keys(ACCOUNTS).map(id => ({
+        id, role: ACCOUNTS[id].role, name: ACCOUNTS[id].name,
+        onClick: () => this.setState({ loginId: id, loginPw: 'demo', loginErr: '' }),
+        style: 'display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:8px 11px;border:1px solid rgba(16,24,32,.11);background:#fff;border-radius:6px;font-size:12px;color:rgba(16,24,32,.7);cursor:pointer;text-align:left'
+      })),
+      isList: s.authed && s.screen === 'list', isSub: s.authed && ['edit', 'preview', 'diff'].indexOf(s.screen) >= 0,
+      isEdit: s.screen === 'edit', isPreview: s.screen === 'preview', isDiff: s.screen === 'diff',
+      back: () => this.setState({ screen: 'list' }),
+      tabs,
+      fModule: s.module, fMajor: s.major, fMinor: s.minor, fMenu: s.menu, fWriter: s.writer, fChecker: s.checker,
+      moduleOpts: ['전체'].concat(Object.keys(TREE)), majorOpts, minorOpts,
+      setModule: e => this.setState({ module: e.target.value, major: '전체', minor: '전체', page: 1 }),
+      setMajor: e => this.setState({ major: e.target.value, minor: '전체', page: 1 }),
+      setMinor: this.set('minor'), setMenu: this.set('menu'), setWriter: this.set('writer'), setChecker: this.set('checker'),
+      search: () => this.forceUpdate(),
+      reset: () => this.setState({ module: '전체', major: '전체', minor: '전체', menu: '', writer: '', checker: '', page: 1 }),
+      rows, empty: list.length === 0,
+      countLabel: '총 ' + list.length + '건 / 전체 ' + all.length + '건',
+      pageLabel: page + ' / ' + maxPage + ' 페이지',
+      pages,
+      prev: () => this.setState({ page: Math.max(1, page - 1) }),
+      next: () => this.setState({ page: Math.min(maxPage, page + 1) }),
+      prevStyle: pgBtn(false, page === 1), nextStyle: pgBtn(false, page === maxPage),
+      excel: canExport ? () => {} : undefined,
+      excelStyle: canExport
+        ? 'height:30px;padding:0 13px;font-size:12.5px;border:1px solid rgba(16,24,32,.18);background:#fff;border-radius:5px;color:rgba(16,24,32,.7);cursor:pointer'
+        : 'height:30px;padding:0 13px;font-size:12.5px;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);border-radius:5px;color:rgba(16,24,32,.3);cursor:not-allowed',
+      noPermNote: canExport ? '' : '다운로드 권한 없음',
+      noPermNoteStyle: canExport ? 'display:none' : 'font-size:11.5px;color:rgba(16,24,32,.4)',
+      cur: Object.assign({}, cur, {
+        badgeStyle: badge(cur.status),
+        path: [cur.module, cur.major, cur.minor].filter(Boolean).join(' › ')
+      }),
+      subTabs: [subTab('edit', '편집'), subTab('preview', '미리보기'), subTab('diff', '변경사항')],
+      canReview: s.role === '관리자' || s.role === '검수자',
+      inReview: ['작성완료', '검수중', '검수반려'].indexOf(cur.status) >= 0,
+      reviewerOpts: ['미지정'].concat(s.users.filter(u => u.role === '검수자' && u.active).map(u => u.name)),
+      curReviewer: cur.checker || '미지정',
+      setReviewerSel: e => this.setReviewer(cur.code, e.target.value),
+      reviewerLocked: !(s.role === '관리자' || s.role === '검수자'),
+      reviewNote: (s.role === '관리자' || s.role === '검수자')
+        ? '검수 단계에서 검수 담당자를 지정하고, 배포 대기로 이동하거나 수정 요청 코멘트를 남깁니다.'
+        : '검수 담당자 지정과 검수 처리는 검수자·관리자만 가능합니다.',
+      draft: s.draft,
+      setDraft: e => this.setState({ draft: e.target.value }),
+      addComment: () => this.addComment(cur.code, s.draft),
+      comments: (s.comments[cur.code] || []).map((c, i) => ({ no: i + 1, who: c.who, at: c.at, text: c.text })),
+      hasComments: (s.comments[cur.code] || []).length > 0,
+      noComments: (s.comments[cur.code] || []).length === 0,
+      isNotDiff: s.screen === 'edit' || s.screen === 'preview',
+      commentCount: '코멘트 ' + (s.comments[cur.code] || []).length + '건',
+      toDeploy: (s.role === '관리자' || s.role === '검수자')
+        ? () => { this.setStatus(cur.code, '배포대기'); this.setState({ toast: cur.code + ' 상태를 배포대기로 변경했습니다' }); }
+        : undefined,
+      toDeployStyle: (s.role === '관리자' || s.role === '검수자')
+        ? 'height:32px;padding:0 15px;font-size:12.5px;font-weight:600;border:1px solid #2489A6;background:#2489A6;color:#fff;border-radius:5px;cursor:pointer'
+        : 'height:32px;padding:0 15px;font-size:12.5px;font-weight:600;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);color:rgba(16,24,32,.3);border-radius:5px;cursor:not-allowed',
+      requestFix: (s.role === '관리자' || s.role === '검수자')
+        ? () => { this.addComment(cur.code, s.draft || '수정 요청'); this.setStatus(cur.code, '검수반려'); this.setState({ toast: cur.code + ' 수정 요청을 등록했습니다' }); }
+        : undefined,
+      requestFixStyle: (s.role === '관리자' || s.role === '검수자')
+        ? 'height:32px;padding:0 15px;font-size:12.5px;font-weight:500;border:1px solid #FF8787;background:#fff;color:#D14343;border-radius:5px;cursor:pointer'
+        : 'height:32px;padding:0 15px;font-size:12.5px;border:1px solid rgba(16,24,32,.09);background:rgba(16,24,32,.03);color:rgba(16,24,32,.3);border-radius:5px;cursor:not-allowed',
+      submitStyle: 'height:32px;padding:0 17px;font-size:12.5px;font-weight:500;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer',
+      overview: s.overview,
+      setOverview: e => this.setState({ overview: e.target.value }),
+      addTab: () => this.addTab(),
+      tabList: s.docTabs.map((t, i) => ({
+        name: t.name, order: String(i + 1).padStart(2, '0'),
+        onClick: () => this.setState({ tabIdx: i }),
+        del: () => this.removeTab(i),
+        style: `display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:1px solid ${i === s.tabIdx ? '#1C90FB' : 'rgba(16,24,32,.11)'};background:${i === s.tabIdx ? '#F1F8FF' : '#fff'};border-radius:6px;cursor:pointer;text-align:left;font-size:12.5px;font-weight:${i === s.tabIdx ? 600 : 400};color:#16202a`,
+        orderStyle: `font:500 10.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:${i === s.tabIdx ? '#0B72D6' : 'rgba(16,24,32,.4)'}`,
+        delStyle: iconBtn(s.docTabs.length > 1), delOff: s.docTabs.length <= 1,
+        rowStyle: `display:flex;align-items:center;gap:5px;border-radius:6px;opacity:${s.dragIdx === i ? .45 : 1};${s.overIdx === i && s.dragIdx !== null && s.dragIdx !== i ? 'box-shadow:0 -2px 0 #1C90FB' : ''}`,
+        gripStyle: 'width:20px;height:26px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:3px;cursor:grab;padding:0 4px',
+        gripLine: 'height:1.5px;background:rgba(16,24,32,.32);border-radius:1px',
+        onDragStart: () => this.setState({ dragIdx: i }),
+        onDragOver: e => { e.preventDefault(); if (s.overIdx !== i) this.setState({ overIdx: i }); },
+        onDrop: e => { e.preventDefault(); this.dropTab(i); },
+        onDragEnd: () => this.setState({ dragIdx: null, overIdx: null })
+      })),
+      curTab: s.docTabs[s.tabIdx] || { name: '', overview: '', rows: [] },
+      curTabLabel: '탭 ' + (s.tabIdx + 1) + ' / ' + s.docTabs.length,
+      setTabName: e => this.patchTab(s.tabIdx, { name: e.target.value }),
+      setTabOverview: e => this.patchTab(s.tabIdx, { overview: e.target.value }),
+      tabRows: (s.docTabs[s.tabIdx] || { rows: [] }).rows.map((r, k) => ({
+        no: k + 1, content: r,
+        set: e => this.setRow(s.tabIdx, k, e.target.value),
+        del: () => this.delRow(s.tabIdx, k)
+      })),
+      addRow: () => this.addRow(s.tabIdx),
+      cmpVersion: cmpVer,
+      cmpVersionOpts: prevVers.length ? prevVers : [curVer],
+      setCmpVersion: e => this.setState({ cmpVersion: e.target.value }),
+      cmpLeftLabel: prevVers.length ? '이전 버전 ' + cmpVer : '이전 버전 없음 (최초 작성)',
+      cmpRightLabel: '현재 버전 ' + curVer,
+      cmpStat: (() => {
+        const d = this.diffRows();
+        const c = d.filter(x => x.kind === 'changed').length, a = d.filter(x => x.kind === 'added').length, r = d.filter(x => x.kind === 'removed').length;
+        return '변경 ' + c + ' · 추가 ' + a + ' · 삭제 ' + r;
+      })(),
+      diffRows: this.diffRows(),
+      cmpLeft: this.cmpDocs().left, cmpRight: this.cmpDocs().right,
+      pvTabs: s.docTabs.map((t, i) => ({
+        name: t.name, order: String(i + 1).padStart(2, '0'), overview: t.overview,
+        rows: t.rows.map((r, k) => ({ no: k + 1, content: r }))
+      })),
+      fields: [
+        { label: '조회기간', type: 'date', desc: '조회할 기간을 시작일~종료일로 입력합니다. 기본값은 당월 1일부터 오늘까지입니다.' },
+        { label: '사업장', type: 'select', desc: '로그인 사용자에게 권한이 부여된 사업장만 선택할 수 있습니다.' },
+        { label: '거래처', type: 'search', desc: '코드 또는 거래처명 일부를 입력하면 검색 팝업이 표시됩니다.' },
+        { label: '사용여부', type: 'radio', desc: '사용 / 미사용 / 전체 중 선택합니다.' }
+      ],
+      meta: [
+        { k: '메뉴코드', v: cur.code || '-' }, { k: '버전', v: cur.version || '-' },
+        { k: '상태', v: cur.status || '-' }, { k: '작성 담당자', v: cur.writer || '-' },
+        { k: '검수 담당자', v: cur.checker || '-' }, { k: '최종 수정일', v: cur.updated || '-' }
+      ],
+      history: [curVer].concat(prevVers).map((v, i, arr) => {
+        const last = i === arr.length - 1;
+        const notes = [
+          '탭 개요·항목 설명 수정, 탭 순서 변경 반영',
+          '화면 캡처 재촬영 — 상단 탭 UI 변경 반영',
+          '조회조건에 사업장 항목 설명 추가',
+          '항목 설명 중 필수/선택 표기 누락',
+          '매뉴얼 최초 작성'
+        ];
+        const dates = ['2026-08-14 16:20', '2026-08-11 09:42', '2026-07-28 14:05', '2026-07-19 11:30', '2026-07-02 10:11'];
+        const kinds = ['검수', '수정', '수정', '반려', '최초'];
+        return {
+          version: v, at: dates[Math.min(i, 4)],
+          who: (i % 2 === 0 ? cur.checker : cur.writer) || '김서준',
+          kind: last ? '최초' : kinds[Math.min(i, 3)],
+          what: last ? '매뉴얼 최초 작성' : notes[Math.min(i, 3)]
+        };
+      }).map(h => ({
+        ...h,
+        kindStyle: badge(h.kind === '반려' ? '반려' : h.kind === '검수' ? '검수중' : h.kind === '최초' ? '작성대기' : '작성중', true)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
