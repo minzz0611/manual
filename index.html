@@ -39,7 +39,7 @@
 </sc-if>
 
 <sc-if value="{{ authed }}" hint-placeholder-val="{{ false }}">
-<header style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 24px;height:58px;background:var(--hd-bg);border-bottom:1px solid var(--hd-line);position:sticky;top:0;z-index:20">
+<header style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 24px;height:58px;background:var(--hd-bg);border-bottom:1px solid var(--hd-line);position:sticky;top:0;z-index:40">
 <div style="display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 auto;overflow:hidden">
 <div onClick="{{ goHome }}" title="홈으로 이동" style="display:flex;align-items:center;gap:11px;min-width:0;cursor:pointer" style-hover="opacity:.72">
 <div style="width:9px;height:22px;background:linear-gradient(180deg,#0CAAFF,#8168FF);border-radius:2px;flex:none"></div>
@@ -115,7 +115,8 @@
 
 <div style="display:flex;align-items:center;gap:10px">
 <span style="font-size:12.5px;color:var(--ink-3);white-space:nowrap">컬럼 헤더를 클릭하면 정렬됩니다</span>
-<button onClick="{{ reqManual }}" style="height:30px;padding:0 13px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">매뉴얼 요청</button>
+<button onClick="{{ openNewManual }}" style="height:30px;padding:0 13px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer;white-space:nowrap" style-hover="background:rgba(16,24,32,.04)">매뉴얼 작성</button>
+<button onClick="{{ reqManual }}" style="height:30px;padding:0 13px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer;white-space:nowrap">매뉴얼 요청</button>
 <button onClick="{{ dlBtnClick }}" title="{{ dlBtnTip }}" style="{{ dlBtnStyle }}">내려받기</button>
 </div>
 </div>
@@ -539,7 +540,7 @@
 
 <sc-if value="{{ isSub }}" hint-placeholder-val="{{ false }}">
 <main style="flex:1;padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px">
-<div style="position:sticky;top:0;z-index:30;display:flex;flex-direction:column;gap:12px;margin:-20px -24px 0;padding:14px 24px 0;background:var(--page)">
+<div style="position:sticky;top:58px;z-index:30;display:flex;flex-direction:column;gap:12px;margin:-20px -24px 0;padding:14px 24px 0;background:var(--page)">
 <div style="display:flex;align-items:center;gap:12px">
 <button onClick="{{ back }}" style="height:30px;padding:0 13px;font-size:13.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">← 목록</button>
 <div style="display:flex;align-items:baseline;gap:9px">
@@ -619,7 +620,7 @@
 <span style="font-size:13px;color:var(--ink-2)">{{ lockNote }}</span>
 <button onClick="{{ startEditing }}" style="{{ startEditBtnStyle }}" style-hover="background:#0B72D6">수정 시작</button>
 </div>
-<div style="display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start">
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:start">
 <div style="{{ stickyPaneStyle }}">
 <div style="display:flex;flex-direction:column;gap:9px;padding:12px 12px 10px">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
@@ -654,22 +655,28 @@
 <span style="font-size:11.5px;line-height:1.55;color:var(--ink-3)">항목을 누르면 해당 탭으로 이동합니다</span>
 </div>
 </div>
-<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-<div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)">메뉴명 <span style="{{ lockedBadgeStyle }}">수정 불가</span></span>
-<div style="height:34px;display:flex;align-items:center;padding:0 10px;font-size:13.5px;font-weight:500;background:var(--surface-2);border:1px solid var(--line);border-radius:5px">{{ cur.name }}</div></div>
-<div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)">메뉴경로 <span style="{{ lockedBadgeStyle }}">수정 불가</span></span>
-<div style="height:34px;display:flex;align-items:center;padding:0 10px;font-size:13.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:5px">{{ cur.path }}</div></div>
+<div style="display:flex;flex-direction:column;gap:22px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(23,28,36,.06);padding:32px 36px 40px">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:14px;height:72px;padding:0 24px;border-radius:6px;background:linear-gradient(100deg,#6053FF 0%,#309AFF 52%,#00DCFF 100%)">
+<h2 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.02em;color:#fff">{{ cur.name }}</h2>
+<span style="display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:10px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.45);font-size:11px;font-weight:600;color:#fff;white-space:nowrap">수정 불가</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:12px;color:#309AFF">▶</span>
+<span style="font-size:13.5px;font-weight:600;color:#309AFF;letter-spacing:-.01em">{{ pvCrumb }}</span>
+<span style="{{ lockedBadgeStyle }}">수정 불가</span>
 </div>
 <div style="display:flex;flex-direction:column;gap:6px">
 <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;color:var(--ink-3)">메뉴 개요</span>
 <span style="{{ requiredBadgeStyle }}">필수</span></div>
 {{ overviewField }}</div>
+</div>
 
 <sc-for list="{{ tabPanels }}" as="tp" hint-placeholder-count="3">
 <div ref="{{ tp.panelRef }}" onFocus="{{ tp.onFocusPanel }}" style="{{ tp.panelStyle }}">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ tp.label }}</span>
+<div style="display:flex;align-items:center;gap:9px">
+<span style="width:6px;height:6px;background:var(--ink);flex:none"></span>
+<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3);white-space:nowrap">{{ tp.label }}</span>
 <span style="{{ tp.badgeStyle }}">{{ tp.badge }}</span>
 <input value="{{ tp.name }}" onChange="{{ tp.setName }}" disabled="{{ editLocked }}" placeholder="탭명" style="{{ tabNameStyle }}" />
 </div>
@@ -707,13 +714,13 @@
 </div>
 </sc-if>
 <div style="{{ b.tableStyle }}">
-<div style="background:var(--surface);border:1px solid var(--line);border-radius:5px;overflow:hidden">
-<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:center;height:32px;padding:0 10px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-3)"><span>번호</span><span>내용</span><span></span></div>
+<div style="background:var(--surface);border:1px solid var(--line-2);border-radius:5px;overflow:hidden">
+<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:stretch;height:32px;background:#7C6BFF;font-size:12.5px;font-weight:700;color:#fff"><span style="display:flex;align-items:center;justify-content:center;border-right:1px solid rgba(255,255,255,.5)">번호</span><span style="display:flex;align-items:center;justify-content:center">설명</span><span></span></div>
 <sc-for list="{{ b.rows }}" as="row" hint-placeholder-count="3">
-<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:start;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line)">
-<span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3);padding-top:9px">{{ row.no }}</span>
-<div style="min-width:0">{{ row.editor }}</div>
-<button onClick="{{ row.del }}" title="행 삭제" style="{{ b.rowDelStyle }}">✕</button>
+<div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:stretch;padding:0;border-bottom:1px solid var(--line-2)">
+<span style="display:flex;align-items:flex-start;justify-content:center;padding:13px 4px 0;border-right:1px solid var(--line-2);font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-2);font-variant-numeric:tabular-nums">{{ row.no }}</span>
+<div style="min-width:0;padding:6px 8px">{{ row.editor }}</div>
+<div style="display:flex;align-items:flex-start;justify-content:center;padding-top:8px"><button onClick="{{ row.del }}" title="행 삭제" style="{{ b.rowDelStyle }}">✕</button></div>
 </div>
 </sc-for>
 </div>
@@ -736,31 +743,31 @@
 
 <sc-if value="{{ isPreview }}" hint-placeholder-val="{{ false }}">
 <section style="display:grid;place-items:start center;padding:6px 0 18px">
-<div style="width:820px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(23,28,36,.06);padding:60px 68px 68px;display:flex;flex-direction:column;gap:26px">
-<div style="display:flex;flex-direction:column;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--line)">
-<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px">
-<span style="font-size:12.5px;letter-spacing:.01em;color:var(--ink-3)">{{ cur.path }}</span>
+<div style="width:820px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(23,28,36,.06);padding:48px 48px 68px;display:flex;flex-direction:column;gap:22px">
+<div style="display:flex;align-items:center;height:78px;padding:0 28px;border-radius:6px;background:linear-gradient(100deg,#6053FF 0%,#309AFF 52%,#00DCFF 100%)">
+<h2 style="margin:0;font-size:27px;font-weight:800;letter-spacing:-.02em;color:#fff">{{ cur.name }}</h2>
 </div>
-<div style="display:flex;flex-direction:column;gap:9px">
-<h2 style="margin:0;font-size:27px;font-weight:700;letter-spacing:-.025em;line-height:1.3">{{ cur.name }}</h2>
-<span style="width:44px;height:3px;border-radius:2px;background:#1C90FB"></span>
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:12px;color:#309AFF">▶</span>
+<span style="font-size:13.5px;font-weight:600;color:#309AFF;letter-spacing:-.01em">{{ pvCrumb }}</span>
 </div>
 <div style="{{ pvOverviewStyle }}">{{ pvOverview }}</div>
 </div>
 <sc-for list="{{ pvTabs }}" as="t" hint-placeholder-count="3">
-<div style="display:flex;flex-direction:column;gap:18px">
-<div style="display:flex;align-items:center;gap:10px">
-<span style="display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;padding:0 7px;border-radius:4px;background:{{ t.chipBg }};font:600 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6;font-variant-numeric:tabular-nums">{{ t.order }}</span>
-<h3 style="margin:0;font-size:17.5px;font-weight:700;letter-spacing:-.015em">{{ t.name }}</h3>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:center;gap:9px">
+<span style="width:6px;height:6px;background:var(--ink);flex:none"></span>
+<h3 style="margin:0;font-size:17px;font-weight:700;letter-spacing:-.015em">{{ t.name }}</h3>
 </div>
 <sc-for list="{{ t.blocks }}" as="b" hint-placeholder-count="2">
 <div style="display:flex;flex-direction:column;gap:12px">
 <div style="{{ b.imgStyle }}"><span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">screen capture — 1440×900</span></div>
 <div style="{{ b.ovStyle }}">{{ b.ovBody }}</div>
 <div style="{{ b.tableStyle }}">
-<div style="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;height:36px;background:var(--surface-2);border-bottom:1px solid var(--line-2);font-size:12.5px;font-weight:600;color:var(--ink-3)"><span style="text-align:center">번호</span><span style="padding-left:14px">내용</span></div>
+<div style="display:grid;grid-template-columns:70px minmax(0,1fr);align-items:stretch;background:#7C6BFF;border:1px solid var(--line-2)"><span style="display:flex;align-items:center;justify-content:center;height:30px;font-size:13px;font-weight:700;color:#fff;border-right:1px solid rgba(255,255,255,.5)">번호</span><span style="display:flex;align-items:center;justify-content:center;height:30px;font-size:13px;font-weight:700;color:#fff">설명</span></div>
 <sc-for list="{{ b.rows }}" as="row" hint-placeholder-count="3">
-<div style="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:start;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px"><span style="text-align:center;font:500 13px/1.65 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ row.no }}</span><span style="min-width:0;padding-left:14px">{{ row.body }}</span></div>
+<div style="display:grid;grid-template-columns:70px minmax(0,1fr);align-items:stretch;border:1px solid var(--line-2);border-top:0;font-size:14px"><span style="display:flex;align-items:center;justify-content:center;padding:5px 6px;font:500 13px/1.55 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-2);font-variant-numeric:tabular-nums;border-right:1px solid var(--line-2)">{{ row.no }}</span><span style="min-width:0;padding:5px 14px">{{ row.body }}</span></div>
 </sc-for>
 </div>
 </div>
@@ -854,7 +861,7 @@
 </div>
 
 <sc-if value="{{ showComments }}" hint-placeholder-val="{{ false }}">
-<aside style="position:sticky;top:158px;align-self:start;max-height:calc(100vh - 180px);display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:14px 15px">
+<aside style="position:sticky;top:176px;z-index:10;align-self:start;height:calc(100vh - 198px);display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:14px 15px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
 <h3 style="margin:0;font-size:13.5px;font-weight:600;color:var(--ink-2);white-space:nowrap">댓글</h3>
 <span style="font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ commentCount }}</span>
@@ -862,18 +869,26 @@
 <div style="flex:1;min-height:90px;overflow-y:auto;border:1px solid var(--line);border-radius:6px">
 <sc-for list="{{ comments }}" as="c" hint-placeholder-count="2">
 <div style="padding:10px 11px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;gap:7px;align-items:baseline;flex-wrap:wrap"><span style="font-size:12.5px;font-weight:600">{{ c.who }}</span><span style="font-size:11.5px;color:var(--ink-3)">{{ c.at }}</span><span style="{{ c.badgeStyle }}">{{ c.badge }}</span></div>
-<span style="font-size:13px;line-height:1.65;color:var(--ink-2)">{{ c.text }}</span>
+<div style="display:flex;gap:7px;align-items:center;justify-content:space-between">
+<div style="display:flex;gap:7px;align-items:baseline;flex-wrap:wrap;min-width:0"><span style="font-size:12.5px;font-weight:600">{{ c.who }}</span><span style="font-size:11.5px;color:var(--ink-3)">{{ c.at }}</span><span style="{{ c.badgeStyle }}">{{ c.badge }}</span></div>
+<div style="display:flex;gap:4px;flex:none">
+<button onClick="{{ c.openReply }}" title="{{ c.replyBtnTitle }}" style="{{ c.iconBtnStyle }}">{{ c.replyBtnLabel }}</button>
+<button onClick="{{ c.openEdit }}" title="{{ c.editBtnTitle }}" style="{{ c.ownBtnStyle }}">{{ c.editBtnLabel }}</button>
+<button onClick="{{ c.remove }}" title="삭제" style="{{ c.dangerBtnStyle }}">🗑</button>
+</div>
+</div>
+<span style="{{ c.textStyle }}">{{ c.text }}</span>
+<div style="{{ c.editBoxStyle }}">
+<textarea value="{{ editDraft }}" onChange="{{ setEditDraft }}" style="min-height:52px;padding:8px;font-size:12.5px;line-height:1.65;border:1px solid var(--line-2);border-radius:5px;resize:vertical"></textarea>
+<button onClick="{{ c.submitEdit }}" style="align-self:flex-end;height:26px;padding:0 11px;font-size:12px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer">수정 저장</button>
+</div>
 <sc-for list="{{ c.replies }}" as="r" hint-placeholder-count="1">
 <div style="display:flex;flex-direction:column;gap:2px;margin-left:12px;padding:7px 10px;background:var(--surface-2);border-left:2px solid var(--line-2);border-radius:0 5px 5px 0">
 <div style="display:flex;gap:6px;align-items:baseline"><span style="font-size:11.5px;color:var(--ink-3)">↳</span><span style="font-size:12px;font-weight:600">{{ r.who }}</span><span style="font-size:11px;color:var(--ink-3)">{{ r.at }}</span></div>
 <span style="font-size:12.5px;line-height:1.6;color:var(--ink-2)">{{ r.text }}</span>
 </div>
 </sc-for>
-<div style="display:flex;align-items:center;gap:8px">
-<button onClick="{{ c.openReply }}" style="{{ c.replyBtnStyle }}">{{ c.replyBtnLabel }}</button>
 <span style="{{ c.replyCountStyle }}">{{ c.replyCount }}</span>
-</div>
 <div style="{{ c.replyBoxStyle }}">
 <textarea value="{{ replyDraft }}" onChange="{{ setReplyDraft }}" placeholder="답글을 입력하세요 (예: 설계자가 문구를 수정했습니다)" style="min-height:52px;padding:8px;font-size:12.5px;line-height:1.65;border:1px solid var(--line-2);border-radius:5px;resize:vertical"></textarea>
 <button onClick="{{ c.submitReply }}" style="align-self:flex-end;height:26px;padding:0 11px;font-size:12px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">답글 등록</button>
@@ -895,13 +910,49 @@
 </main>
 </sc-if>
 
+<sc-if value="{{ nmOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeNewManual }}" style="position:fixed;inset:0;z-index:70;background:rgba(10,11,32,.42);display:flex;align-items:center;justify-content:center;padding:28px 24px">
+<div onClick="{{ stopClick }}" style="width:min(560px,100%);background:var(--page);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 48px rgba(10,11,32,.28);display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--line)">
+<h3 style="margin:0;font-size:16px;font-weight:600;white-space:nowrap">매뉴얼 작성</h3>
+<span style="font-size:12.5px;color:var(--ink-3)">자동생성 없이 직접 제작합니다</span>
+<button onClick="{{ closeNewManual }}" aria-label="닫기" style="margin-left:auto;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:16px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer">✕</button>
+</div>
+<div style="padding:18px 20px;display:flex;flex-direction:column;gap:13px;background:var(--surface)">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">모듈</span>
+<select value="{{ nmMod }}" onChange="{{ setNmMod }}" style="height:32px;padding:0 8px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)"><sc-for list="{{ nmMods }}" as="o" hint-placeholder-count="4"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">대분류</span>
+<select value="{{ nmMaj }}" onChange="{{ setNmMaj }}" style="height:32px;padding:0 8px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)"><sc-for list="{{ nmMajs }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">소분류</span>
+<select value="{{ nmMin }}" onChange="{{ setNmMin }}" style="height:32px;padding:0 8px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)"><sc-for list="{{ nmMins }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
+</div>
+<div style="display:grid;grid-template-columns:150px minmax(0,1fr);gap:9px">
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">메뉴코드 <span style="{{ optionalBadgeStyle }}">선택</span></span>
+<input value="{{ nmCode }}" onChange="{{ setNmCode }}" placeholder="자동 부여" style="height:32px;padding:0 10px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink);font-variant-numeric:tabular-nums" /></label>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">메뉴명 <span style="{{ requiredBadgeStyle }}">필수</span></span>
+<input value="{{ nmName }}" onChange="{{ setNmName }}" placeholder="예: 일반전표 등록" style="height:32px;padding:0 10px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)" /></label>
+</div>
+<label style="display:flex;flex-direction:column;gap:5px"><span style="font-size:12px;color:var(--ink-3)">다른 매뉴얼 복사</span>
+<select value="{{ nmCopy }}" onChange="{{ setNmCopy }}" style="height:32px;padding:0 8px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)"><sc-for list="{{ nmCopyOpts }}" as="o" hint-placeholder-count="3"><option value="{{ o.code }}">{{ o.label }}</option></sc-for></select>
+<span style="font-size:11.5px;line-height:1.6;color:var(--ink-3)">{{ nmCopyNote }}</span></label>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end;padding:13px 20px;background:var(--surface-2);border-top:1px solid var(--line);border-radius:0 0 12px 12px">
+<button onClick="{{ closeNewManual }}" style="height:32px;width:96px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer">취소</button>
+<button onClick="{{ createManual }}" style="height:32px;width:96px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">작성 시작</button>
+</div>
+</div>
+</div>
+</sc-if>
+
 <sc-if value="{{ leaveAsk }}" hint-placeholder-val="{{ false }}">
 <div onClick="{{ closeLeave }}" style="position:fixed;inset:0;z-index:70;background:rgba(10,11,32,.42);display:flex;align-items:center;justify-content:center;padding:28px 24px">
 <div onClick="{{ stopClick }}" style="width:min(420px,100%);background:var(--page);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 48px rgba(10,11,32,.28);padding:22px 24px;display:flex;flex-direction:column;gap:14px">
 <h3 style="margin:0;font-size:15px;font-weight:600;color:var(--ink)">임시저장이 필요합니다</h3>
-<p style="margin:0;font-size:13px;line-height:1.75;color:var(--ink-2)">편집 중인 내용은 임시저장하지 않으면 사라집니다. 저장하고 목록으로 이동합니다.</p>
+<p style="margin:0;font-size:13px;line-height:1.75;color:var(--ink-2)">편집 중인 내용은 임시저장하지 않으면 사라집니다. 저장 여부를 선택하세요.</p>
 <div style="display:flex;gap:8px;justify-content:flex-end">
 <button onClick="{{ closeLeave }}" style="height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer">계속 편집</button>
+<button onClick="{{ leaveSkip }}" style="height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:#D14343;cursor:pointer">저장 없이 나가기</button>
 <button onClick="{{ leaveSave }}" style="height:32px;padding:0 16px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">임시저장 후 나가기</button>
 </div>
 </div>
@@ -949,10 +1000,10 @@ let DARK = false;
 function badge(status, small) {
   if (DARK) {
     const ac = (CARD_C[status] || CARD_C['전체'])[1];
-    return `display:inline-flex;align-items:center;height:${small ? 20 : 22}px;padding:0 9px;border-radius:11px;background:${ac}24;color:${ac};font-size:12.5px;font-weight:500;white-space:nowrap`;
+    return `display:inline-flex;align-items:center;height:${small ? 20 : 22}px;padding:0 9px;border-radius:11px;background:${ac}24;color:${ac};border:1px solid ${ac}66;font-size:12.5px;font-weight:500;white-space:nowrap`;
   }
   const c = SC[status] || SC['자동생성'];
-  return `display:inline-flex;align-items:center;height:${small ? 20 : 22}px;padding:0 9px;border-radius:11px;background:${c[0]};color:${c[1]};font-size:12.5px;font-weight:500;white-space:nowrap`;
+  return `display:inline-flex;align-items:center;height:${small ? 20 : 22}px;padding:0 9px;border-radius:11px;background:${c[0]};color:${c[1]};border:1px solid ${c[1]}59;font-size:12.5px;font-weight:500;white-space:nowrap`;
 }
 function iconBtn(on) {
   return `width:22px;height:22px;flex:none;display:grid;place-items:center;border:0;background:none;padding:0;font-size:13px;line-height:1;color:var(--ink-3);opacity:${on ? .8 : .3};cursor:${on ? 'pointer' : 'not-allowed'}`;
@@ -1036,7 +1087,8 @@ class Component extends DCLogic {
       { name: '첨부파일', overview: '증빙 파일을 등록·삭제합니다.', rows: ['파일 : 1건당 20MB, 최대 10건까지 첨부할 수 있습니다.'] }
     ],
     custom: '전체', overrides: {}, toast: '', dragIdx: null, overIdx: null, cmpVersion: 'v1.3',
-    statusOv: {}, reviewerOv: {}, comments: {}, draft: '', replyOpen: null, replyDraft: '', leaveAsk: false, dirty: false,
+    statusOv: {}, reviewerOv: {}, comments: {}, draft: '', replyOpen: null, replyDraft: '', editOpen: null, editDraft: '', leaveAsk: false, leaveTo: null, dirty: false,
+    newRows: [], nmOpen: false, nmMod: '', nmMaj: '', nmMin: '', nmCode: '', nmName: '', nmCopy: '',
     authed: true, editing: false, loginId: '', loginPw: '', loginErr: '',
     permEdit: false, usersBackup: null,
     mmMod: '전체', mmWriter: '전체', writerOv: {}, mmSel: [], mmBulkWriter: '미지정',
@@ -1688,7 +1740,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
   items() {
     const s = this.state, ov = s.overrides || {}, sv = s.statusOv || {}, rv = s.reviewerOv || {};
     const wv = s.writerOv || {};
-    return this.data().map(r => {
+    return this.data().concat(s.newRows || []).map(r => {
       const patch = {};
       if (ov[r.code] !== undefined) patch.custom = ov[r.code];
       if (sv[r.code] !== undefined) patch.status = sv[r.code];
@@ -1700,6 +1752,36 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
     });
   }
 
+  createManual() {
+    const s = this.state;
+    const mod = s.nmMod || Object.keys(TREE)[0];
+    const majs = Object.keys(TREE[mod]);
+    const maj = s.nmMaj && majs.indexOf(s.nmMaj) >= 0 ? s.nmMaj : majs[0];
+    const mins = TREE[mod][maj];
+    const min = s.nmMin && mins.indexOf(s.nmMin) >= 0 ? s.nmMin : mins[0];
+    const name = (s.nmName || '').trim();
+    if (!name) return this.setState({ toast: '메뉴명을 입력하세요' });
+    const code = (s.nmCode || '').trim() || (PREFIX[mod] + String(90000 + (s.newRows || []).length * 10));
+    if (this.items().some(r => r.code === code)) return this.setState({ toast: '이미 등록된 메뉴코드입니다 — ' + code });
+    const src = s.nmCopy ? this.items().find(r => r.code === s.nmCopy) : null;
+    const row = {
+      module: mod, major: maj, minor: min, code, name,
+      version: 'v1.0', status: '수정중', custom: true,
+      writer: ROLE_ME[s.role], checker: '미지정', updated: TODAY
+    };
+    const patch = {
+      newRows: (s.newRows || []).concat([row]),
+      nmOpen: false, nmCode: '', nmName: '', nmCopy: '',
+      cur: row, screen: 'edit', editing: true, tabIdx: 0,
+      statusOv: Object.assign({}, s.statusOv, { [code]: '수정중' }),
+      toast: code + ' ' + name + (src ? ' — ' + src.name + ' 내용을 복사해 생성했습니다' : ' 매뉴얼을 생성했습니다')
+    };
+    if (!src) {
+      patch.overview = '';
+      patch.docTabs = [{ name: '', overview: '', blocks: [{ type: 'image' }, { type: 'table', rows: [{ html: '<div><br></div>' }] }] }];
+    }
+    this.setState(patch);
+  }
   setStatus(code, status) {
     this.setState({ statusOv: Object.assign({}, this.state.statusOv, { [code]: status }) });
     const cur = this.state.cur;
@@ -1714,6 +1796,15 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
     if (!text.trim()) return;
     const list = (this.state.comments[code] || []).concat([{ who: ROLE_ME[this.state.role], at: '2026-08-26 11:20', text: text.trim(), replies: [] }]);
     this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), draft: '' });
+  }
+  updateComment(code, idx, text) {
+    if (!text.trim()) return this.setState({ toast: '댓글 내용을 입력하세요' });
+    const list = (this.state.comments[code] || []).map((c, i) => i !== idx ? c : Object.assign({}, c, { text: text.trim(), edited: true }));
+    this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), editOpen: null, editDraft: '', toast: '댓글을 수정했습니다' });
+  }
+  removeComment(code, idx) {
+    const list = (this.state.comments[code] || []).filter((c, i) => i !== idx);
+    this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), editOpen: null, replyOpen: null, toast: '댓글을 삭제했습니다' });
   }
   addReply(code, idx, text) {
     if (!text.trim()) return;
@@ -1753,6 +1844,14 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
 
   set(k) { return e => this.setState({ [k]: e.target.value, page: 1 }); }
 
+  askLeave(fn) {
+    const cur = this.state.cur || {};
+    if (this.state.screen === 'edit' && ['수정중', '검수중'].indexOf(cur.status) >= 0) {
+      this.setState({ leaveAsk: true, leaveTo: fn });
+      return true;
+    }
+    return false;
+  }
   scrollEdge(dir) {
     const el = this.panelEls && this.panelEls[0];
     if (!el) return;
@@ -1771,7 +1870,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       p.scrollTo({ top: p.scrollTop + top - p.getBoundingClientRect().top - 78, behavior: 'smooth' });
     } else {
       const sc = document.scrollingElement || document.documentElement;
-      sc.scrollTo({ top: sc.scrollTop + top - 168, behavior: 'smooth' });
+      sc.scrollTo({ top: sc.scrollTop + top - 226, behavior: 'smooth' });
     }
   }
   moveTabTo(from, to) {
@@ -2014,7 +2113,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       const off = key === 'edit' && !editTabOn;
       return {
         label,
-        onClick: off ? undefined : () => this.setState({ screen: key }),
+        onClick: off ? undefined : () => { const go = () => this.setState({ screen: key }); if (key === 'preview' || !this.askLeave(go)) go(); },
         tip: off ? '수정중 · 검수중 단계에서만 편집할 수 있습니다' : '',
         style: `height:34px;padding:0 15px;font-size:13.5px;font-weight:${s.screen === key ? 600 : 400};border:none;border-bottom:2px solid ${s.screen === key ? '#1C90FB' : 'transparent'};background:transparent;color:${off ? 'var(--line-2)' : (s.screen === key ? '#0B72D6' : 'var(--ink-3)')};cursor:${off ? 'not-allowed' : 'pointer'};margin-bottom:-1px`
       };
@@ -2355,15 +2454,48 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       })),
       isList: s.authed && s.screen === 'list', isSub: s.authed && ['edit', 'preview', 'diff'].indexOf(s.screen) >= 0,
       isEdit: s.screen === 'edit', isPreview: s.screen === 'preview', isDiff: s.screen === 'diff',
-      back: () => {
-        if (['수정중', '검수중'].indexOf(cur.status) >= 0) return this.setState({ leaveAsk: true });
-        this.setState({ screen: 'list' });
-      },
+      back: () => { const go = () => this.setState({ screen: 'list' }); if (!this.askLeave(go)) go(); },
+      nmOpen: s.nmOpen,
+      openNewManual: () => this.setState({ nmOpen: true, nmMod: s.nmMod || Object.keys(TREE)[0], nmMaj: '', nmMin: '', nmCode: '', nmName: '', nmCopy: '' }),
+      closeNewManual: () => this.setState({ nmOpen: false }),
+      nmMod: s.nmMod || Object.keys(TREE)[0],
+      nmMods: Object.keys(TREE),
+      setNmMod: e => this.setState({ nmMod: e.target.value, nmMaj: '', nmMin: '' }),
+      nmMaj: s.nmMaj || Object.keys(TREE[s.nmMod || Object.keys(TREE)[0]])[0],
+      nmMajs: Object.keys(TREE[s.nmMod || Object.keys(TREE)[0]]),
+      setNmMaj: e => this.setState({ nmMaj: e.target.value, nmMin: '' }),
+      nmMin: (() => {
+        const mod = s.nmMod || Object.keys(TREE)[0];
+        const maj = s.nmMaj || Object.keys(TREE[mod])[0];
+        return s.nmMin || TREE[mod][maj][0];
+      })(),
+      nmMins: (() => {
+        const mod = s.nmMod || Object.keys(TREE)[0];
+        const maj = s.nmMaj || Object.keys(TREE[mod])[0];
+        return TREE[mod][maj];
+      })(),
+      setNmMin: e => this.setState({ nmMin: e.target.value }),
+      nmCode: s.nmCode, setNmCode: e => this.setState({ nmCode: e.target.value }),
+      nmName: s.nmName, setNmName: e => this.setState({ nmName: e.target.value }),
+      nmCopy: s.nmCopy, setNmCopy: e => this.setState({ nmCopy: e.target.value }),
+      nmCopyOpts: [{ code: '', label: '복사하지 않음 — 빈 매뉴얼로 시작' }].concat(
+        this.items().filter(r => ['배포완료', '배포대기', '검수완료'].indexOf(r.status) >= 0).slice(0, 40)
+          .map(r => ({ code: r.code, label: r.code + ' · ' + r.module + ' › ' + r.name }))
+      ),
+      nmCopyNote: s.nmCopy ? '메뉴코드 · 메뉴명 · 메뉴경로를 제외한 개요와 탭 구성이 복사됩니다' : '탭 1개로 비어 있는 매뉴얼이 생성됩니다',
+      createManual: () => this.createManual(),
       leaveAsk: s.leaveAsk,
-      closeLeave: () => this.setState({ leaveAsk: false }),
-      leaveSave: () => this.setState({ leaveAsk: false, screen: 'list', dirty: false, toast: CN + ' 임시저장했습니다' }),
+      closeLeave: () => this.setState({ leaveAsk: false, leaveTo: null }),
+      leaveSave: () => {
+        const fn = s.leaveTo || (() => this.setState({ screen: 'list' }));
+        this.setState({ leaveAsk: false, leaveTo: null, dirty: false, toast: CN + ' 임시저장했습니다' }, fn);
+      },
+      leaveSkip: () => {
+        const fn = s.leaveTo || (() => this.setState({ screen: 'list' }));
+        this.setState({ leaveAsk: false, leaveTo: null, dirty: false }, fn);
+      },
       tempSave: () => this.setState({ dirty: false, toast: CN + ' 임시저장했습니다' }),
-      goHome: () => this.setState({ screen: 'list', modal: '', dlOpen: false, cur: null }),
+      goHome: () => { const go = () => this.setState({ screen: 'list', modal: '', dlOpen: false, cur: null }); if (!this.askLeave(go)) go(); },
       tabs,
       fModule: s.module, fMajor: s.major, fMinor: s.minor, fQuery: s.query, setQuery: e => this.setState({ query: e.target.value, page: 1 }),
       mineChk: chk(s.mine), mineMark: s.mine ? '✓' : '',
@@ -2401,10 +2533,10 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         this.io = new IntersectionObserver(entries => {
           const stuck = !entries[0].isIntersecting;
           if (!!this.state.paneStuck !== stuck) this.setState({ paneStuck: stuck });
-        }, { rootMargin: '-96px 0px 0px 0px', threshold: 0 });
+        }, { rootMargin: '-154px 0px 0px 0px', threshold: 0 });
         this.io.observe(el);
       },
-      infoBarStyle: 'position:sticky;top:90px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
+      infoBarStyle: 'position:sticky;top:148px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
       infoTopStyle: s.paneStuck
         ? 'display:flex;flex-direction:column;gap:0px'
         : 'display:flex;flex-direction:column;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--line)',
@@ -2456,7 +2588,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid #FF8787;background:var(--surface);color:#D14343;border-radius:5px;cursor:pointer'
         : offBtn,
       reject: reviewer && cur.status === '검수중'
-        ? () => { this.addComment(cur.code, s.draft || '검수 반려'); this.setStatus(cur.code, '검수반려'); this.setState({ toast: CN + ' 검수 반려 처리했습니다' }); }
+        ? () => { this.setStatus(cur.code, '검수반려'); this.setState({ toast: CN + ' 검수 반려 처리했습니다' }); }
         : undefined,
       passReviewStyle: reviewer && cur.status === '검수중'
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid #1E8F89;background:' + (DARK ? 'rgba(62,143,138,.24)' : '#E3F6F5') + ';color:' + (DARK ? '#7FD8D2' : '#1E8F89') + ';border-radius:5px;cursor:pointer'
@@ -2499,7 +2631,6 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
           label: '검수 반려', can: reviewer, danger: true,
           tip: reviewer ? '수정이 필요한 경우 반려합니다' : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다' : '검수는 검수자 또는 관리자가 처리합니다'),
           run: () => {
-            this.addComment(cur.code, (s.draft || '').trim() || '검수 반려');
             this.setStatus(cur.code, '검수반려');
             this.setState({ editing: false, screen: 'preview', draft: '', toast: CN + ' 검수 반려 처리했습니다' });
           }
@@ -2553,22 +2684,43 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       curReviewer: cur.checker || '미지정',
       setReviewerSel: e => this.setReviewer(cur.code, e.target.value),
       reviewerLocked: !(s.role === '관리자' || s.role === '검수자'),
-      reviewNote: reviewer
-        ? '검수 담당자를 지정하고, 반려 시 댓글을 남깁니다.'
-        : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다.' : '검수 처리는 검수자·관리자만 가능합니다.'),
+      reviewNote: '모든 단계에서 댓글과 답글을 남길 수 있습니다.',
       reviewerLocked: !reviewer,
       draft: s.draft,
       setDraft: e => this.setState({ draft: e.target.value }),
       addComment: () => this.addComment(cur.code, s.draft),
       replyDraft: s.replyDraft,
+      editDraft: s.editDraft,
+      setEditDraft: e => this.setState({ editDraft: e.target.value }),
       setReplyDraft: e => this.setState({ replyDraft: e.target.value }),
       comments: (s.comments[cur.code] || []).map((c, i, arr) => ({
         no: i + 1, who: c.who, at: c.at, text: c.text,
         replies: (c.replies || []).map(r => ({ who: r.who, at: r.at, text: r.text })),
         replyCount: (c.replies || []).length ? '답글 ' + (c.replies || []).length + '개' : '',
         replyCountStyle: (c.replies || []).length ? 'font-size:11.5px;color:var(--ink-3)' : 'display:none',
-        openReply: () => this.setState({ replyOpen: s.replyOpen === i ? null : i, replyDraft: '' }),
-        replyBtnLabel: s.replyOpen === i ? '취소' : '답글',
+        openReply: () => this.setState({ replyOpen: s.replyOpen === i ? null : i, replyDraft: '', editOpen: null }),
+        replyBtnLabel: s.replyOpen === i ? '✕' : '↩',
+        replyBtnTitle: s.replyOpen === i ? '답글 취소' : '답글',
+        iconBtnStyle: 'width:24px;height:24px;display:grid;place-items:center;font-size:12px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer;padding:0',
+        ownBtnStyle: c.who === ROLE_ME[s.role]
+          ? 'width:24px;height:24px;display:grid;place-items:center;font-size:12px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer;padding:0'
+          : 'display:none',
+        dangerBtnStyle: c.who === ROLE_ME[s.role]
+          ? 'width:24px;height:24px;display:grid;place-items:center;font-size:12px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:#D14343;cursor:pointer;padding:0'
+          : 'display:none',
+        openEdit: () => {
+          if (c.who !== ROLE_ME[s.role]) return this.setState({ toast: '본인이 작성한 댓글만 수정할 수 있습니다' });
+          this.setState({ editOpen: s.editOpen === i ? null : i, editDraft: c.text, replyOpen: null });
+        },
+        editBtnLabel: s.editOpen === i ? '✕' : '✎',
+        editBtnTitle: s.editOpen === i ? '수정 취소' : '수정',
+        editBoxStyle: s.editOpen === i ? 'display:flex;flex-direction:column;gap:6px' : 'display:none',
+        textStyle: s.editOpen === i ? 'display:none' : 'font-size:13px;line-height:1.65;color:var(--ink-2)',
+        submitEdit: () => this.updateComment(cur.code, i, s.editDraft),
+        remove: () => {
+          if (c.who !== ROLE_ME[s.role]) return this.setState({ toast: '본인이 작성한 댓글만 삭제할 수 있습니다' });
+          this.removeComment(cur.code, i);
+        },
         replyBtnStyle: 'height:24px;padding:0 9px;font-size:11.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer',
         replyBoxStyle: s.replyOpen === i ? 'display:flex;flex-direction:column;gap:6px;padding-left:12px;border-left:2px solid var(--line-2)' : 'display:none',
         submitReply: () => this.addReply(cur.code, i, s.replyDraft),
@@ -2578,8 +2730,8 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       hasComments: (s.comments[cur.code] || []).length > 0,
       noComments: (s.comments[cur.code] || []).length === 0,
       isNotDiff: s.screen === 'edit' || s.screen === 'preview',
-      showComments: (s.screen === 'edit' || s.screen === 'preview') && ["검수중","검수반려","검수완료","배포대기","배포완료"].indexOf(cur.status) >= 0,
-      subGridStyle: 'display:grid;grid-template-columns:minmax(0,1fr)' + (((s.screen === 'edit' || s.screen === 'preview') && ["검수중","검수반려","검수완료","배포대기","배포완료"].indexOf(cur.status) >= 0) ? ' 316px' : '') + ';gap:14px;align-items:start',
+      showComments: s.screen === 'edit' || s.screen === 'preview',
+      subGridStyle: 'display:grid;grid-template-columns:minmax(0,1fr)' + ((s.screen === 'edit' || s.screen === 'preview') ? ' 316px' : '') + ';gap:14px;align-items:start',
       commentCount: '댓글 ' + (s.comments[cur.code] || []).length + '건',
       toDeploy: writerSide && cur.status === '검수완료'
         ? () => { this.setStatus(cur.code, '배포대기'); this.setState({ toast: CN + ' 배포대기로 이동했습니다' }); }
@@ -2608,7 +2760,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       editLocked: LOCKED,
       tabNameStyle: 'flex:1;height:32px;padding:0 10px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);border-radius:5px;background:' + (LOCKED ? 'var(--surface-2)' : 'var(--surface)'),
       addTabStyle: LOCKED ? 'display:none' : 'height:25px;padding:0 9px;font-size:12px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:#0B72D6;cursor:pointer',
-      stickyPaneStyle: 'position:sticky;top:158px;display:flex;flex-direction:column;max-height:calc(100vh - 180px);overflow:hidden;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(23,28,36,.04)',
+      stickyPaneStyle: 'order:2;position:sticky;top:216px;display:flex;flex-direction:column;max-height:calc(100vh - 238px);overflow:hidden;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(23,28,36,.04)',
       tabCountLabel: s.docTabs.length + '개 탭',
       histBtnStyle: 'height:30px;padding:0 8px;font-size:12.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:var(--ink-2);cursor:pointer',
       styleBarStyle: LOCKED ? 'display:none' : 'display:flex;flex-direction:column;gap:7px;padding:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px',
@@ -2726,6 +2878,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       })(),
       diffRows: this.diffRows(),
       cmpLeft: this.cmpDocs().left, cmpRight: this.cmpDocs().right,
+      pvCrumb: [cur.module, cur.major, cur.minor, cur.name].filter(Boolean).join(' › '),
       pvOverviewStyle: htmlToText(s.overview || '').trim() ? 'margin:0;font-size:14.5px;line-height:1.9;color:var(--ink-2);text-wrap:pretty' : 'display:none',
       pvOverview: React.createElement('div', { className: 'rt', dangerouslySetInnerHTML: { __html: s.overview || '' }, style: { whiteSpace: 'pre-wrap' } }),
       pvTabs: s.docTabs.map((t, i) => {
@@ -2743,7 +2896,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
               imgStyle: isTable ? 'display:none' : 'height:210px;border:1px dashed var(--line-2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:grid;place-items:center',
               ovStyle: (!isTable && bi === firstImage && htmlToText(t.overview || '').trim()) ? 'margin:0;font-size:14px;line-height:1.8;color:var(--ink-2);text-wrap:pretty' : 'display:none',
               ovBody: React.createElement('div', { className: 'rt', dangerouslySetInnerHTML: { __html: t.overview || '' }, style: { whiteSpace: 'pre-wrap' } }),
-              tableStyle: isTable ? 'border-top:1px solid var(--line)' : 'display:none',
+              tableStyle: isTable ? '' : 'display:none',
               rows: isTable ? (b.rows || []).map((r, k) => ({
                 no: start + k + 1,
                 body: React.createElement('div', {
