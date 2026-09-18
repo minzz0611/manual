@@ -1,0 +1,67 @@
+/* DOUZONE ERP — Color System
+   Blue = trust/foundation · Violet = innovation · Purple = AI/emphasis · Cool gray neutrals.
+   Always reference by token; never hardcode hex. */
+:root {
+  /* Primary — Blue (trust / foundation) */
+  --primary-50:  #E5F6FF;
+  --primary-100: #B8E9FF;
+  --primary-300: #4DC5FF;
+  --primary-500: #00AAFF; /* main */
+  --primary-700: #0077B3;
+
+  /* Secondary — Violet (innovation) */
+  --violet-50:  #ECECFE;
+  --violet-300: #8A88F9;
+  --violet-500: #514EF6; /* sub-main */
+  --violet-700: #3835C9;
+
+  /* Secondary — Purple (AI / emphasis) */
+  --purple-500: #B93EFF;
+  --purple-700: #8B1FCC;
+
+  /* Neutral — cool gray */
+  --neutral-0:   #FFFFFF;
+  --neutral-50:  #F7F9FC;
+  --neutral-100: #EDF1F7;
+  --neutral-200: #DCE3ED;
+  --neutral-300: #B9C3D1;
+  --neutral-500: #6E7A8C;
+  --neutral-700: #3D4756;
+  --neutral-900: #171C24;
+
+  /* Semantic */
+  --success: #12B76A;
+  --warning: #F79009;
+  --error:   #FC4C60; /* 시안1 */
+  --info:    #00AAFF; /* 시안1 */
+  --success-bg: #E7F8F0;
+  --error-bg:   #FDECEE;
+
+  /* Brand gradient — 시안1 확정 · cyan → magenta 5스톱. Hero / AI emphasis only. */
+  --gradient-brand: linear-gradient(90deg, #00DCFF 0%, #309AFF 25%, #6053FF 50%, #A144D9 75%, #E136FF 100%); /* @kind color */
+  /* 단색 계열 그라데이션 — 버튼·카드·차트 등 범용 액센트 (메인 팔레트 기반) */
+  --gradient-blue:   linear-gradient(90deg, #309AFF 0%, #4164E1 100%); /* @kind color */
+  --gradient-indigo: linear-gradient(90deg, #6053FF 0%, #372DA6 100%); /* @kind color */
+  --gradient-purple: linear-gradient(90deg, #E136FF 0%, #A144D9 100%); /* @kind color */
+
+  /* ---- Semantic aliases ---- */
+  --surface-page:   var(--neutral-50);
+  --surface-card:   var(--neutral-0);
+  --surface-sunken: var(--neutral-100);
+  --surface-inverse: var(--neutral-900);
+
+  --text-strong:  var(--neutral-900);
+  --text-body:    var(--neutral-700);
+  --text-muted:   var(--neutral-500);
+  --text-onbrand: var(--neutral-0);
+  --text-link:    var(--primary-700);
+
+  --border-subtle: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+  --border-focus:  var(--primary-500);
+
+  --accent:      var(--primary-500);
+  --accent-ink:  var(--primary-700);
+  --accent-ai:   var(--violet-500);
+  --accent-ai-2: var(--purple-500);
+}

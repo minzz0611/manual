@@ -1,0 +1,51 @@
+/* 시안1 (Draft 1) 색상 후보 — 비교용. 현행 시스템 토큰과 분리 (--s1-* 네임스페이스).
+   메인: 인디고 #6053FF · 스펙트럼: 시안→블루→인디고→퍼플→마젠타 */
+:root {
+  /* Primary · Indigo */
+  --s1-indigo-40:  #EEEDFF;
+  --s1-indigo-100: #DAD7FF;
+  --s1-indigo-300: #948AFF;
+  --s1-indigo-500: #6053FF; /* 메인 */
+  --s1-indigo-700: #372DA6;
+
+  /* Blue ramp (spectrum 500 = #309AFF) */
+  --s1-blue-40:  #EAF4FF;
+  --s1-blue-100: #C9E3FF;
+  --s1-blue-300: #7CC0FF;
+  --s1-blue-700: #4164E1;
+
+  /* Purple ramp (spectrum 500 = #A144D9) */
+  --s1-purple-40:  #F6EBFC;
+  --s1-purple-100: #EAD0F7;
+  --s1-purple-300: #C68AEA;
+  --s1-purple-700: #7322A1;
+
+  /* Magenta ramp (spectrum 500 = #E136FF) */
+  --s1-magenta-40:  #FBEAFF;
+  --s1-magenta-100: #F5CCFF;
+  --s1-magenta-300: #EE8CFF;
+  --s1-magenta-700: #A712C4;
+
+  /* Secondary / spectrum — 다듬은 균등 보간 램프 (확정) */
+  --s1-cyan-500:    #00DCFF; /* 스펙트럼 시작 */
+  --s1-blue-500:    #309AFF;
+  --s1-purple-500:  #A144D9;
+  --s1-magenta-500: #E136FF; /* 스펙트럼 끝 */
+  --s1-blue-brand:  #00AAFF; /* DOUZONE 블루 (원표기) */
+
+  /* Neutral · 쿨 그레이 */
+  --s1-neutral-0:   #FFFFFF;
+  --s1-neutral-40:  #F4F6F9;
+  --s1-neutral-100: #E9ECF1;
+  --s1-neutral-300: #B0B8C4;
+  --s1-neutral-500: #6B7480;
+  --s1-neutral-700: #393A47;
+  --s1-neutral-900: #11141D;
+  --s1-navy-900:    #0A0B20; /* 다크 표면 · 표지/간지 */
+
+  /* Semantic */
+  --s1-success-500: #22A356;
+  --s1-warning-500: #F78500;
+  --s1-error-500:   #FC4C60;
+  --s1-info-500:    #00AAFF;
+}
