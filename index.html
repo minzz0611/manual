@@ -1530,23 +1530,24 @@ h3.sec{margin:0 0 14px;font-size:21px;font-weight:700;border-bottom:2px solid #1
 .divider .no{font:500 14px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.12em;color:#1C90FB}
 .divider h2{margin:0;font-size:32px;font-weight:700}
 .divider p{margin:0;font-size:14px;color:#4a5764}
-.mn-head{border-bottom:1px solid #d9dfe5;padding-bottom:13px;margin-bottom:16px}
-.mn-head .path{font-size:12px;color:#6b7785}
-.mn-head h2{margin:7px 0 0;font-size:25px;font-weight:700;letter-spacing:-.02em}
-.mn-head h2::after{content:'';display:block;width:42px;height:3px;border-radius:2px;background:#1C90FB;margin-top:9px}
-.mn-head .code{font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
+.mn-head{margin-bottom:14px}
+.mn-banner{display:flex;align-items:center;justify-content:space-between;gap:8mm;min-height:19mm;padding:0 8mm;border-radius:3mm;background:linear-gradient(100deg,#6053FF 0%,#309AFF 52%,#00DCFF 100%)}
+.mn-banner h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.02em;color:#fff}
+.mn-banner .code{font:600 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:rgba(255,255,255,.92)}
+.mn-head .path{margin-top:9px;font-size:13px;font-weight:600;color:#309AFF}
+.mn-head .path::before{content:'▶ ';font-size:10px}
 .ov{font-size:13.5px;line-height:1.85;color:#2c3742;margin:0 0 16px}
 .tab{margin:0 0 20px;page-break-inside:avoid}
-.tab .th{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.tab .th .no{display:inline-block;min-width:22px;padding:2px 6px;border-radius:3px;background:#EAF3FE;text-align:center;font:600 11.5px/1.4 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6}
+.tab .th{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.tab .th .no{width:6px;height:6px;background:#11141d;flex:none}
 .tab .th h4{margin:0;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
 .shot{height:62mm;border:1px dashed #b7c0c9;background:repeating-linear-gradient(135deg,#f4f6f8 0 8px,#fff 8px 16px);display:flex;align-items:center;justify-content:center;font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1;margin-bottom:9px}
 .tab p{margin:0 0 9px;font-size:13px;line-height:1.75;color:#2c3742}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{border:1px solid #dde3e9;padding:7px 9px;text-align:left;vertical-align:top}
-th{background:#f4f6f9;font-weight:600;color:#4a5764}
-th.n{width:38px;text-align:center}
-td.n{width:38px;text-align:center;font-family:'Pretendard Variable',Pretendard,sans-serif;font-weight:500;color:#6b7785;font-variant-numeric:tabular-nums}
+th,td{border:1px solid #dde3e9;padding:5px 9px;text-align:left;vertical-align:top}
+th{background:#7C6BFF;font-weight:700;color:#fff;text-align:center;border-color:#dde3e9}
+th.n{width:46px;text-align:center}
+td.n{width:46px;text-align:center;font-family:'Pretendard Variable',Pretendard,sans-serif;font-weight:500;color:#6b7785;font-variant-numeric:tabular-nums}
 td.rt ul{margin:2px 0;padding-left:18px}
 td.rt ul ul{list-style:disc;padding-left:16px}
 td.rt li,td.rt div{margin:2px 0;white-space:pre-wrap}
@@ -1560,13 +1561,13 @@ td.rt b,td.rt strong{color:#8168FF}
 
   menuPage(r) {
     const s = this.state, E = t => this.esc(t);
-    const tabs = s.docTabs.map((t, i) => `<div class="tab"${i > 0 ? ' style="page-break-before:always;break-before:page"' : ''}><div class="th"><span class="no">TAB ${String(i + 1).padStart(2, '0')}</span><h4>${E(t.name)}</h4></div>
+    const tabs = s.docTabs.map((t, i) => `<div class="tab"${i > 0 ? ' style="page-break-before:always;break-before:page"' : ''}><div class="th"><span class="no"></span><h4>${E(t.name)}</h4></div>
 ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table'); return tabBlocks(t).map((b, bi) => {
   if (b.type !== 'table') return '<div class="shot">screen capture — ' + E(t.name) + '</div>' + (bi === fi && htmlToText(t.overview || '').trim() ? '<div class="rt ov">' + (t.overview || '') + '</div>' : '');
   const start = n; n += (b.rows || []).length;
-  return '<table><thead><tr><th class="n">번호</th><th>내용</th></tr></thead><tbody>' + (b.rows || []).map((row, k) => '<tr><td class="n">' + (start + k + 1) + '</td><td class="rt">' + rowHtml(row) + '</td></tr>').join('') + '</tbody></table>';
+  return '<table><thead><tr><th class="n">번호</th><th>설명</th></tr></thead><tbody>' + (b.rows || []).map((row, k) => '<tr><td class="n">' + (start + k + 1) + '</td><td class="rt">' + rowHtml(row) + '</td></tr>').join('') + '</tbody></table>';
 }).join(''); })()}</div>`).join('');
-    return `<section class="page"><div class="mn-head"><div class="path">${E([r.module, r.major, r.minor].join(' › '))}</div><h2>${E(r.name)}</h2><span class="code">${E(r.code)} · ${E(r.version)} · ${r.custom ? '커스텀' : '패키지'}</span></div>
+    return `<section class="page"><div class="mn-head"><div class="mn-banner"><h2>${E(r.name)}</h2><span class="code">${E(r.code)} · ${E(r.version)} · ${r.custom ? '커스텀' : '패키지'}</span></div><div class="path">${E([r.module, r.major, r.minor, r.name].filter(Boolean).join(' › '))}</div></div>
 <div class="rt ov">${s.overview || ''}</div>${tabs}
 <div class="pf"><span>Amaranth 10 매뉴얼</span><span>${E(r.code)}</span></div></section>`;
   }
