@@ -416,11 +416,7 @@
 <div style="display:flex;flex-direction:column;gap:11px;padding:13px 14px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px">
 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px">
 <span style="flex:none;font-size:12.5px;color:var(--ink-3);white-space:nowrap;width:74px">모듈</span>
-<sc-for list="{{ dlModChips }}" as="m" hint-placeholder-count="6"><button onClick="{{ m.onClick }}" style="{{ m.style }}">{{ m.label }}<span style="{{ m.countStyle }}">{{ m.count }}</span></button></sc-for>
-<div style="display:flex;gap:6px;margin-left:auto">
-<button onClick="{{ dlAll }}" style="height:28px;padding:0 11px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-3);cursor:pointer" style-hover="background:var(--hover)">전체 선택</button>
-<button onClick="{{ dlNone }}" style="height:28px;padding:0 11px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-3);cursor:pointer" style-hover="background:var(--hover)">전체 해제</button>
-</div>
+<select value="{{ dlModSel }}" onChange="{{ setDlModSel }}" style="width:230px;height:32px;padding:0 9px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)"><sc-for list="{{ dlModOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select>
 </div>
 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px">
 <label style="display:flex;align-items:center;gap:8px"><span style="flex:none;font-size:12.5px;color:var(--ink-3);white-space:nowrap;width:74px">표지 타이틀</span>
@@ -432,8 +428,6 @@
 </div>
 <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px 16px">
 <span style="flex:none;font-size:12.5px;color:var(--ink-3);white-space:nowrap;width:74px">포함 항목</span>
-<button onClick="{{ toggleCover }}" style="display:flex;align-items:center;gap:8px;padding:0;border:none;background:transparent;font-size:13px;color:var(--ink);cursor:pointer"><span style="{{ coverStyle }}">{{ coverMark }}</span>표지</button>
-<button onClick="{{ toggleToc }}" style="display:flex;align-items:center;gap:8px;padding:0;border:none;background:transparent;font-size:13px;color:var(--ink);cursor:pointer"><span style="{{ tocStyle }}">{{ tocMark }}</span>목차</button>
 <button onClick="{{ toggleStd }}" style="display:flex;align-items:center;gap:8px;padding:0;border:none;background:transparent;font-size:13px;color:var(--ink);cursor:pointer"><span style="{{ stdStyle }}">{{ stdMark }}</span>패키지 메뉴</button>
 <button onClick="{{ toggleCustom }}" style="display:flex;align-items:center;gap:8px;padding:0;border:none;background:transparent;font-size:13px;color:var(--ink);cursor:pointer"><span style="{{ customChkStyle }}">{{ customMark }}</span>커스텀 메뉴</button>
 </div>
@@ -496,8 +490,6 @@
 <span style="font-size:13px;font-weight:600;color:var(--ink-2)">매뉴얼 선택 — 선택한 매뉴얼만 내려받습니다</span>
 <div style="display:flex;align-items:center;gap:8px">
 <span style="font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ sgSelLabel }}</span>
-<button onClick="{{ sgAll }}" style="height:26px;padding:0 10px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-3);cursor:pointer">전체 선택</button>
-<button onClick="{{ sgNone }}" style="height:26px;padding:0 10px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-3);cursor:pointer">전체 해제</button>
 </div>
 </div>
 <div style="flex:1;min-height:240px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;overflow:hidden">
@@ -1097,7 +1089,7 @@ class Component extends DCLogic {
     reqOpen: false, reqCode: '', reqAssignee: '미지정', reqNote: '', reqs: null,
     rqMod: '전체', rqMenu: '전체', rqQ: '', rqMine: false, rqFrom: '', rqTo: '', rqDrafts: [],
     dlOpen: false, dlMode: 'batch', sgMod: '전체', sgMaj: '전체', sgStatus: '전체', sgQ: '', sgSel: [],
-    dlMods: Object.keys(TREE), dlCover: true, dlToc: true, dlStd: true, dlCustom: true, dlFormat: 'PDF', dlDone: false,
+    dlMods: [Object.keys(TREE)[0]], dlCover: true, dlToc: true, dlStd: true, dlCustom: true, dlFormat: 'PDF', dlDone: false,
     dlTitle: 'Amaranth 10 사용자 매뉴얼', dlModLabel: ''
   };
 
@@ -1510,26 +1502,32 @@ class Component extends DCLogic {
 body{margin:0;font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .page{page-break-after:always;break-after:page;min-height:243mm;display:flex;flex-direction:column}
 .page:last-child{page-break-after:auto}
-.cover{justify-content:flex-start;padding:0}
-.cover .band{height:7mm;background:linear-gradient(90deg,#0CAAFF,#1C90FB 46%,#8168FF)}
-.cover .top{padding-top:30mm}
-.cover .kicker{font:600 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.22em;color:#9aa4af}
-.cover .modslot{margin-top:9mm;display:inline-block;padding:7px 15px;border:1.5px solid #1C90FB;border-radius:999px;color:#0B72D6;font-size:14px;font-weight:600;letter-spacing:-.01em}
-.cover h1{margin:9mm 0 0;font-size:44px;line-height:1.28;font-weight:700;letter-spacing:-.03em;max-width:145mm;text-wrap:pretty}
-.cover .rule{margin-top:8mm;width:34mm;height:3px;background:#1C90FB}
-.cover .sub{margin-top:6mm;font-size:15.5px;color:#4a5764}
-.cover .meta{margin-top:auto;border-top:1px solid #d6dbe0;padding-top:7mm;display:grid;grid-template-columns:1fr 1fr;gap:6mm 12mm}
-.cover .meta div b{display:block;font:600 10.5px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.1em;color:#9aa4af;margin-bottom:4px}
-.cover .meta div span{font-size:13.5px;color:#2c3742}
-h3.sec{margin:0 0 14px;font-size:21px;font-weight:700;border-bottom:2px solid #1C90FB;padding-bottom:8px}
-.toc-row{display:flex;gap:10px;align-items:baseline;justify-content:space-between;font-size:13.5px;padding:5px 0;border-bottom:1px dotted #d6dbe0}
-.toc-row .maj{font-weight:600}
-.toc-row .ind{padding-left:14px;color:#4a5764}
-.toc-row .code{font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
-.divider{justify-content:flex-start;align-items:flex-start;gap:12px;background:#f2f6fb;padding:70mm 0 0 12mm;border-left:8px solid #1C90FB}
-.divider .no{font:500 14px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.12em;color:#1C90FB}
-.divider h2{margin:0;font-size:32px;font-weight:700}
-.divider p{margin:0;font-size:14px;color:#4a5764}
+.cover,.divider{margin:-18mm -16mm;width:210mm;height:297mm;min-height:297mm}
+.cover{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0;overflow:hidden;color:#fff;background:linear-gradient(160deg,#6053FF 0%,#309AFF 58%,#00DCFF 100%)}
+.cover .orb{position:absolute;right:-26mm;top:38mm;width:104mm;height:104mm;border-radius:999px;background:rgba(255,255,255,.08)}
+.cover h1{margin:0;position:absolute;left:0;right:0;top:21.5%;text-align:center;font-size:62px;line-height:1;font-weight:800;letter-spacing:-.02em}
+.cover .cmod{position:absolute;left:0;right:0;top:34.3%;text-align:center;font-size:21px;font-weight:700;letter-spacing:-.01em}
+.cover .cdate{position:absolute;left:0;right:0;top:41%;text-align:center;font-size:15px;font-weight:600;color:rgba(255,255,255,.92);font-variant-numeric:tabular-nums}
+.cover .cfoot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:0 18mm 14mm;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.04em}
+.toc{padding:14mm 16mm 12mm}
+.toc-head{height:60px;display:flex;align-items:center;padding:0 26px;margin-bottom:22px;background:linear-gradient(100deg,#6053FF 0%,#309AFF 60%,#00DCFF 100%)}
+.toc-head span{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.toc-part{display:flex;align-items:center;gap:10px;padding:16px 0 9px;border-bottom:1.5px solid #E9ECF1}
+.toc-part .pt{font-size:19px;font-weight:700;color:#6053FF}
+.toc-part .fill{flex:1 1 auto}
+.toc-part .cnt{font-size:13px;font-weight:600;color:#6B7480}
+.toc-min{padding:15px 0 5px;font-size:16px;font-weight:700;color:#309AFF}
+.toc-item{display:flex;align-items:center;gap:8px;padding:3px 0 3px 18px}
+.toc-item .nm{font-size:14.5px;font-weight:500;color:#11141D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toc-item .dots{flex:1 1 auto;min-width:10px;height:8px;background-image:radial-gradient(circle,#D4D9E2 .9px,transparent .9px);background-size:5px 5px;background-position:0 60%;background-repeat:repeat-x}
+.toc-item .pg{font:600 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#6B7480;font-variant-numeric:tabular-nums}
+.divider{position:relative;display:flex;flex-direction:column;background:#6C63F8;color:#fff;overflow:hidden;padding:0}
+.divider .orb{position:absolute;right:-24mm;top:32mm;width:95mm;height:95mm;border-radius:999px;background:rgba(255,255,255,.06)}
+.divider .dwrap{position:absolute;right:20mm;top:33%;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.divider .pill{padding:8px 24px;border-radius:999px;background:#fff;color:#6053FF;font-size:16px;font-weight:700}
+.divider h2{margin:0;font-size:46px;line-height:1.18;font-weight:800;letter-spacing:-.02em;text-align:right}
+.divider .dsub{font-size:14px;font-weight:500;color:rgba(255,255,255,.88)}
+.divider .dfoot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:0 20mm 12mm;font-size:11px;font-weight:600;color:rgba(255,255,255,.82);letter-spacing:.04em}
 .mn-head{margin-bottom:14px}
 .mn-banner{display:flex;align-items:center;justify-content:space-between;gap:8mm;min-height:19mm;padding:0 8mm;border-radius:3mm;background:linear-gradient(100deg,#6053FF 0%,#309AFF 52%,#00DCFF 100%)}
 .mn-banner h2{margin:0;font-size:24px;font-weight:800;letter-spacing:-.02em;color:#fff}
@@ -1575,39 +1573,61 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
   openBook(title, mods, rowsByMod) {
     const s = this.state, E = t => this.esc(t), today = '2026-08-26';
     let pages = '';
+    const cnt = mods.reduce((a, m) => a + rowsByMod[m].length, 0);
+    const modLabel = (s.dlModLabel || '').trim() || mods.join(' · ');
     if (s.dlCover) {
-      const autoMod = mods.length > 1 ? '전체 모듈 ' + mods.length + '개' : mods[0] + ' 모듈';
-      const slot = (s.dlModLabel || '').trim() || autoMod;
-      const cnt = mods.reduce((a, m) => a + rowsByMod[m].length, 0);
-      pages += `<section class="page cover"><div class="band"></div>
-<div class="top"><div class="kicker">AMARANTH 10 USER MANUAL</div>
-<div class="modslot">${E(slot)}</div>
-<h1>${E(title)}</h1><div class="rule"></div>
-<div class="sub">${E(mods.join(' · '))} · 총 ${cnt}개 메뉴</div></div>
-<div class="meta"><div><b>발행일</b><span>${today}</span></div><div><b>발행</b><span>경영정보팀</span></div><div><b>대상 모듈</b><span>${E(mods.join(', '))}</span></div><div><b>수록 메뉴</b><span>${cnt}건</span></div></div></section>`;
+      pages += `<section class="page cover"><div class="orb"></div>
+<h1>사용설명서</h1>
+<div class="cmod">${E(modLabel)}</div>
+<div class="cdate">${today.replace(/-/g, '.')}</div>
+<div class="cfoot"><span>${E(title)}</span><span>DOUZONE</span></div></section>`;
     }
-    if (s.dlToc) {
-      let toc = '';
-      mods.forEach(mod => Object.keys(TREE[mod]).forEach(maj => {
-        const rows = rowsByMod[mod].filter(r => r.major === maj);
-        if (!rows.length) return;
-        toc += `<div class="toc-row"><span class="maj">${E(mod)} · ${E(maj)}</span><span class="code">${rows.length}건</span></div>`;
-        rows.forEach(r => { toc += `<div class="toc-row"><span class="ind">${E(r.minor)} — ${E(r.name)}</span><span class="code">${E(r.code)}</span></div>`; });
-      }));
-      pages += `<section class="page"><h3 class="sec">목차</h3>${toc}<div class="pf"><span>Amaranth 10 매뉴얼</span><span>${today}</span></div></section>`;
-    }
-    mods.forEach(mod => Object.keys(TREE[mod]).forEach((maj, i) => {
+    const parts = [];
+    mods.forEach(mod => Object.keys(TREE[mod]).forEach(maj => {
       const rows = rowsByMod[mod].filter(r => r.major === maj);
-      if (!rows.length) return;
-      pages += `<section class="page divider"><span class="no">SECTION ${String(i + 1).padStart(2, '0')}</span><h2>${E(maj)}</h2><p>${E(mod)} 모듈 · ${rows.length}개 메뉴</p></section>`;
-      rows.forEach(r => { pages += this.menuPage(r); });
+      if (rows.length) parts.push({ mod, maj, rows });
     }));
+    if (s.dlToc) {
+      let pageNo = (s.dlCover ? 1 : 0) + 1;
+      let toc = '';
+      parts.forEach((p, pi) => {
+        toc += `<div class="toc-part"><span class="pt">Part ${pi + 1}. ${E(p.maj)}</span><span class="fill"></span><span class="cnt">${p.rows.length}개</span></div>`;
+        let lastMin = '';
+        p.rows.forEach(r => {
+          if (r.minor !== lastMin) { toc += `<div class="toc-min">${E(r.minor)}</div>`; lastMin = r.minor; }
+          toc += `<div class="toc-item"><span class="nm">${E(r.name)}</span><span class="dots"></span><span class="pg">${E(r.code)}</span></div>`;
+        });
+      });
+      pages += `<section class="page toc"><div class="toc-head"><span>차례</span></div>${toc}
+<div class="pf"><span>${E(modLabel)}</span><span>${today}</span></div></section>`;
+    }
+    parts.forEach((p, pi) => {
+      pages += `<section class="page divider"><div class="orb"></div>
+<div class="dwrap"><span class="pill">Part ${pi + 1}</span><h2>${E(p.maj)}</h2><span class="dsub">${p.rows.length}개 메뉴</span></div>
+<div class="dfoot"><span>${E(title)} · ${E(p.mod)}</span><span>DOUZONE</span></div></section>`;
+      p.rows.forEach(r => { pages += this.menuPage(r); });
+    });
     const css = '<style>' + this.bookCss() + '</style>';
     const head = '<meta charset="utf-8"><title>' + E(title) + '</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">' + css;
+    const doc = '<!doctype html><html lang="ko"><head>' + head + '</head><body>' + pages + '</body></html>';
+    const fmt = s.dlFormat || 'PDF';
+    if (fmt !== 'PDF') {
+      const ext = fmt === 'DOCX' ? 'doc' : 'html';
+      const type = fmt === 'DOCX' ? 'application/msword' : 'text/html';
+      const url = URL.createObjectURL(new Blob(['\ufeff' + doc], { type: type + ';charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = title.replace(/[\\/:*?"<>|]/g, '_') + '.' + ext;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      return true;
+    }
     const w = window.open('', '_blank');
     if (!w) { this.setState({ toast: '팝업이 차단되었습니다. 팝업 허용 후 다시 시도하세요' }); return false; }
     w.document.open();
-    w.document.write('<!doctype html><html lang="ko"><head>' + head + '</head><body>' + pages + '</body></html>');
+    w.document.write(doc);
     w.document.close();
     setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 900);
     return true;
@@ -1626,7 +1646,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
 
   downloadOne(r) {
     const by = {}; by[r.module] = [r];
-    if (this.openBook('A10 매뉴얼 · ' + r.name, [r.module], by)) this.setState({ toast: r.code + ' 매뉴얼 PDF를 생성했습니다' });
+    if (this.openBook('A10 매뉴얼 · ' + r.name, [r.module], by)) this.setState({ toast: r.code + ' 매뉴얼 ' + (this.state.dlFormat || 'PDF') + ' 파일을 생성했습니다' });
   }
 
   downloadBatch() {
@@ -1871,7 +1891,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       p.scrollTo({ top: p.scrollTop + top - p.getBoundingClientRect().top - 78, behavior: 'smooth' });
     } else {
       const sc = document.scrollingElement || document.documentElement;
-      sc.scrollTo({ top: sc.scrollTop + top - 226, behavior: 'smooth' });
+      sc.scrollTo({ top: sc.scrollTop + top - 240, behavior: 'smooth' });
     }
   }
   moveTabTo(from, to) {
@@ -2236,15 +2256,9 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       sgNone: () => this.setState({ sgSel: [], dlDone: false }),
       closeDl: () => this.setState({ dlOpen: false }),
       dlFileCount: '파일 ' + s.dlMods.length + '개 / 모듈 ' + Object.keys(TREE).length + '개',
-      dlModChips: Object.keys(TREE).map(mod => {
-        const on = s.dlMods.indexOf(mod) >= 0;
-        const cnt = all.filter(r => r.module === mod).length;
-        return {
-          label: mod, count: cnt + '건', onClick: () => this.toggleDlMod(mod),
-          style: `display:flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:6px;border:1px solid ${on ? '#1C90FB' : 'rgba(16,24,32,.14)'};background:${on ? 'oklch(0.96 0.02 245)' : '#fff'};color:${on ? 'oklch(0.4 0.13 245)' : 'var(--ink-3)'};font-size:13.5px;font-weight:500;cursor:pointer`,
-          countStyle: `font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;opacity:.6`
-        };
-      }),
+      dlModSel: s.dlMods[0] || Object.keys(TREE)[0],
+      dlModOpts: Object.keys(TREE).map(mod => ({ value: mod, label: mod + ' (' + all.filter(r => r.module === mod).length + '건)' })),
+      setDlModSel: e => this.setState({ dlMods: [e.target.value], dlDone: false }),
       dlAll: () => this.setState({ dlMods: Object.keys(TREE), dlDone: false }),
       dlNone: () => this.setState({ dlMods: [], dlDone: false }),
       dlCover: s.dlCover, dlToc: s.dlToc,
@@ -2534,10 +2548,10 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         this.io = new IntersectionObserver(entries => {
           const stuck = !entries[0].isIntersecting;
           if (!!this.state.paneStuck !== stuck) this.setState({ paneStuck: stuck });
-        }, { rootMargin: '-154px 0px 0px 0px', threshold: 0 });
+        }, { rootMargin: '-168px 0px 0px 0px', threshold: 0 });
         this.io.observe(el);
       },
-      infoBarStyle: 'position:sticky;top:148px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
+      infoBarStyle: 'position:sticky;top:162px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
       infoTopStyle: s.paneStuck
         ? 'display:flex;flex-direction:column;gap:0px'
         : 'display:flex;flex-direction:column;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--line)',
@@ -2761,7 +2775,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       editLocked: LOCKED,
       tabNameStyle: 'flex:1;height:32px;padding:0 10px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);border-radius:5px;background:' + (LOCKED ? 'var(--surface-2)' : 'var(--surface)'),
       addTabStyle: LOCKED ? 'display:none' : 'height:25px;padding:0 9px;font-size:12px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:#0B72D6;cursor:pointer',
-      stickyPaneStyle: 'order:2;position:sticky;top:216px;display:flex;flex-direction:column;max-height:calc(100vh - 238px);overflow:hidden;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(23,28,36,.04)',
+      stickyPaneStyle: 'order:2;position:sticky;top:230px;display:flex;flex-direction:column;max-height:calc(100vh - 252px);overflow:hidden;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(23,28,36,.04)',
       tabCountLabel: s.docTabs.length + '개 탭',
       histBtnStyle: 'height:30px;padding:0 8px;font-size:12.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:var(--ink-2);cursor:pointer',
       styleBarStyle: LOCKED ? 'display:none' : 'display:flex;flex-direction:column;gap:7px;padding:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px',
