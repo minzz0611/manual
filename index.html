@@ -1301,6 +1301,10 @@ class Component extends DCLogic {
 
   }
   componentWillUnmount() {
+    if (this.onScrollStuck) {
+      window.removeEventListener('scroll', this.onScrollStuck, true);
+      window.removeEventListener('resize', this.onScrollStuck);
+    }
     if (this.onKey) document.removeEventListener('keydown', this.onKey, true);
     if (this.onResize) window.removeEventListener('resize', this.onResize);
     if (this.io) this.io.disconnect();
@@ -2067,24 +2071,29 @@ td.rt b,td.rt strong{color:#8168FF}
     const key = a.tab + ':' + a.block;
     const pv = this.state.screen === 'preview';
     const map = pv ? this.pvEls : this.blockEls;
-    const el = map && map[key];
-    if (!el) return this.setState({ toast: '연결된 영역을 찾을 수 없습니다' });
-    this.setState(pv ? { cmFlash: key } : { tabIdx: a.tab, cmFlash: key });
-    const scrollNow = () => {
+    if (!map || !map[key]) return this.setState({ toast: '연결된 영역을 찾을 수 없습니다' });
+    const settle = (tries) => {
       const node = (pv ? this.pvEls : this.blockEls)[key];
-      if (!node) return;
+      if (!node || !node.isConnected) {
+        if (tries > 0) return setTimeout(() => settle(tries - 1), 80);
+        return;
+      }
       const sc = document.scrollingElement || document.documentElement;
       const bar = this.infoEl;
-      const HEAD = bar ? Math.max(0, bar.getBoundingClientRect().bottom) + 16 : 240;
+      const HEAD = (bar && bar.isConnected ? Math.max(0, bar.getBoundingClientRect().bottom) : 200) + 16;
       const r = node.getBoundingClientRect();
       const space = window.innerHeight - HEAD - 16;
+      const fits = r.height < space;
+      const ok = r.top >= HEAD - 2 && (fits ? r.bottom <= window.innerHeight - 14 : true) && (!fits ? r.top <= HEAD + 6 : true);
+      if (ok || tries <= 0) return;
       let delta = r.top - HEAD;
-      if (r.height < space) delta = r.top - HEAD - (space - r.height) / 2;
-      sc.scrollTo({ top: Math.max(0, sc.scrollTop + delta), behavior: 'smooth' });
+      if (fits) delta = r.top - HEAD - (space - r.height) / 2;
+      const target = Math.max(0, Math.min(sc.scrollHeight - sc.clientHeight, sc.scrollTop + delta));
+      sc.scrollTo({ top: target, behavior: tries > 1 ? 'smooth' : 'auto' });
+      setTimeout(() => settle(tries - 1), 340);
     };
-    requestAnimationFrame(() => requestAnimationFrame(scrollNow));
-    setTimeout(scrollNow, 420);
-    setTimeout(() => this.setState({ cmFlash: null }), 1600);
+    this.setState(pv ? { cmFlash: key } : { tabIdx: a.tab, cmFlash: key }, () => settle(4));
+    setTimeout(() => this.setState({ cmFlash: null }), 2600);
   }
   scrollToTab(i) {
     const el = this.panelEls && this.panelEls[i];
@@ -2836,11 +2845,18 @@ td.rt b,td.rt strong{color:#8168FF}
         if (!el || this.sentinelEl === el) return;
         this.sentinelEl = el;
         if (this.io) this.io.disconnect();
-        this.io = new IntersectionObserver(entries => {
-          const stuck = !entries[0].isIntersecting;
+        const sc = document.scrollingElement || document.documentElement;
+        const apply = () => {
+          const top = sc ? sc.scrollTop : 0;
+          const stuck = top > 24 && el.isConnected && el.getBoundingClientRect().top < 168;
           if (!!this.state.paneStuck !== stuck) this.setState({ paneStuck: stuck });
-        }, { rootMargin: '-168px 0px 0px 0px', threshold: 0 });
-        this.io.observe(el);
+        };
+        this.applyStuck = apply;
+        if (this.onScrollStuck) window.removeEventListener('scroll', this.onScrollStuck, true);
+        this.onScrollStuck = () => { if (this.rafStuck) return; this.rafStuck = requestAnimationFrame(() => { this.rafStuck = null; apply(); }); };
+        window.addEventListener('scroll', this.onScrollStuck, true);
+        window.addEventListener('resize', this.onScrollStuck);
+        apply();
       },
       infoRef: el => { this.infoEl = el; },
       infoBarStyle: 'margin-top:-14px;position:sticky;top:162px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 -14px 0 0 var(--page),0 6px 14px rgba(23,28,36,.10);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
