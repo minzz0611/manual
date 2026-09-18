@@ -255,6 +255,10 @@
 <sc-for list="{{ rqMenuOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select></label>
 <label style="display:flex;align-items:center;gap:8px"><span style="flex:none;font-size:12.5px;color:var(--ink-3);white-space:nowrap">담당자 검색</span>
 <input value="{{ rqQ }}" onChange="{{ setRqQ }}" placeholder="담당자명" style="width:150px;height:32px;padding:0 10px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)" /></label>
+<label style="display:flex;align-items:center;gap:8px"><span style="flex:none;font-size:12.5px;color:var(--ink-3);white-space:nowrap">요청일</span>
+<input type="date" value="{{ rqFrom }}" onChange="{{ setRqFrom }}" style="width:142px;height:32px;padding:0 8px;font-size:13px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)" />
+<span style="font-size:12.5px;color:var(--ink-3)">~</span>
+<input type="date" value="{{ rqTo }}" onChange="{{ setRqTo }}" style="width:142px;height:32px;padding:0 8px;font-size:13px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)" /></label>
 <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;color:var(--ink-2);white-space:nowrap">
 <input type="checkbox" checked="{{ rqMine }}" onChange="{{ toggleRqMine }}" style="width:15px;height:15px;accent-color:#1C90FB;cursor:pointer" />내 담당건</label>
 <div style="display:flex;align-items:center;gap:7px;flex:none;margin-left:auto">
@@ -275,12 +279,12 @@
 <button onClick="{{ rqSave }}" style="height:28px;padding:0 15px;font-size:13px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer;white-space:nowrap" style-hover="background:#0B72D6">저장</button>
 </div>
 </div>
-<div style="flex:none;display:grid;grid-template-columns:82px 96px 112px minmax(0,1fr) minmax(0,1.1fr) 88px 34px;align-items:center;gap:10px;padding:0 16px;height:38px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-3)">
-<span>상태</span><span>모듈</span><span>메뉴코드</span><span>메뉴</span><span>요청사항</span><span>요청자</span><span></span>
+<div style="flex:none;display:grid;grid-template-columns:82px 92px 104px minmax(0,1fr) minmax(0,1fr) 96px 80px 34px;align-items:center;gap:10px;padding:0 16px;height:38px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-3)">
+<span>상태</span><span>모듈</span><span>메뉴코드</span><span>메뉴</span><span>요청사항</span><span>요청일</span><span>요청자</span><span></span>
 </div>
 <div style="flex:1;min-height:0;overflow:auto">
 <sc-for list="{{ rqDraftRows }}" as="d" hint-placeholder-count="0">
-<div style="display:grid;grid-template-columns:82px 96px 112px minmax(0,1fr) minmax(0,1.1fr) 88px 34px;align-items:center;gap:10px;padding:0 16px;height:44px;border-bottom:1px solid var(--line);background:{{ d.rowBg }}">
+<div style="display:grid;grid-template-columns:82px 92px 104px minmax(0,1fr) minmax(0,1fr) 96px 80px 34px;align-items:center;gap:10px;padding:0 16px;height:44px;border-bottom:1px solid var(--line);background:{{ d.rowBg }}">
 <span><span style="{{ d.badgeStyle }}">신규</span></span>
 <select value="{{ d.mod }}" onChange="{{ d.setMod }}" style="width:100%;height:30px;padding:0 6px;font-size:13px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)">
 <sc-for list="{{ rqDraftModOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o }}">{{ o }}</option></sc-for></select>
@@ -288,17 +292,19 @@
 <sc-for list="{{ d.codeOpts }}" as="o" hint-placeholder-count="8"><option value="{{ o }}">{{ o }}</option></sc-for></select>
 <span style="color:var(--ink-2);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ d.name }}</span>
 <input value="{{ d.note }}" onChange="{{ d.setNote }}" placeholder="요청사항 (선택)" style="width:100%;height:30px;padding:0 9px;font-size:13px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)" />
+<span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ rqToday }}</span>
 <span style="color:var(--ink-2);font-size:13px">{{ rqMe }}</span>
 <span style="display:flex;justify-content:center"><button onClick="{{ d.del }}" title="행 삭제" style="width:24px;height:24px;display:grid;place-items:center;border:none;background:transparent;font-size:13px;color:var(--ink-3);cursor:pointer" style-hover="color:#8C3A3A">✕</button></span>
 </div>
 </sc-for>
 <sc-for list="{{ reqRows }}" as="q" hint-placeholder-count="5">
-<div style="display:grid;grid-template-columns:82px 96px 112px minmax(0,1fr) minmax(0,1.1fr) 88px 34px;align-items:center;gap:10px;padding:0 16px;height:40px;border-bottom:1px solid var(--line);font-size:13.5px">
+<div style="display:grid;grid-template-columns:82px 92px 104px minmax(0,1fr) minmax(0,1fr) 96px 80px 34px;align-items:center;gap:10px;padding:0 16px;height:40px;border-bottom:1px solid var(--line);font-size:13.5px">
 <span><span style="{{ q.badgeStyle }}">{{ q.state }}</span></span>
 <span style="color:var(--ink-2)">{{ q.mod }}</span>
 <span style="font:500 13px/1 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6">{{ q.code }}</span>
 <span style="color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ q.name }}</span>
 <span style="color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ q.note }}</span>
+<span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ q.at }}</span>
 <span style="color:var(--ink-2)">{{ q.by }}</span>
 <span style="display:flex;justify-content:center"><button onClick="{{ q.del }}" title="요청 취소" style="width:24px;height:24px;display:grid;place-items:center;border:none;background:transparent;font-size:13px;color:var(--ink-3);cursor:pointer" style-hover="color:#8C3A3A">✕</button></span>
 </div>
@@ -432,12 +438,12 @@
 </div>
 </div>
 </div>
-<div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:9px">
+<div style="flex:1;min-height:278px;display:flex;flex-direction:column;gap:9px">
 <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px">
 <span style="font-size:13px;font-weight:600;color:var(--ink-2)">생성될 파일 — 모듈별로 파일 1개가 만들어집니다</span>
 <span style="font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ dlFileCount }}</span>
 </div>
-<div style="flex:1;min-height:0;overflow-y:auto;border:1px solid var(--line);border-radius:6px">
+<div style="flex:1;min-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:6px">
 <sc-for list="{{ dlFiles }}" as="d" hint-placeholder-count="3">
 <div style="border-bottom:1px solid var(--line)">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--surface-2)">
@@ -484,7 +490,7 @@
 <input value="{{ sgQ }}" onChange="{{ setSgQ }}" placeholder="메뉴명 또는 메뉴코드" style="flex:1;min-width:0;height:32px;padding:0 9px;font-size:13.5px;border:1px solid var(--line-2);border-radius:5px;background:var(--surface)" /></label>
 </div>
 </div>
-<div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:9px">
+<div style="flex:1;min-height:278px;display:flex;flex-direction:column;gap:9px">
 <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px">
 <span style="font-size:13px;font-weight:600;color:var(--ink-2)">매뉴얼 선택 — 선택한 매뉴얼만 내려받습니다</span>
 <div style="display:flex;align-items:center;gap:8px">
@@ -493,7 +499,7 @@
 <button onClick="{{ sgNone }}" style="height:26px;padding:0 10px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-3);cursor:pointer">전체 해제</button>
 </div>
 </div>
-<div style="flex:1;min-height:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;overflow:hidden">
+<div style="flex:1;min-height:240px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;overflow:hidden">
 <div style="flex:none;display:grid;grid-template-columns:38px 96px minmax(0,1fr) 84px 54px 84px;align-items:center;gap:8px;padding:0 12px;height:34px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-3)"><span></span><span>메뉴코드</span><span>메뉴명</span><span>모듈</span><span>버전</span><span style="text-align:center">상태</span></div>
 <div style="flex:1;min-height:0;overflow-y:auto">
 <sc-for list="{{ sgRows }}" as="g" hint-placeholder-count="6">
@@ -533,6 +539,7 @@
 
 <sc-if value="{{ isSub }}" hint-placeholder-val="{{ false }}">
 <main style="flex:1;padding:20px 24px 40px;display:flex;flex-direction:column;gap:14px">
+<div style="position:sticky;top:0;z-index:30;display:flex;flex-direction:column;gap:12px;margin:-20px -24px 0;padding:14px 24px 0;background:var(--page)">
 <div style="display:flex;align-items:center;gap:12px">
 <button onClick="{{ back }}" style="height:30px;padding:0 13px;font-size:13.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">← 목록</button>
 <div style="display:flex;align-items:baseline;gap:9px">
@@ -545,6 +552,7 @@
 
 <div style="display:flex;gap:6px;border-bottom:1px solid var(--line);padding-bottom:0">
 <sc-for list="{{ subTabs }}" as="s" hint-placeholder-count="3"><button onClick="{{ s.onClick }}" title="{{ s.tip }}" style="{{ s.style }}">{{ s.label }}</button></sc-for>
+</div>
 </div>
 
 <sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
@@ -562,9 +570,10 @@
 <div style="min-width:0;display:flex;flex-direction:column;gap:14px">
 
 <sc-if value="{{ isNotDiff }}" hint-placeholder-val="{{ true }}">
-<section style="background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:14px 16px;display:flex;flex-direction:column;gap:13px">
+<div ref="{{ stickySentinel }}" style="height:1px;margin-bottom:-1px"></div>
+<section style="{{ infoBarStyle }}">
 <sc-if value="{{ isNotDiff }}" hint-placeholder-val="{{ true }}">
-<div style="display:flex;flex-direction:column;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--line)">
+<div style="{{ infoTopStyle }}">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
 <div style="display:flex;align-items:center;gap:9px;min-width:0;flex-wrap:wrap">
 <span style="display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB;font-variant-numeric:tabular-nums">{{ curCode }}</span>
@@ -573,14 +582,18 @@
 <span style="font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums">최종 수정 {{ curUpdated }}</span>
 <span style="width:1px;height:13px;background:var(--line)"></span>
 <span style="font-size:12.5px;color:var(--ink-3)">{{ commentCount }}</span>
+<span style="{{ collapsedSepStyle }}"></span>
+<span style="{{ collapsedInfoStyle }}">{{ collapsedPeople }}</span>
+<span style="{{ curStatusPillStyle }}">{{ curStatusLabel }}</span>
 </div>
 <div style="display:flex;gap:7px;flex-wrap:wrap">
+<button onClick="{{ tempSave }}" style="{{ tempSaveStyle }}">임시저장</button>
 <sc-for list="{{ actions }}" as="a" hint-placeholder-count="2">
 <button onClick="{{ a.onClick }}" title="{{ a.tip }}" style="{{ a.style }}">{{ a.label }}</button>
 </sc-for>
 </div>
 </div>
-<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px">
+<div style="{{ assigneeRowStyle }}">
 <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-3)">작성 담당자
 <select value="{{ curWriter }}" onChange="{{ setWriterSel }}" disabled="{{ writerLocked }}" style="height:30px;width:118px;padding:0 7px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);border-radius:5px;background:var(--surface);color:var(--ink)">
 <sc-for list="{{ writerOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o }}">{{ o }}</option></sc-for></select></label>
@@ -591,7 +604,7 @@
 </div>
 </div>
 </sc-if>
-<div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding-top:1px">
+<div style="{{ flowRowStyle }}">
 <sc-for list="{{ flowSteps }}" as="f" hint-placeholder-count="6">
 <span style="{{ f.style }}">{{ f.label }}</span><span style="{{ f.arrowStyle }}">›</span>
 </sc-for>
@@ -606,6 +619,42 @@
 <span style="font-size:13px;color:var(--ink-2)">{{ lockNote }}</span>
 <button onClick="{{ startEditing }}" style="{{ startEditBtnStyle }}" style-hover="background:#0B72D6">수정 시작</button>
 </div>
+<div style="display:grid;grid-template-columns:250px minmax(0,1fr);gap:16px;align-items:start">
+<div style="{{ stickyPaneStyle }}">
+<div style="display:flex;flex-direction:column;gap:9px;padding:12px 12px 10px">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ doUndo }}" title="되돌리기 (Ctrl+Z)" style="{{ histBtnStyle }}">↩ 되돌리기</button>
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ doRedo }}" title="다시 실행 (Ctrl+Y)" style="{{ histBtnStyle }}">↪ 다시 실행</button>
+</div>
+<div style="{{ styleBarStyle }}">
+<span style="font:600 11px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.04em;color:var(--ink-3)">서식 — 선택 영역에 적용</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ styleBold }}" title="선택한 단어 강조 (Ctrl+B)" style="{{ styleBoldBtnStyle }}">강조</button>
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ stylePlain }}" title="서식 해제" style="{{ styleBtnStyle }}">본문</button>
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ styleLv1 }}" title="1뎁스 글머리" style="{{ styleBtnStyle }}">• 1뎁스</button>
+<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ styleLv2 }}" title="2뎁스 글머리" style="{{ styleBtnStyle }}">• 2뎁스</button>
+</div>
+</div>
+</div>
+<div style="height:1px;background:var(--line)"></div>
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:7px;padding:11px 12px 12px">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+<span style="display:flex;align-items:baseline;gap:6px"><span style="font-weight:600;font-size:13px;color:var(--ink-2)">구성</span><span style="font:400 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ tabCountLabel }}</span></span>
+<button onClick="{{ addTab }}" style="{{ addTabStyle }}" style-hover="background:var(--hover)">+ 탭 추가</button>
+</div>
+<div style="flex:1;min-height:40px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin:0 -4px;padding:0 4px">
+<sc-for list="{{ tabList }}" as="t" hint-placeholder-count="3">
+<div draggable="{{ t.draggable }}" onDragStart="{{ t.onDragStart }}" onDragOver="{{ t.onDragOver }}" onDrop="{{ t.onDrop }}" onDragEnd="{{ t.onDragEnd }}" style="{{ t.rowStyle }}">
+<div style="{{ t.gripStyle }}" title="드래그하여 순서 변경"><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div></div>
+<button onClick="{{ t.onClick }}" style="{{ t.style }}" style-hover="background:var(--hover)"><span style="{{ t.orderStyle }}">{{ t.order }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</span></button>
+<button onClick="{{ t.del }}" disabled="{{ t.delOff }}" title="탭 삭제" style="{{ t.delStyle }}">✕</button>
+</div>
+</sc-for>
+</div>
+<span style="font-size:11.5px;line-height:1.55;color:var(--ink-3)">항목을 누르면 해당 탭으로 이동합니다</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;min-width:0">
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 <div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)">메뉴명 <span style="{{ lockedBadgeStyle }}">수정 불가</span></span>
 <div style="height:34px;display:flex;align-items:center;padding:0 10px;font-size:13.5px;font-weight:500;background:var(--surface-2);border:1px solid var(--line);border-radius:5px">{{ cur.name }}</div></div>
@@ -614,45 +663,25 @@
 </div>
 <div style="display:flex;flex-direction:column;gap:6px">
 <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12.5px;color:var(--ink-3)">메뉴 개요</span>
-<span style="{{ requiredBadgeStyle }}">필수</span>
-<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ emphasizeOverview }}" title="선택한 단어 강조" style="{{ fieldToolStyle }}">강조</button>
-<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ plainOverview }}" title="강조 해제" style="{{ fieldToolStyle }}">본문</button></div>
+<span style="{{ requiredBadgeStyle }}">필수</span></div>
 {{ overviewField }}</div>
 
-<div style="height:1px;background:var(--line)"></div>
-
-<div style="display:flex;align-items:center;justify-content:space-between">
-<span style="display:none">탭 구성</span>
-<button onClick="{{ addTab }}" style="display:none">+ 탭 추가</button>
-</div>
-<div style="display:grid;grid-template-columns:240px 1fr;gap:14px;align-items:start">
-<div style="display:flex;flex-direction:column;gap:6px">
-<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:2px"><span style="font-weight:600;font-size:13.5px;color:var(--ink-2)">탭 구성</span><button onClick="{{ addTab }}" style="{{ addTabStyle }}" style-hover="background:var(--hover)">+ 탭 추가</button></div>
-<sc-for list="{{ tabList }}" as="t" hint-placeholder-count="3">
-<div draggable="{{ t.draggable }}" onDragStart="{{ t.onDragStart }}" onDragOver="{{ t.onDragOver }}" onDrop="{{ t.onDrop }}" onDragEnd="{{ t.onDragEnd }}" style="{{ t.rowStyle }}">
-<div style="{{ t.gripStyle }}" title="드래그하여 순서 변경"><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div><div style="{{ t.gripLine }}"></div></div>
-<button onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="{{ t.orderStyle }}">{{ t.order }}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.name }}</span></button>
-<button onClick="{{ t.del }}" disabled="{{ t.delOff }}" title="탭 삭제" style="{{ t.delStyle }}">✕</button>
-</div>
-</sc-for>
-<span style="font-size:12px;color:var(--ink-3);padding-top:2px">좌측 손잡이를 드래그해 탭 순서를 변경합니다</span>
-</div>
-
-<div style="border:1px solid var(--line);border-radius:7px;padding:15px 16px;display:flex;flex-direction:column;gap:14px">
+<sc-for list="{{ tabPanels }}" as="tp" hint-placeholder-count="3">
+<div ref="{{ tp.panelRef }}" onFocus="{{ tp.onFocusPanel }}" style="{{ tp.panelStyle }}">
 <div style="display:flex;align-items:center;gap:10px">
-<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ curTabLabel }}</span>
-<span style="{{ tabNameBadgeStyle }}">{{ tabNameBadge }}</span>
-<input value="{{ curTab.name }}" onChange="{{ setTabName }}" disabled="{{ editLocked }}" placeholder="탭명" style="{{ tabNameStyle }}" />
+<span style="font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ tp.label }}</span>
+<span style="{{ tp.badgeStyle }}">{{ tp.badge }}</span>
+<input value="{{ tp.name }}" onChange="{{ tp.setName }}" disabled="{{ editLocked }}" placeholder="탭명" style="{{ tabNameStyle }}" />
 </div>
 <div style="display:flex;flex-direction:column;gap:9px">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
 <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-3)">본문 구성 — 이미지 · 표 <span style="{{ requiredBadgeStyle }}">필수</span></span>
 <div style="display:flex;gap:6px">
-<button onClick="{{ addImageBlock }}" style="{{ addBlockStyle }}">+ 이미지</button>
-<button onClick="{{ addTableBlock }}" style="{{ addBlockStyle }}">+ 표</button>
+<button onClick="{{ tp.addImage }}" style="{{ addBlockStyle }}">+ 이미지</button>
+<button onClick="{{ tp.addTable }}" style="{{ addBlockStyle }}">+ 표</button>
 </div>
 </div>
-<sc-for list="{{ blocks }}" as="b" hint-placeholder-count="2">
+<sc-for list="{{ tp.blocks }}" as="b" hint-placeholder-count="2">
 <div draggable="{{ b.draggable }}" onDragStart="{{ b.onDragStart }}" onDragOver="{{ b.onDragOver }}" onDrop="{{ b.onDrop }}" onDragEnd="{{ b.onDragEnd }}" style="{{ b.wrapStyle }}">
 <div style="{{ b.gripStyle }}" title="드래그하여 순서 변경"><div style="{{ b.gripLine }}"></div><div style="{{ b.gripLine }}"></div><div style="{{ b.gripLine }}"></div></div>
 <div style="{{ b.bodyStyle }}">
@@ -673,19 +702,11 @@
 <sc-if value="{{ b.hasOverview }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:5px;padding-top:2px">
 <div style="display:flex;align-items:center;gap:7px"><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3)">개요 <span style="{{ optionalBadgeStyle }}">선택</span></span>
-<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ b.emphasizeOverview }}" title="선택한 단어 강조" style="{{ fieldToolStyle }}">강조</button>
-<button onMouseDown="{{ keepFieldFocus }}" onClick="{{ b.plainOverview }}" title="강조 해제" style="{{ fieldToolStyle }}">본문</button></div>
+</div>
 {{ b.overviewField }}
 </div>
 </sc-if>
 <div style="{{ b.tableStyle }}">
-<div style="{{ b.toolbarStyle }}">
-<span style="font-size:11.5px;color:var(--ink-3);padding-right:3px">선택한 문장/단어에 적용</span>
-<button onMouseDown="{{ b.keepFocus }}" onClick="{{ b.bold }}" title="선택한 단어 강조" style="{{ b.toolStyle }}"><b>강조</b></button>
-<button onMouseDown="{{ b.keepFocus }}" onClick="{{ b.lv1 }}" title="1뎁스 글머리" style="{{ b.toolStyle }}">• 1뎁스</button>
-<button onMouseDown="{{ b.keepFocus }}" onClick="{{ b.lv2 }}" title="2뎁스 글머리" style="{{ b.toolStyle }}">• 2뎁스</button>
-<button onMouseDown="{{ b.keepFocus }}" onClick="{{ b.plain }}" title="글머리 해제" style="{{ b.toolStyle }}">본문</button>
-</div>
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:5px;overflow:hidden">
 <div style="display:grid;grid-template-columns:52px 1fr 34px;align-items:center;height:32px;padding:0 10px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;color:var(--ink-3)"><span>번호</span><span>내용</span><span></span></div>
 <sc-for list="{{ b.rows }}" as="row" hint-placeholder-count="3">
@@ -702,8 +723,10 @@
 </sc-for>
 </div>
 </div>
+</sc-for>
 </div>
-<div style="display:flex;gap:7px;justify-content:flex-end;padding-top:2px">
+</div>
+<div style="display:none">
 <button style="{{ tempSaveStyle }}">임시저장</button>
 
 </div>
@@ -712,25 +735,32 @@
 </sc-if>
 
 <sc-if value="{{ isPreview }}" hint-placeholder-val="{{ false }}">
-<section style="display:grid;place-items:start center;padding:6px 0">
-<div style="width:800px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:56px 64px;display:flex;flex-direction:column;gap:22px">
-<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #1C90FB;padding-bottom:12px">
-<span style="font-size:13px;color:var(--ink-3)">{{ cur.path }}</span>
-<span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ cur.version }}</span>
+<section style="display:grid;place-items:start center;padding:6px 0 18px">
+<div style="width:820px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(23,28,36,.06);padding:60px 68px 68px;display:flex;flex-direction:column;gap:26px">
+<div style="display:flex;flex-direction:column;gap:18px;padding-bottom:20px;border-bottom:1px solid var(--line)">
+<div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px">
+<span style="font-size:12.5px;letter-spacing:.01em;color:var(--ink-3)">{{ cur.path }}</span>
 </div>
-<h2 style="margin:0;font-size:25.5px;font-weight:600;letter-spacing:-.02em">{{ cur.name }}</h2>
-<p style="margin:0;font-size:14.5px;line-height:1.85;color:var(--ink-2);text-wrap:pretty">{{ overview }}</p>
+<div style="display:flex;flex-direction:column;gap:9px">
+<h2 style="margin:0;font-size:27px;font-weight:700;letter-spacing:-.025em;line-height:1.3">{{ cur.name }}</h2>
+<span style="width:44px;height:3px;border-radius:2px;background:#1C90FB"></span>
+</div>
+<div style="{{ pvOverviewStyle }}">{{ pvOverview }}</div>
+</div>
 <sc-for list="{{ pvTabs }}" as="t" hint-placeholder-count="3">
-<div style="display:flex;flex-direction:column;gap:14px;padding-top:14px;border-top:1px solid var(--line)">
-<div style="display:flex;align-items:baseline;gap:9px"><span style="font:500 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB">{{ t.order }}</span><h3 style="margin:0;font-size:17px;font-weight:600">{{ t.name }}</h3></div>
+<div style="display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;padding:0 7px;border-radius:4px;background:{{ t.chipBg }};font:600 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6;font-variant-numeric:tabular-nums">{{ t.order }}</span>
+<h3 style="margin:0;font-size:17.5px;font-weight:700;letter-spacing:-.015em">{{ t.name }}</h3>
+</div>
 <sc-for list="{{ t.blocks }}" as="b" hint-placeholder-count="2">
-<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;flex-direction:column;gap:12px">
 <div style="{{ b.imgStyle }}"><span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">screen capture — 1440×900</span></div>
 <div style="{{ b.ovStyle }}">{{ b.ovBody }}</div>
 <div style="{{ b.tableStyle }}">
-<div style="display:grid;grid-template-columns:56px 1fr;gap:12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink-3)"><span>번호</span><span>내용</span></div>
+<div style="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;height:36px;background:var(--surface-2);border-bottom:1px solid var(--line-2);font-size:12.5px;font-weight:600;color:var(--ink-3)"><span style="text-align:center">번호</span><span style="padding-left:14px">내용</span></div>
 <sc-for list="{{ b.rows }}" as="row" hint-placeholder-count="3">
-<div style="display:grid;grid-template-columns:56px 1fr;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line);font-size:14px"><span style="font:400 13px/1.5 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">{{ row.no }}</span><span style="min-width:0">{{ row.body }}</span></div>
+<div style="display:grid;grid-template-columns:62px minmax(0,1fr);align-items:start;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px"><span style="text-align:center;font:500 13px/1.65 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ row.no }}</span><span style="min-width:0;padding-left:14px">{{ row.body }}</span></div>
 </sc-for>
 </div>
 </div>
@@ -824,31 +854,58 @@
 </div>
 
 <sc-if value="{{ showComments }}" hint-placeholder-val="{{ false }}">
-<aside style="position:sticky;top:16px;align-self:start;max-height:calc(100vh - 32px);display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:14px 15px">
+<aside style="position:sticky;top:158px;align-self:start;max-height:calc(100vh - 180px);display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:14px 15px">
 <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
-<h3 style="margin:0;font-size:13.5px;font-weight:600;color:var(--ink-2);white-space:nowrap">검수 코멘트</h3>
+<h3 style="margin:0;font-size:13.5px;font-weight:600;color:var(--ink-2);white-space:nowrap">댓글</h3>
 <span style="font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums">{{ commentCount }}</span>
 </div>
 <div style="flex:1;min-height:90px;overflow-y:auto;border:1px solid var(--line);border-radius:6px">
 <sc-for list="{{ comments }}" as="c" hint-placeholder-count="2">
-<div style="padding:9px 11px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:3px">
-<div style="display:flex;gap:7px;align-items:baseline"><span style="font-size:12.5px;font-weight:600">{{ c.who }}</span><span style="font-size:11.5px;color:var(--ink-3)">{{ c.at }}</span><span style="{{ c.badgeStyle }}">{{ c.badge }}</span></div>
+<div style="padding:10px 11px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:7px;align-items:baseline;flex-wrap:wrap"><span style="font-size:12.5px;font-weight:600">{{ c.who }}</span><span style="font-size:11.5px;color:var(--ink-3)">{{ c.at }}</span><span style="{{ c.badgeStyle }}">{{ c.badge }}</span></div>
 <span style="font-size:13px;line-height:1.65;color:var(--ink-2)">{{ c.text }}</span>
+<sc-for list="{{ c.replies }}" as="r" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:2px;margin-left:12px;padding:7px 10px;background:var(--surface-2);border-left:2px solid var(--line-2);border-radius:0 5px 5px 0">
+<div style="display:flex;gap:6px;align-items:baseline"><span style="font-size:11.5px;color:var(--ink-3)">↳</span><span style="font-size:12px;font-weight:600">{{ r.who }}</span><span style="font-size:11px;color:var(--ink-3)">{{ r.at }}</span></div>
+<span style="font-size:12.5px;line-height:1.6;color:var(--ink-2)">{{ r.text }}</span>
+</div>
+</sc-for>
+<div style="display:flex;align-items:center;gap:8px">
+<button onClick="{{ c.openReply }}" style="{{ c.replyBtnStyle }}">{{ c.replyBtnLabel }}</button>
+<span style="{{ c.replyCountStyle }}">{{ c.replyCount }}</span>
+</div>
+<div style="{{ c.replyBoxStyle }}">
+<textarea value="{{ replyDraft }}" onChange="{{ setReplyDraft }}" placeholder="답글을 입력하세요 (예: 설계자가 문구를 수정했습니다)" style="min-height:52px;padding:8px;font-size:12.5px;line-height:1.65;border:1px solid var(--line-2);border-radius:5px;resize:vertical"></textarea>
+<button onClick="{{ c.submitReply }}" style="align-self:flex-end;height:26px;padding:0 11px;font-size:12px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">답글 등록</button>
+</div>
 </div>
 </sc-for>
 <sc-if value="{{ noComments }}" hint-placeholder-val="{{ true }}">
-<div style="padding:22px 11px;text-align:center;font-size:12.5px;color:var(--ink-3)">등록된 코멘트가 없습니다</div>
+<div style="padding:22px 11px;text-align:center;font-size:12.5px;color:var(--ink-3)">등록된 댓글이 없습니다</div>
 </sc-if>
 </div>
-<textarea value="{{ draft }}" onChange="{{ setDraft }}" placeholder="반려 코멘트를 입력하세요 (예: 03 첨부파일 탭 표 2번 항목 문구 수정 필요)" style="min-height:64px;padding:10px;font-size:13.5px;line-height:1.7;border:1px solid var(--line-2);border-radius:5px;resize:vertical"></textarea>
+<textarea value="{{ draft }}" onChange="{{ setDraft }}" placeholder="댓글을 입력하세요 (예: 03 첨부파일 탭 표 2번 항목 문구 수정 필요)" style="min-height:64px;padding:10px;font-size:13.5px;line-height:1.7;border:1px solid var(--line-2);border-radius:5px;resize:vertical"></textarea>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
 <span style="font-size:12px;color:var(--ink-3)">{{ reviewNote }}</span>
-<button onClick="{{ addComment }}" style="height:30px;padding:0 14px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">코멘트 등록</button>
+<button onClick="{{ addComment }}" style="flex:none;height:30px;padding:0 14px;white-space:nowrap;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer" style-hover="background:rgba(16,24,32,.04)">등록</button>
 </div>
 </aside>
 </sc-if>
 </div>
 </main>
+</sc-if>
+
+<sc-if value="{{ leaveAsk }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeLeave }}" style="position:fixed;inset:0;z-index:70;background:rgba(10,11,32,.42);display:flex;align-items:center;justify-content:center;padding:28px 24px">
+<div onClick="{{ stopClick }}" style="width:min(420px,100%);background:var(--page);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 48px rgba(10,11,32,.28);padding:22px 24px;display:flex;flex-direction:column;gap:14px">
+<h3 style="margin:0;font-size:15px;font-weight:600;color:var(--ink)">임시저장이 필요합니다</h3>
+<p style="margin:0;font-size:13px;line-height:1.75;color:var(--ink-2)">편집 중인 내용은 임시저장하지 않으면 사라집니다. 저장하고 목록으로 이동합니다.</p>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button onClick="{{ closeLeave }}" style="height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer">계속 편집</button>
+<button onClick="{{ leaveSave }}" style="height:32px;padding:0 16px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer">임시저장 후 나가기</button>
+</div>
+</div>
+</div>
 </sc-if>
 </div>
 </x-dc>
@@ -861,6 +918,7 @@ const TREE = {
   '생산': { '생산계획': ['기준생산계획', '작업지시'], '실적': ['생산실적', '불량관리'] },
   '시스템': { '기준정보': ['공통코드', '거래처'], '권한': ['사용자', '메뉴권한'] }
 };
+const TODAY = '2026-09-17';
 const STATUSES = ['자동생성', '수정중', '수정완료', '검수중', '검수반려', '검수완료', '배포대기', '배포완료', '폐기'];
 const SC = {
   '자동생성': ['#EFEFFF', '#4B46C4'],
@@ -978,14 +1036,14 @@ class Component extends DCLogic {
       { name: '첨부파일', overview: '증빙 파일을 등록·삭제합니다.', rows: ['파일 : 1건당 20MB, 최대 10건까지 첨부할 수 있습니다.'] }
     ],
     custom: '전체', overrides: {}, toast: '', dragIdx: null, overIdx: null, cmpVersion: 'v1.3',
-    statusOv: {}, reviewerOv: {}, comments: {}, draft: '',
+    statusOv: {}, reviewerOv: {}, comments: {}, draft: '', replyOpen: null, replyDraft: '', leaveAsk: false, dirty: false,
     authed: true, editing: false, loginId: '', loginPw: '', loginErr: '',
     permEdit: false, usersBackup: null,
     mmMod: '전체', mmWriter: '전체', writerOv: {}, mmSel: [], mmBulkWriter: '미지정',
     dark: false,
     blkDrag: null, blkOver: null,
     reqOpen: false, reqCode: '', reqAssignee: '미지정', reqNote: '', reqs: null,
-    rqMod: '전체', rqMenu: '전체', rqQ: '', rqMine: false, rqDrafts: [],
+    rqMod: '전체', rqMenu: '전체', rqQ: '', rqMine: false, rqFrom: '', rqTo: '', rqDrafts: [],
     dlOpen: false, dlMode: 'batch', sgMod: '전체', sgMaj: '전체', sgStatus: '전체', sgQ: '', sgSel: [],
     dlMods: Object.keys(TREE), dlCover: true, dlToc: true, dlStd: true, dlCustom: true, dlFormat: 'PDF', dlDone: false,
     dlTitle: 'Amaranth 10 사용자 매뉴얼', dlModLabel: ''
@@ -1070,19 +1128,21 @@ class Component extends DCLogic {
         if (!key || !this.rowEls || !this.rowEls[key]) return;
         try { document.execCommand('styleWithCSS', false, false); } catch (err) {}
         const node = this.rowEls[key];
-        document.execCommand('bold', false, null);
+        this.toggleEmph();
         this.commitField(key, node.innerHTML);
       }
     };
     document.addEventListener('keydown', this.onKey, true);
+
   }
   componentWillUnmount() {
     if (this.onKey) document.removeEventListener('keydown', this.onKey, true);
+    if (this.io) this.io.disconnect();
   }
   fieldHtml(key) {
     const s = this.state;
     if (key === 'ov') return s.overview || '';
-    if (key === 'tabov') return (s.docTabs[s.tabIdx] || {}).overview || '';
+    if (key.indexOf('tabov') === 0) { const t = key.split(':')[1]; return (s.docTabs[t === undefined ? s.tabIdx : +t] || {}).overview || ''; }
     const p = key.split(':');
     if (p.length !== 3) return '';
     const b = tabBlocks(s.docTabs[+p[0]] || {})[+p[1]];
@@ -1090,7 +1150,7 @@ class Component extends DCLogic {
   }
   writeField(key, html) {
     if (key === 'ov') return this.setState({ overview: html });
-    if (key === 'tabov') return this.patchTab(this.state.tabIdx, { overview: html });
+    if (key.indexOf('tabov') === 0) { const t = key.split(':')[1]; return this.patchTab(t === undefined ? this.state.tabIdx : +t, { overview: html }); }
     const p = key.split(':');
     if (p.length === 3) this.setRowHtml(+p[0], +p[1], +p[2], html);
   }
@@ -1146,8 +1206,13 @@ class Component extends DCLogic {
     this.restoreField(key, html);
     return true;
   }
-  commitActive() {
-    const key = this.activeKey, el = this.rowEls && this.rowEls[key];
+  histCmd(cmd) {
+    const key = this.activeKey;
+    if (!key || !this.rowEls || !this.rowEls[key]) return this.setState({ toast: '되돌릴 입력란을 먼저 클릭하세요' });
+    if (cmd === 'redo') this.redoField(key);
+    else this.undoField(key);
+  }
+  commitActive() {    const key = this.activeKey, el = this.rowEls && this.rowEls[key];
     if (!key || !el) return;
     this.commitField(key, el.innerHTML);
   }
@@ -1173,6 +1238,21 @@ class Component extends DCLogic {
     this.commitField(key, el.innerHTML);
     if (sel.rangeCount) this.activeRange = sel.getRangeAt(0).cloneRange();
   }
+  toggleEmph() {
+    const sel = document.getSelection();
+    const anchor = sel && sel.anchorNode;
+    const node = anchor && anchor.nodeType === 1 ? anchor : (anchor && anchor.parentElement);
+    const on = node && node.closest ? !!node.closest('b, strong') : false;
+    document.execCommand('bold', false, null);
+    document.execCommand('foreColor', false, on ? 'currentColor' : '#8168FF');
+    if (on) {
+      const sel2 = document.getSelection();
+      const n2 = sel2 && sel2.anchorNode;
+      const el2 = n2 && n2.nodeType === 1 ? n2 : (n2 && n2.parentElement);
+      const span = el2 && el2.closest ? el2.closest('font, span') : null;
+      if (span) span.style.color = '';
+    }
+  }
   emphasizeField(key, commit) {
     const el = this.rowEls && this.rowEls[key];
     if (!el || this.activeKey !== key) return;
@@ -1183,7 +1263,7 @@ class Component extends DCLogic {
     } else if (!el.contains(sel.anchorNode)) return;
     if (sel.isCollapsed) return;
     try { document.execCommand('styleWithCSS', false, false); } catch (e) {}
-    document.execCommand('bold', false, null);
+    this.toggleEmph();
     this.commitField(key, el.innerHTML);
     if (sel.rangeCount) this.activeRange = sel.getRangeAt(0).cloneRange();
   }
@@ -1194,6 +1274,41 @@ class Component extends DCLogic {
     if (!el || !el.contains(sel.anchorNode)) return;
     this.activeKey = key;
     this.activeRange = sel.getRangeAt(0).cloneRange();
+  }
+  activeEl() {
+    const el = this.rowEls && this.rowEls[this.activeKey];
+    if (!el || !el.isConnected) return null;
+    const sel = document.getSelection();
+    if (this.activeRange && el.contains(this.activeRange.commonAncestorContainer)) {
+      sel.removeAllRanges();
+      sel.addRange(this.activeRange);
+    } else if (!el.contains(sel.anchorNode)) return null;
+    try { document.execCommand('styleWithCSS', false, false); } catch (e) {}
+    return el;
+  }
+  bulletA(level) {
+    const el = this.activeEl();
+    if (!el) return this.setState({ toast: '스타일을 적용할 텍스트를 먼저 선택하세요' });
+    if (level === 0) {
+      let g = 0;
+      while (this.rowDepth(el) > 1 && g++ < 4) document.execCommand('outdent', false, null);
+      if (this.rowDepth(el) === 1) document.execCommand('insertUnorderedList', false, null);
+      return this.afterEdit(el);
+    }
+    if (this.rowDepth(el) === 0) document.execCommand('insertUnorderedList', false, null);
+    let g = 0;
+    while (this.rowDepth(el) < level && g++ < 4) document.execCommand('indent', false, null);
+    g = 0;
+    while (this.rowDepth(el) > level && g++ < 4) document.execCommand('outdent', false, null);
+    this.afterEdit(el);
+  }
+  emphasizeA() {
+    const el = this.activeEl();
+    if (!el) return this.setState({ toast: '강조할 단어를 먼저 선택하세요' });
+    const sel = document.getSelection();
+    if (sel.isCollapsed) return this.setState({ toast: '강조할 단어를 먼저 선택하세요' });
+    this.toggleEmph();
+    this.afterEdit(el);
   }
   useSel(i, bi) {
     const pre = i + ':' + bi + ':';
@@ -1363,21 +1478,23 @@ h3.sec{margin:0 0 14px;font-size:21px;font-weight:700;border-bottom:2px solid #1
 .divider .no{font:500 14px/1 'Pretendard Variable',Pretendard,sans-serif;letter-spacing:.12em;color:#1C90FB}
 .divider h2{margin:0;font-size:32px;font-weight:700}
 .divider p{margin:0;font-size:14px;color:#4a5764}
-.mn-head{border-bottom:2px solid #16202a;padding-bottom:9px;margin-bottom:14px}
-.mn-head .path{font-size:12.5px;color:#6b7785}
-.mn-head h2{margin:4px 0 0;font-size:24.5px;font-weight:700}
-.mn-head .code{font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
+.mn-head{border-bottom:1px solid #d9dfe5;padding-bottom:13px;margin-bottom:16px}
+.mn-head .path{font-size:12px;color:#6b7785}
+.mn-head h2{margin:7px 0 0;font-size:25px;font-weight:700;letter-spacing:-.02em}
+.mn-head h2::after{content:'';display:block;width:42px;height:3px;border-radius:2px;background:#1C90FB;margin-top:9px}
+.mn-head .code{font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1}
 .ov{font-size:13.5px;line-height:1.85;color:#2c3742;margin:0 0 16px}
 .tab{margin:0 0 20px;page-break-inside:avoid}
-.tab .th{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
-.tab .th .no{font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#1C90FB}
-.tab .th h4{margin:0;font-size:16px;font-weight:700}
+.tab .th{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tab .th .no{display:inline-block;min-width:22px;padding:2px 6px;border-radius:3px;background:#EAF3FE;text-align:center;font:600 11.5px/1.4 'Pretendard Variable',Pretendard,sans-serif;color:#0B72D6}
+.tab .th h4{margin:0;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
 .shot{height:62mm;border:1px dashed #b7c0c9;background:repeating-linear-gradient(135deg,#f4f6f8 0 8px,#fff 8px 16px);display:flex;align-items:center;justify-content:center;font:400 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:#8b95a1;margin-bottom:9px}
 .tab p{margin:0 0 9px;font-size:13px;line-height:1.75;color:#2c3742}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
-th,td{border:1px solid #cfd6dd;padding:6px 8px;text-align:left;vertical-align:top}
-th{background:#eef2f7;font-weight:600}
-td.n{width:34px;text-align:center;font-family:'Pretendard Variable',Pretendard,sans-serif;color:#6b7785}
+th,td{border:1px solid #dde3e9;padding:7px 9px;text-align:left;vertical-align:top}
+th{background:#f4f6f9;font-weight:600;color:#4a5764}
+th.n{width:38px;text-align:center}
+td.n{width:38px;text-align:center;font-family:'Pretendard Variable',Pretendard,sans-serif;font-weight:500;color:#6b7785;font-variant-numeric:tabular-nums}
 td.rt ul{margin:2px 0;padding-left:18px}
 td.rt ul ul{list-style:disc;padding-left:16px}
 td.rt li,td.rt div{margin:2px 0;white-space:pre-wrap}
@@ -1398,7 +1515,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
   return '<table><thead><tr><th class="n">번호</th><th>내용</th></tr></thead><tbody>' + (b.rows || []).map((row, k) => '<tr><td class="n">' + (start + k + 1) + '</td><td class="rt">' + rowHtml(row) + '</td></tr>').join('') + '</tbody></table>';
 }).join(''); })()}</div>`).join('');
     return `<section class="page"><div class="mn-head"><div class="path">${E([r.module, r.major, r.minor].join(' › '))}</div><h2>${E(r.name)}</h2><span class="code">${E(r.code)} · ${E(r.version)} · ${r.custom ? '커스텀' : '패키지'}</span></div>
-<p class="ov">${E(s.overview)}</p>${tabs}
+<div class="rt ov">${s.overview || ''}</div>${tabs}
 <div class="pf"><span>Amaranth 10 매뉴얼</span><span>${E(r.code)}</span></div></section>`;
   }
 
@@ -1595,8 +1712,15 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
   }
   addComment(code, text) {
     if (!text.trim()) return;
-    const list = (this.state.comments[code] || []).concat([{ who: ROLE_ME[this.state.role], at: '2026-08-26 11:20', text: text.trim() }]);
+    const list = (this.state.comments[code] || []).concat([{ who: ROLE_ME[this.state.role], at: '2026-08-26 11:20', text: text.trim(), replies: [] }]);
     this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), draft: '' });
+  }
+  addReply(code, idx, text) {
+    if (!text.trim()) return;
+    const list = (this.state.comments[code] || []).map((c, i) => i !== idx ? c : Object.assign({}, c, {
+      replies: (c.replies || []).concat([{ who: ROLE_ME[this.state.role], at: '2026-08-26 11:32', text: text.trim() }])
+    }));
+    this.setState({ comments: Object.assign({}, this.state.comments, { [code]: list }), replyDraft: '', replyOpen: null });
   }
 
   perm(row) {
@@ -1629,17 +1753,140 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
 
   set(k) { return e => this.setState({ [k]: e.target.value, page: 1 }); }
 
+  scrollEdge(dir) {
+    const el = this.panelEls && this.panelEls[0];
+    if (!el) return;
+    let p = el.parentElement;
+    while (p && p !== document.body && !(p.scrollHeight > p.clientHeight + 8 && /auto|scroll/.test(getComputedStyle(p).overflowY))) p = p.parentElement;
+    const sc = (p && p !== document.body) ? p : (document.scrollingElement || document.documentElement);
+    sc.scrollTo({ top: dir < 0 ? 0 : sc.scrollHeight, behavior: 'smooth' });
+  }
+  scrollToTab(i) {
+    const el = this.panelEls && this.panelEls[i];
+    if (!el) return;
+    let p = el.parentElement;
+    while (p && p !== document.body && !(p.scrollHeight > p.clientHeight + 8 && /auto|scroll/.test(getComputedStyle(p).overflowY))) p = p.parentElement;
+    const top = el.getBoundingClientRect().top;
+    if (p && p !== document.body) {
+      p.scrollTo({ top: p.scrollTop + top - p.getBoundingClientRect().top - 78, behavior: 'smooth' });
+    } else {
+      const sc = document.scrollingElement || document.documentElement;
+      sc.scrollTo({ top: sc.scrollTop + top - 168, behavior: 'smooth' });
+    }
+  }
+  moveTabTo(from, to) {
+    if (from === to) return;
+    const tabs = this.state.docTabs.slice();
+    const t = tabs.splice(from, 1)[0];
+    tabs.splice(to, 0, t);
+    this.setState({ docTabs: tabs, tabIdx: to }, () => this.scrollToTab(to));
+  }
+  buildBlocks(i, LOCKED) {
+    const s = this.state;
+    return (() => {
+        const bl = tabBlocks(s.docTabs[i] || {});
+        if (!this.rowEls) this.rowEls = {};
+        const tool = "height:24px;padding:0 8px;border-radius:4px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-size:12px;font-weight:500;cursor:pointer";
+        const ghost = "width:24px;height:24px;display:grid;place-items:center;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;font-size:11px;color:var(--ink-3);cursor:pointer";
+        let n = 0;
+        const counts = bl.map(b => b.type === 'table' ? (b.rows || []).length : 0);
+        return bl.map((b, bi) => {
+          const isTable = b.type === 'table';
+          const firstImage = bl.findIndex(x => x.type !== 'table');
+          const start = n;
+          if (isTable) n += (b.rows || []).length;
+          const nextTable = bl.findIndex((x, y) => y > bi && x.type === 'table');
+          let calloutStart = 0;
+          for (let y = 0; y < nextTable; y++) calloutStart += counts[y];
+          const callouts = nextTable >= 0
+            ? Array.from({ length: counts[nextTable] }, (_, y) => calloutStart + y + 1)
+            : [];
+          return {
+            label: isTable ? '표 — 번호 · 내용' : '이미지 — 화면 캡처',
+            isTable, isImage: !isTable,
+            tableStyle: isTable ? 'display:flex;flex-direction:column;gap:7px' : 'display:none',
+            imgStyle: isTable ? 'display:none' : 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;height:172px;border:1px dashed var(--line-2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px)',
+            calloutNote: callouts.length ? '콜아웃 ' + callouts.join(' · ') : '연결된 표가 없습니다',
+            overviewStyle: (!isTable && bi === firstImage) ? 'display:flex;flex-direction:column;gap:5px;padding-top:2px' : 'display:none',
+            hasOverview: !isTable && bi === firstImage,
+            overviewField: (!isTable && bi === firstImage) ? React.createElement('div', {
+              className: 'rt',
+              contentEditable: !LOCKED,
+              suppressContentEditableWarning: true,
+              key: 'tabov-' + i,
+              ref: el => { if (!this.rowEls) this.rowEls = {}; this.rowEls['tabov:' + i] = el; },
+              dangerouslySetInnerHTML: { __html: (s.docTabs[i] || {}).overview || '' },
+              onFocus: () => { this.activeKey = 'tabov:' + i; this.richSel('tabov:' + i); },
+              onMouseUp: () => this.richSel('tabov:' + i),
+              onKeyUp: () => this.richSel('tabov:' + i),
+              onBlur: e => this.commitField('tabov:' + i, e.currentTarget.innerHTML),
+              style: { minHeight: '52px', padding: '9px 10px', fontSize: '13.5px', lineHeight: 1.7, border: '1px solid var(--line-2)', borderRadius: '5px', background: 'var(--surface)', outline: 'none', whiteSpace: 'pre-wrap' }
+            }) : null,
+            emphasizeOverview: () => this.emphasizeField('tabov:' + i, html => this.patchTab(i, { overview: html })),
+            plainOverview: () => this.plainField('tabov:' + i, html => this.patchTab(i, { overview: html })),
+            addRowStyle: (isTable && !LOCKED) ? tool : 'display:none',
+            toolStyle: isTable ? tool : 'display:none',
+            toolbarStyle: (isTable && !LOCKED) ? 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:7px 9px;background:var(--surface);border:1px solid var(--line);border-radius:5px' : 'display:none',
+            bold: () => this.emphasize(i, bi),
+            lv1: () => this.setBullet(i, bi, 1),
+            lv2: () => this.setBullet(i, bi, 2),
+            plain: () => this.setBullet(i, bi, 0),
+            keepFocus: e => e.preventDefault(),
+            addRow: () => this.addRow(i, bi),
+            up: () => this.moveBlock(i, bi, -1),
+            down: () => this.moveBlock(i, bi, 1),
+            wrapStyle: 'display:flex;gap:5px;align-items:flex-start;border-radius:6px;opacity:' + (s.blkDrag === bi ? .45 : 1) + (s.blkOver === bi && s.blkDrag !== null && s.blkDrag !== bi ? ';box-shadow:0 -2px 0 #1C90FB' : ''),
+            bodyStyle: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding:11px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px',
+            gripStyle: LOCKED ? 'display:none' : 'width:20px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:3px;cursor:grab;padding:14px 4px 0',
+            gripLine: 'height:1.5px;background:var(--ink-3);opacity:.6;border-radius:1px',
+            onDragStart: () => this.setState({ blkDrag: bi }),
+            onDragOver: e => { e.preventDefault(); if (s.blkOver !== bi) this.setState({ blkOver: bi }); },
+            onDrop: e => { e.preventDefault(); this.dropBlock(i, s.blkDrag, bi); },
+            onDragEnd: () => this.setState({ blkDrag: null, blkOver: null }),
+            draggable: !LOCKED,
+            uploadStyle: LOCKED ? 'display:none' : 'height:28px;padding:0 13px;font-size:13px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer',
+            del: () => this.delBlock(i, bi),
+            rowDelStyle: LOCKED ? 'display:none' : 'width:24px;height:24px;margin-top:3px;display:grid;place-items:center;border:0;background:none;padding:0;font-size:13px;color:var(--ink-3);opacity:.8;cursor:pointer',
+            ghostStyle: LOCKED ? 'display:none' : ghost,
+            rows: isTable ? (b.rows || []).map((r, k) => {
+              const key = i + ':' + bi + ':' + k;
+              return {
+                no: start + k + 1,
+                editor: React.createElement('div', {
+                  contentEditable: !LOCKED,
+                  suppressContentEditableWarning: true,
+                  ref: el => { this.rowEls[key] = el; },
+                  dangerouslySetInnerHTML: { __html: rowHtml(r) },
+                  onFocus: () => { this.activeKey = key; this.saveSel(key); },
+                  onMouseUp: () => this.saveSel(key),
+                  onKeyUp: () => this.saveSel(key),
+                  onBlur: e => this.commitField(key, e.currentTarget.innerHTML),
+                  style: {
+                    minHeight: '30px', padding: '7px 10px', fontSize: '13.5px', lineHeight: 1.6,
+                    border: '1px solid var(--line)', borderRadius: '4px', outline: 'none',
+                    color: 'var(--ink-2)', background: 'var(--surface)', whiteSpace: 'pre-wrap'
+                  }
+                }),
+                del: () => this.delRow(i, bi, k)
+              };
+            }) : []
+          };
+        });
+      })();
+  }
   renderVals() {
     DARK = !!this.state.dark;
-    const EDITABLE_STATUS = ['자동생성', '수정중', '검수중'].indexOf((this.state.cur || {}).status) >= 0;
-    const LOCKED = !this.state.editing || !EDITABLE_STATUS;
+    const CUR_ST = (this.state.cur || {}).status;
+    const EDITABLE_STATUS = ['자동생성', '수정중', '검수중'].indexOf(CUR_ST) >= 0;
+    const ALWAYS_EDIT = ['수정중', '검수중'].indexOf(CUR_ST) >= 0;
+    const LOCKED = !EDITABLE_STATUS || (!ALWAYS_EDIT && !this.state.editing);
     const s = this.state, me = ROLE_ME[s.role];
     const all = this.items();
     let list = this.filtered();
     const base = this.filtered(true);
     const reqList = s.reqs || (function (rows) {
       const pick = rows.slice(0, 5);
-      return pick.map((r, i) => ({ state: i === 4 ? '생성중' : '대기중', code: r.code, who: '미지정', note: '', by: '이연주' }));
+      return pick.map((r, i) => ({ state: i === 4 ? '생성중' : '대기중', code: r.code, who: '미지정', note: '', by: '이연주', at: ['2026-09-08', '2026-09-10', '2026-09-11', '2026-09-15', '2026-09-16'][i] || '2026-09-16' }));
     })(all);
     const byCode = {};
     all.forEach(r => { byCode[r.code] = r; });
@@ -1649,6 +1896,8 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       if (s.rqMenu && s.rqMenu !== '전체' && q.code !== s.rqMenu) return false;
       if (s.rqQ && String(q.who || '').indexOf(s.rqQ) < 0) return false;
       if (s.rqMine && q.who !== me) return false;
+      if (s.rqFrom && String(q.at || '') < s.rqFrom) return false;
+      if (s.rqTo && String(q.at || '') > s.rqTo) return false;
       return true;
     });
     const mmList = all.filter(r => (s.mmMod === '전체' || r.module === s.mmMod) && (s.mmWriter === '전체' || r.writer === s.mmWriter));
@@ -1756,6 +2005,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
     const cmpVer = prevVers.indexOf(s.cmpVersion) >= 0 ? s.cmpVersion : (prevVers[0] || curVer);
     const isWriter = cur.writer === me;
     const reviewer = (s.role === '검수자' || s.role === '관리자') && !isWriter;
+    const CN = cur.code + ' ' + (cur.name || '');
     const writerSide = s.role === '관리자' || isWriter;
     const offBtn = 'height:32px;padding:0 15px;font-size:13.5px;border:1px solid var(--line);background:rgba(16,24,32,.03);color:var(--ink-3);border-radius:5px;cursor:not-allowed';
     const canExport = s.role === '관리자' || s.role === '검수자';
@@ -2003,6 +2253,9 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       reqOpen: s.reqOpen,
       rqMe: me,
       rqMod: s.rqMod, rqQ: s.rqQ, rqMine: s.rqMine, rqMenu: s.rqMenu || '전체',
+      rqFrom: s.rqFrom, rqTo: s.rqTo, rqToday: TODAY,
+      setRqFrom: e => this.setState({ rqFrom: e.target.value }),
+      setRqTo: e => this.setState({ rqTo: e.target.value }),
       rqMenuOpts: [{ value: '전체', label: '전체' }].concat(
         all.filter(r => s.rqMod === '전체' || r.module === s.rqMod).map(r => ({ value: r.code, label: r.code + ' · ' + r.name }))
       ),
@@ -2013,7 +2266,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       setRqMod: e => this.setState({ rqMod: e.target.value, rqMenu: '전체' }),
       setRqQ: e => this.setState({ rqQ: e.target.value }),
       toggleRqMine: () => this.setState({ rqMine: !s.rqMine }),
-      rqReset: () => this.setState({ rqMod: '전체', rqMenu: '전체', rqQ: '', rqMine: false }),
+      rqReset: () => this.setState({ rqMod: '전체', rqMenu: '전체', rqQ: '', rqMine: false, rqFrom: '', rqTo: '' }),
       rqSearch: () => this.setState({ toast: '조회조건을 적용했습니다' }),
       rqDraftModOpts: Object.keys(TREE),
       rqAddRow: () => {
@@ -2048,12 +2301,12 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         const drafts = s.rqDrafts.filter(d => d.code);
         if (!drafts.length) return this.setState({ toast: '저장할 신규 요청이 없습니다' });
         this.setState({
-          reqs: reqList.concat(drafts.map(d => ({ state: '대기중', code: d.code, who: (byCode[d.code] || {}).writer || '미지정', note: (d.note || '').trim(), by: me }))),
+          reqs: reqList.concat(drafts.map(d => ({ state: '대기중', code: d.code, who: (byCode[d.code] || {}).writer || '미지정', note: (d.note || '').trim(), by: me, at: TODAY }))),
           rqDrafts: [], toast: '매뉴얼 요청 ' + drafts.length + '건을 저장했습니다'
         });
       },
       reqRows: rqView.map(q => ({
-        state: q.state, code: q.code, mod: (byCode[q.code] || {}).module || '—', name: (byCode[q.code] || {}).name || '', note: q.note || '—', by: q.by,
+        state: q.state, code: q.code, mod: (byCode[q.code] || {}).module || '—', name: (byCode[q.code] || {}).name || '', note: q.note || '—', by: q.by, at: q.at || '—',
         badgeStyle: 'display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:11px;font-size:12.5px;font-weight:500;' +
           (q.state === '생성중'
             ? (DARK ? 'background:rgba(129,104,255,.24);color:#C4BCFF' : 'background:#ECECFF;color:#4C4C8C')
@@ -2078,11 +2331,9 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         ? 'height:34px;padding:0 20px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;color:#fff;border-radius:5px;cursor:pointer'
         : 'height:34px;padding:0 20px;font-size:13.5px;font-weight:600;border:1px solid var(--line);background:rgba(16,24,32,.03);color:var(--ink-3);border-radius:5px;cursor:not-allowed',
       canDl: s.role === '관리자' || s.role === '검수자',
-      dlBtnStyle: (s.role === '관리자' || s.role === '검수자')
-        ? 'height:30px;padding:0 13px;font-size:13.5px;font-weight:500;border:1px solid #1C90FB;background:var(--surface);border-radius:5px;color:#0B72D6;cursor:pointer'
-        : 'height:30px;padding:0 13px;font-size:13.5px;border:1px solid var(--line);background:rgba(16,24,32,.03);border-radius:5px;color:var(--ink-3);cursor:not-allowed',
-      dlBtnTip: (s.role === '관리자' || s.role === '검수자') ? '' : '일괄 내려받기는 관리자·검수자만 가능합니다',
-      dlBtnClick: (s.role === '관리자' || s.role === '검수자') ? () => this.setState({ dlOpen: true, dlDone: false }) : undefined,
+      dlBtnStyle: 'height:30px;padding:0 13px;font-size:13.5px;font-weight:500;border:1px solid #1C90FB;background:var(--surface);border-radius:5px;color:#0B72D6;cursor:pointer',
+      dlBtnTip: '',
+      dlBtnClick: () => this.setState({ dlOpen: true, dlDone: false }),
       canManageRole: s.role === '관리자',
       isRestricted: s.role !== '관리자',
       roleBadgeStyle: 'display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:5px;background:rgba(16,24,32,.05);color:var(--ink-2);font-size:13.5px;font-weight:500',
@@ -2104,7 +2355,14 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       })),
       isList: s.authed && s.screen === 'list', isSub: s.authed && ['edit', 'preview', 'diff'].indexOf(s.screen) >= 0,
       isEdit: s.screen === 'edit', isPreview: s.screen === 'preview', isDiff: s.screen === 'diff',
-      back: () => this.setState({ screen: 'list' }),
+      back: () => {
+        if (['수정중', '검수중'].indexOf(cur.status) >= 0) return this.setState({ leaveAsk: true });
+        this.setState({ screen: 'list' });
+      },
+      leaveAsk: s.leaveAsk,
+      closeLeave: () => this.setState({ leaveAsk: false }),
+      leaveSave: () => this.setState({ leaveAsk: false, screen: 'list', dirty: false, toast: CN + ' 임시저장했습니다' }),
+      tempSave: () => this.setState({ dirty: false, toast: CN + ' 임시저장했습니다' }),
       goHome: () => this.setState({ screen: 'list', modal: '', dlOpen: false, cur: null }),
       tabs,
       fModule: s.module, fMajor: s.major, fMinor: s.minor, fQuery: s.query, setQuery: e => this.setState({ query: e.target.value, page: 1 }),
@@ -2136,6 +2394,32 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       subTabs: [subTab('edit', '편집'), subTab('preview', '미리보기'), subTab('diff', '변경사항')],
       canReview: reviewer,
       inReview: ['수정완료', '검수중', '검수반려'].indexOf(cur.status) >= 0,
+      stickySentinel: el => {
+        if (!el || this.sentinelEl === el) return;
+        this.sentinelEl = el;
+        if (this.io) this.io.disconnect();
+        this.io = new IntersectionObserver(entries => {
+          const stuck = !entries[0].isIntersecting;
+          if (!!this.state.paneStuck !== stuck) this.setState({ paneStuck: stuck });
+        }, { rootMargin: '-96px 0px 0px 0px', threshold: 0 });
+        this.io.observe(el);
+      },
+      infoBarStyle: 'position:sticky;top:90px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 2px rgba(23,28,36,.04);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
+      infoTopStyle: s.paneStuck
+        ? 'display:flex;flex-direction:column;gap:0px'
+        : 'display:flex;flex-direction:column;gap:11px;padding-bottom:13px;border-bottom:1px solid var(--line)',
+      assigneeRowStyle: s.paneStuck ? 'display:none' : 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:9px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:7px',
+      flowRowStyle: s.paneStuck ? 'display:none' : 'display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding-top:1px',
+      collapsedSepStyle: s.paneStuck ? 'width:1px;height:13px;background:var(--line)' : 'display:none',
+      collapsedInfoStyle: s.paneStuck ? 'font-size:12.5px;color:var(--ink-3);white-space:nowrap' : 'display:none',
+      collapsedPeople: '작성 ' + (cur.writer || '미지정') + ' · 검수 ' + (cur.reviewer || '미지정'),
+      curStatusLabel: cur.status,
+      curStatusPillStyle: (() => {
+        if (!s.paneStuck) return 'display:none';
+        const c = SC[cur.status] || SC['자동생성'];
+        const ac = (CARD_C[cur.status] || CARD_C['전체'])[1];
+        return 'display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:12px;font-size:12px;font-weight:600;background:' + (DARK ? ac + '2E' : c[0]) + ';color:' + (DARK ? ac : c[1]) + ';border:1px solid ' + (DARK ? ac : c[1]);
+      })(),
       flowSteps: (() => {
         const base = ['자동생성', '수정중', '수정완료', '검수중', '검수완료', '배포대기', '배포완료'];
         const rejected = cur.status === '검수반려';
@@ -2165,20 +2449,20 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid #A67C08;background:#FDF4DA;color:#A67C08;border-radius:5px;cursor:pointer'
         : offBtn,
       startReview: reviewer && cur.status === '수정완료'
-        ? () => { this.setStatus(cur.code, '검수중'); this.setState({ toast: cur.code + ' 검수를 시작했습니다' }); }
+        ? () => { this.setStatus(cur.code, '검수중'); this.setState({ toast: CN + ' 검수를 시작했습니다' }); }
         : undefined,
       startReviewTip: isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다' : (cur.status === '수정완료' ? '' : '수정완료 상태만 검수를 시작할 수 있습니다'),
       rejectStyle: reviewer && cur.status === '검수중'
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid #FF8787;background:var(--surface);color:#D14343;border-radius:5px;cursor:pointer'
         : offBtn,
       reject: reviewer && cur.status === '검수중'
-        ? () => { this.addComment(cur.code, s.draft || '검수 반려'); this.setStatus(cur.code, '검수반려'); this.setState({ toast: cur.code + ' 검수 반려 처리했습니다' }); }
+        ? () => { this.addComment(cur.code, s.draft || '검수 반려'); this.setStatus(cur.code, '검수반려'); this.setState({ toast: CN + ' 검수 반려 처리했습니다' }); }
         : undefined,
       passReviewStyle: reviewer && cur.status === '검수중'
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:500;border:1px solid #1E8F89;background:' + (DARK ? 'rgba(62,143,138,.24)' : '#E3F6F5') + ';color:' + (DARK ? '#7FD8D2' : '#1E8F89') + ';border-radius:5px;cursor:pointer'
         : offBtn,
       passReview: reviewer && cur.status === '검수중'
-        ? () => { this.setStatus(cur.code, '검수완료'); this.setState({ toast: cur.code + ' 검수완료로 변경했습니다' }); }
+        ? () => { this.setStatus(cur.code, '검수완료'); this.setState({ toast: CN + ' 검수완료로 변경했습니다' }); }
         : undefined,
       submitLabel: '수정 완료',
       actions: (() => {
@@ -2189,7 +2473,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
           tip: writerSide ? '' : '수정은 작성 담당자 또는 관리자가 처리합니다',
           run: () => {
             if (cur.status === '자동생성' || cur.status === '검수반려') this.setStatus(cur.code, '수정중');
-            this.setState({ editing: true, screen: 'edit', toast: cur.code + ' 수정을 시작했습니다' });
+            this.setState({ editing: true, screen: 'edit', toast: CN + ' 수정을 시작했습니다' });
           }
         };
         const submit = {
@@ -2203,43 +2487,57 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
             });
             if (miss.length) return this.setState({ toast: '필수 항목이 비어 있습니다 — ' + miss.slice(0, 3).join(', ') });
             this.setStatus(cur.code, '수정완료');
-            this.setState({ editing: false, screen: 'preview', toast: cur.code + ' 수정완료로 변경했습니다' });
+            this.setState({ editing: false, screen: 'preview', toast: CN + ' 수정완료로 변경했습니다' });
           }
         };
         const startReview = {
           label: '검수 시작', can: reviewer,
           tip: reviewer ? '' : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다' : '검수는 검수자 또는 관리자가 처리합니다'),
-          run: () => { this.setStatus(cur.code, '검수중'); this.setState({ editing: false, screen: 'preview', toast: cur.code + ' 검수를 시작했습니다' }); }
+          run: () => { this.setStatus(cur.code, '검수중'); this.setState({ editing: false, screen: 'preview', toast: CN + ' 검수를 시작했습니다' }); }
+        };
+        const rejectReview = {
+          label: '검수 반려', can: reviewer, danger: true,
+          tip: reviewer ? '수정이 필요한 경우 반려합니다' : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다' : '검수는 검수자 또는 관리자가 처리합니다'),
+          run: () => {
+            this.addComment(cur.code, (s.draft || '').trim() || '검수 반려');
+            this.setStatus(cur.code, '검수반려');
+            this.setState({ editing: false, screen: 'preview', draft: '', toast: CN + ' 검수 반려 처리했습니다' });
+          }
         };
         const passReview = {
           label: '검수 완료', can: reviewer,
           tip: reviewer ? '' : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다' : '검수는 검수자 또는 관리자가 처리합니다'),
-          run: () => { this.setStatus(cur.code, '검수완료'); this.setState({ editing: false, screen: 'preview', toast: cur.code + ' 검수완료로 변경했습니다' }); }
+          run: () => { this.setStatus(cur.code, '검수완료'); this.setState({ editing: false, screen: 'preview', toast: CN + ' 검수완료로 변경했습니다' }); }
         };
         const toDeployWait = {
           label: '배포대기', can: writerSide,
           tip: writerSide ? '' : '배포는 작성 담당자 또는 관리자가 처리합니다',
-          run: () => { this.setStatus(cur.code, '배포대기'); this.setState({ editing: false, screen: 'preview', toast: cur.code + ' 배포대기로 이동했습니다' }); }
+          run: () => { this.setStatus(cur.code, '배포대기'); this.setState({ editing: false, screen: 'preview', toast: CN + ' 배포대기로 이동했습니다' }); }
         };
         const discard = {
           label: '폐기', can: writerSide, danger: true,
           tip: writerSide ? '문서를 폐기 상태로 변경합니다' : '폐기는 작성 담당자 또는 관리자가 처리합니다',
-          run: () => { this.setStatus(cur.code, '폐기'); this.setState({ editing: false, screen: 'preview', toast: cur.code + ' 폐기 처리했습니다' }); }
+          run: () => { this.setStatus(cur.code, '폐기'); this.setState({ editing: false, screen: 'preview', toast: CN + ' 폐기 처리했습니다' }); }
         };
+        const back = (label, to, tip, note) => ({
+          label, can: writerSide || reviewer, tip, secondary: true,
+          run: () => { this.setStatus(cur.code, to); this.setState({ editing: false, screen: 'preview', toast: CN + ' ' + note }); }
+        });
         const map = {
           '자동생성': [startEdit, submit],
           '수정중': [submit],
-          '수정완료': [startReview, passReview],
-          '검수중': [passReview],
-          '검수완료': [toDeployWait],
-          '검수반려': [startEdit, submit]
+          '수정완료': [startReview, passReview, back('수정중으로 되돌리기', '수정중', '추가 수정이 필요하면 수정중으로 되돌립니다', '수정중으로 되돌렸습니다')],
+          '검수중': [passReview, rejectReview, back('수정완료로 되돌리기', '수정완료', '검수를 취소하고 수정완료로 되돌립니다', '수정완료로 되돌렸습니다')],
+          '검수완료': [toDeployWait, back('검수중으로 되돌리기', '검수중', '재검수가 필요하면 검수중으로 되돌립니다', '검수중으로 되돌렸습니다')],
+          '배포대기': [back('검수완료로 되돌리기', '검수완료', '배포 전 단계로 되돌립니다', '검수완료로 되돌렸습니다')],
+          '검수반려': [startEdit, submit, back('검수중으로 되돌리기', '검수중', '반려를 취소하고 검수중으로 되돌립니다', '검수중으로 되돌렸습니다')]
         };
         const list = (map[cur.status] || []).slice();
         if (cur.status !== '폐기') list.push(discard);
         const dangerStyle = 'height:32px;padding:0 14px;font-size:13.5px;font-weight:500;border:1px solid #FF8787;background:var(--surface);border-radius:5px;color:#D14343;cursor:pointer;white-space:nowrap';
         return list.map((a, x) => ({
           label: a.label,
-          style: !a.can ? offBtn : (a.danger ? dangerStyle : (x === 0 ? primary : second)),
+          style: !a.can ? offBtn : (a.danger ? dangerStyle : (a.secondary ? second : (x === 0 ? primary : second))),
           tip: a.tip,
           onClick: a.can ? a.run : undefined
         }));
@@ -2250,21 +2548,31 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       writerLocked: s.role !== '관리자',
       setWriterSel: e => {
         const name = e.target.value;
-        this.setState({ writerOv: Object.assign({}, this.state.writerOv, { [cur.code]: name }), cur: Object.assign({}, cur, { writer: name }), toast: cur.code + ' 작성 담당자를 ' + name + '(으)로 변경했습니다' });
+        this.setState({ writerOv: Object.assign({}, this.state.writerOv, { [cur.code]: name }), cur: Object.assign({}, cur, { writer: name }), toast: CN + ' 작성 담당자를 ' + name + '(으)로 변경했습니다' });
       },
       curReviewer: cur.checker || '미지정',
       setReviewerSel: e => this.setReviewer(cur.code, e.target.value),
       reviewerLocked: !(s.role === '관리자' || s.role === '검수자'),
       reviewNote: reviewer
-        ? '검수 담당자를 지정하고, 반려 시 코멘트를 남깁니다.'
+        ? '검수 담당자를 지정하고, 반려 시 댓글을 남깁니다.'
         : (isWriter ? '작성한 사람은 본인 문서를 검수할 수 없습니다.' : '검수 처리는 검수자·관리자만 가능합니다.'),
       reviewerLocked: !reviewer,
       draft: s.draft,
       setDraft: e => this.setState({ draft: e.target.value }),
       addComment: () => this.addComment(cur.code, s.draft),
+      replyDraft: s.replyDraft,
+      setReplyDraft: e => this.setState({ replyDraft: e.target.value }),
       comments: (s.comments[cur.code] || []).map((c, i, arr) => ({
         no: i + 1, who: c.who, at: c.at, text: c.text,
-        badge: i === arr.length - 1 ? '최근 요청' : '이전 검수',
+        replies: (c.replies || []).map(r => ({ who: r.who, at: r.at, text: r.text })),
+        replyCount: (c.replies || []).length ? '답글 ' + (c.replies || []).length + '개' : '',
+        replyCountStyle: (c.replies || []).length ? 'font-size:11.5px;color:var(--ink-3)' : 'display:none',
+        openReply: () => this.setState({ replyOpen: s.replyOpen === i ? null : i, replyDraft: '' }),
+        replyBtnLabel: s.replyOpen === i ? '취소' : '답글',
+        replyBtnStyle: 'height:24px;padding:0 9px;font-size:11.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer',
+        replyBoxStyle: s.replyOpen === i ? 'display:flex;flex-direction:column;gap:6px;padding-left:12px;border-left:2px solid var(--line-2)' : 'display:none',
+        submitReply: () => this.addReply(cur.code, i, s.replyDraft),
+        badge: i === arr.length - 1 ? '최근' : '이전',
         badgeStyle: `display:inline-flex;align-items:center;height:17px;padding:0 6px;border-radius:3px;font-size:11px;font-weight:600;background:${i === arr.length - 1 ? '#FFECEC' : 'rgba(16,24,32,.05)'};color:${i === arr.length - 1 ? '#D14343' : 'var(--ink-3)'}`
       })),
       hasComments: (s.comments[cur.code] || []).length > 0,
@@ -2272,9 +2580,9 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       isNotDiff: s.screen === 'edit' || s.screen === 'preview',
       showComments: (s.screen === 'edit' || s.screen === 'preview') && ["검수중","검수반려","검수완료","배포대기","배포완료"].indexOf(cur.status) >= 0,
       subGridStyle: 'display:grid;grid-template-columns:minmax(0,1fr)' + (((s.screen === 'edit' || s.screen === 'preview') && ["검수중","검수반려","검수완료","배포대기","배포완료"].indexOf(cur.status) >= 0) ? ' 316px' : '') + ';gap:14px;align-items:start',
-      commentCount: '코멘트 ' + (s.comments[cur.code] || []).length + '건',
+      commentCount: '댓글 ' + (s.comments[cur.code] || []).length + '건',
       toDeploy: writerSide && cur.status === '검수완료'
-        ? () => { this.setStatus(cur.code, '배포대기'); this.setState({ toast: cur.code + ' 배포대기로 이동했습니다' }); }
+        ? () => { this.setStatus(cur.code, '배포대기'); this.setState({ toast: CN + ' 배포대기로 이동했습니다' }); }
         : undefined,
       toDeployStyle: writerSide && cur.status === '검수완료'
         ? 'height:32px;padding:0 15px;font-size:13.5px;font-weight:600;border:1px solid #2489A6;background:#2489A6;color:#fff;border-radius:5px;cursor:pointer'
@@ -2294,12 +2602,24 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
             });
             if (miss.length) return this.setState({ toast: '필수 항목이 비어 있습니다 — ' + miss.slice(0, 3).join(', ') });
             this.setStatus(cur.code, '수정완료');
-            this.setState({ screen: 'preview', toast: cur.code + ' 수정완료로 변경했습니다' });
+            this.setState({ screen: 'preview', toast: CN + ' 수정완료로 변경했습니다' });
           }
         : undefined,
       editLocked: LOCKED,
       tabNameStyle: 'flex:1;height:32px;padding:0 10px;font-size:13.5px;font-weight:500;border:1px solid var(--line-2);border-radius:5px;background:' + (LOCKED ? 'var(--surface-2)' : 'var(--surface)'),
-      addTabStyle: LOCKED ? 'display:none' : 'height:26px;padding:0 10px;font-size:12.5px;font-weight:500;border:1px solid #1C90FB;background:var(--surface);border-radius:5px;color:#1C90FB;cursor:pointer',
+      addTabStyle: LOCKED ? 'display:none' : 'height:25px;padding:0 9px;font-size:12px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:#0B72D6;cursor:pointer',
+      stickyPaneStyle: 'position:sticky;top:158px;display:flex;flex-direction:column;max-height:calc(100vh - 180px);overflow:hidden;border-radius:8px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 2px rgba(23,28,36,.04)',
+      tabCountLabel: s.docTabs.length + '개 탭',
+      histBtnStyle: 'height:30px;padding:0 8px;font-size:12.5px;font-weight:500;border:1px solid var(--line-2);background:var(--surface);border-radius:6px;color:var(--ink-2);cursor:pointer',
+      styleBarStyle: LOCKED ? 'display:none' : 'display:flex;flex-direction:column;gap:7px;padding:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px',
+      styleBtnStyle: 'height:27px;padding:0 9px;border-radius:6px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-size:12px;font-weight:500;cursor:pointer',
+      styleBoldBtnStyle: 'height:27px;padding:0 9px;border-radius:6px;border:1px solid var(--line-2);background:var(--surface);color:#8168FF;font-size:12px;font-weight:700;cursor:pointer',
+      styleBold: () => this.emphasizeA(),
+      styleLv1: () => this.bulletA(1),
+      styleLv2: () => this.bulletA(2),
+      stylePlain: () => this.bulletA(0),
+      doUndo: () => this.histCmd('undo'),
+      doRedo: () => this.histCmd('redo'),
       addBlockStyle: LOCKED ? 'display:none' : 'height:26px;padding:0 10px;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;color:var(--ink-2);cursor:pointer',
       tempSaveStyle: LOCKED ? 'display:none' : 'height:32px;padding:0 15px;font-size:13.5px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer',
       lockBarStyle: LOCKED
@@ -2309,7 +2629,7 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       startEditing: () => {
         if (!EDITABLE_STATUS) return this.setState({ toast: cur.status + ' 상태에서는 편집할 수 없습니다' });
         if (cur.status === '자동생성') this.setStatus(cur.code, '수정중');
-        this.setState({ editing: true, toast: cur.code + ' 수정을 시작했습니다' });
+        this.setState({ editing: true, toast: CN + ' 수정을 시작했습니다' });
       },
       startEditBtnStyle: false && EDITABLE_STATUS
         ? 'height:32px;padding:0 16px;font-size:13.5px;font-weight:600;border:1px solid #1C90FB;background:#1C90FB;border-radius:5px;color:#fff;cursor:pointer;white-space:nowrap'
@@ -2334,11 +2654,25 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       fieldToolStyle: LOCKED ? 'display:none' : 'height:22px;padding:0 8px;border-radius:4px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-size:11.5px;font-weight:600;cursor:pointer',
       keepFieldFocus: e => e.preventDefault(),
       addTab: () => this.addTab(),
-      tabList: s.docTabs.map((t, i) => ({
+      tabList: (() => {
+        const fixed = (label, glyph, dir) => ({
+          name: label, order: glyph, fixed: true,
+          onClick: () => this.scrollEdge(dir),
+          style: 'display:flex;align-items:center;gap:7px;width:100%;height:27px;padding:0 9px;border:1px solid transparent;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:12px;font-weight:500;color:var(--ink-3);transition:background 140ms cubic-bezier(.2,0,0,1)',
+          styleHover: true,
+          orderStyle: "font:500 12px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)",
+          rowStyle: 'display:flex;align-items:center;gap:5px;border-radius:6px',
+          gripStyle: 'display:none', gripLine: 'display:none',
+          delStyle: 'display:none', delOff: true,
+          draggable: false,
+          onDragStart: undefined, onDragOver: undefined, onDrop: undefined, onDragEnd: undefined,
+          del: undefined
+        });
+        return [fixed('맨 위로', '⤒', -1)].concat(s.docTabs.map((t, i) => ({
         name: t.name, order: String(i + 1).padStart(2, '0'),
-        onClick: () => this.setState({ tabIdx: i }),
+        onClick: () => { this.setState({ tabIdx: i }); this.scrollToTab(i); },
         del: () => this.removeTab(i),
-        style: `display:flex;align-items:center;gap:8px;width:100%;padding:9px 10px;border:1px solid ${i === s.tabIdx ? '#1C90FB' : 'var(--line-2)'};background:${i === s.tabIdx ? (DARK ? 'rgba(28,144,251,.16)' : '#F1F8FF') : 'var(--surface)'};border-radius:6px;cursor:pointer;text-align:left;font-size:13.5px;font-weight:${i === s.tabIdx ? 600 : 400};color:var(--ink)`,
+        style: `display:flex;align-items:center;gap:8px;width:100%;height:32px;padding:0 9px;border:1px solid ${i === s.tabIdx ? (DARK ? 'rgba(28,144,251,.55)' : '#BFDDFB') : 'transparent'};background:${i === s.tabIdx ? (DARK ? 'rgba(28,144,251,.16)' : '#F1F8FF') : 'transparent'};border-radius:6px;cursor:pointer;text-align:left;font-size:13px;font-weight:${i === s.tabIdx ? 600 : 400};color:var(--ink);transition:background 140ms cubic-bezier(.2,0,0,1)`,
         orderStyle: `font:500 11.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:${i === s.tabIdx ? (DARK ? '#8CC8FF' : '#0B72D6') : 'var(--ink-3)'}`,
         draggable: !LOCKED,
         delStyle: LOCKED ? 'display:none' : iconBtn(s.docTabs.length > 1), delOff: LOCKED || s.docTabs.length <= 1,
@@ -2349,101 +2683,27 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
         onDragOver: e => { e.preventDefault(); if (s.overIdx !== i) this.setState({ overIdx: i }); },
         onDrop: e => { e.preventDefault(); this.dropTab(i); },
         onDragEnd: () => this.setState({ dragIdx: null, overIdx: null })
-      })),
+        })), [fixed('맨 아래로', '⤓', 1)]);
+      })(),
       curTab: s.docTabs[s.tabIdx] || { name: '', overview: '', rows: [] },
       curTabLabel: '탭 ' + (s.tabIdx + 1) + ' / ' + s.docTabs.length,
       setTabName: e => this.patchTab(s.tabIdx, { name: e.target.value }),
       setTabOverview: e => this.patchTab(s.tabIdx, { overview: e.target.value }),
-      blocks: (() => {
-        const i = s.tabIdx, bl = tabBlocks(s.docTabs[i] || {});
-        if (!this.rowEls) this.rowEls = {};
-        const tool = "height:24px;padding:0 8px;border-radius:4px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-size:12px;font-weight:500;cursor:pointer";
-        const ghost = "width:24px;height:24px;display:grid;place-items:center;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;font-size:11px;color:var(--ink-3);cursor:pointer";
-        let n = 0;
-        const counts = bl.map(b => b.type === 'table' ? (b.rows || []).length : 0);
-        return bl.map((b, bi) => {
-          const isTable = b.type === 'table';
-          const firstImage = bl.findIndex(x => x.type !== 'table');
-          const start = n;
-          if (isTable) n += (b.rows || []).length;
-          const nextTable = bl.findIndex((x, y) => y > bi && x.type === 'table');
-          let calloutStart = 0;
-          for (let y = 0; y < nextTable; y++) calloutStart += counts[y];
-          const callouts = nextTable >= 0
-            ? Array.from({ length: counts[nextTable] }, (_, y) => calloutStart + y + 1)
-            : [];
-          return {
-            label: isTable ? '표 — 번호 · 내용' : '이미지 — 화면 캡처',
-            isTable, isImage: !isTable,
-            tableStyle: isTable ? 'display:flex;flex-direction:column;gap:7px' : 'display:none',
-            imgStyle: isTable ? 'display:none' : 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;height:172px;border:1px dashed var(--line-2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px)',
-            calloutNote: callouts.length ? '콜아웃 ' + callouts.join(' · ') : '연결된 표가 없습니다',
-            overviewStyle: (!isTable && bi === firstImage) ? 'display:flex;flex-direction:column;gap:5px;padding-top:2px' : 'display:none',
-            hasOverview: !isTable && bi === firstImage,
-            overviewField: (!isTable && bi === firstImage) ? React.createElement('div', {
-              className: 'rt',
-              contentEditable: !LOCKED,
-              suppressContentEditableWarning: true,
-              key: 'tabov-' + i,
-              ref: el => { if (!this.rowEls) this.rowEls = {}; this.rowEls['tabov'] = el; },
-              dangerouslySetInnerHTML: { __html: (s.docTabs[i] || {}).overview || '' },
-              onFocus: () => { this.activeKey = 'tabov'; this.richSel('tabov'); },
-              onMouseUp: () => this.richSel('tabov'),
-              onKeyUp: () => this.richSel('tabov'),
-              onBlur: e => this.commitField('tabov', e.currentTarget.innerHTML),
-              style: { minHeight: '52px', padding: '9px 10px', fontSize: '13.5px', lineHeight: 1.7, border: '1px solid var(--line-2)', borderRadius: '5px', background: 'var(--surface)', outline: 'none', whiteSpace: 'pre-wrap' }
-            }) : null,
-            emphasizeOverview: () => this.emphasizeField('tabov', html => this.patchTab(i, { overview: html })),
-            plainOverview: () => this.plainField('tabov', html => this.patchTab(i, { overview: html })),
-            addRowStyle: (isTable && !LOCKED) ? tool : 'display:none',
-            toolStyle: isTable ? tool : 'display:none',
-            toolbarStyle: (isTable && !LOCKED) ? 'display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:7px 9px;background:var(--surface);border:1px solid var(--line);border-radius:5px' : 'display:none',
-            bold: () => this.emphasize(i, bi),
-            lv1: () => this.setBullet(i, bi, 1),
-            lv2: () => this.setBullet(i, bi, 2),
-            plain: () => this.setBullet(i, bi, 0),
-            keepFocus: e => e.preventDefault(),
-            addRow: () => this.addRow(i, bi),
-            up: () => this.moveBlock(i, bi, -1),
-            down: () => this.moveBlock(i, bi, 1),
-            wrapStyle: 'display:flex;gap:5px;align-items:flex-start;border-radius:6px;opacity:' + (s.blkDrag === bi ? .45 : 1) + (s.blkOver === bi && s.blkDrag !== null && s.blkDrag !== bi ? ';box-shadow:0 -2px 0 #1C90FB' : ''),
-            bodyStyle: 'flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding:11px 12px;background:var(--surface-2);border:1px solid var(--line);border-radius:6px',
-            gripStyle: LOCKED ? 'display:none' : 'width:20px;flex:none;display:flex;flex-direction:column;justify-content:center;gap:3px;cursor:grab;padding:14px 4px 0',
-            gripLine: 'height:1.5px;background:var(--ink-3);opacity:.6;border-radius:1px',
-            onDragStart: () => this.setState({ blkDrag: bi }),
-            onDragOver: e => { e.preventDefault(); if (s.blkOver !== bi) this.setState({ blkOver: bi }); },
-            onDrop: e => { e.preventDefault(); this.dropBlock(i, s.blkDrag, bi); },
-            onDragEnd: () => this.setState({ blkDrag: null, blkOver: null }),
-            draggable: !LOCKED,
-            uploadStyle: LOCKED ? 'display:none' : 'height:28px;padding:0 13px;font-size:13px;border:1px solid var(--line-2);background:var(--surface);border-radius:5px;color:var(--ink-2);cursor:pointer',
-            del: () => this.delBlock(i, bi),
-            rowDelStyle: LOCKED ? 'display:none' : 'width:24px;height:24px;margin-top:3px;display:grid;place-items:center;border:0;background:none;padding:0;font-size:13px;color:var(--ink-3);opacity:.8;cursor:pointer',
-            ghostStyle: LOCKED ? 'display:none' : ghost,
-            rows: isTable ? (b.rows || []).map((r, k) => {
-              const key = i + ':' + bi + ':' + k;
-              return {
-                no: start + k + 1,
-                editor: React.createElement('div', {
-                  contentEditable: !LOCKED,
-                  suppressContentEditableWarning: true,
-                  ref: el => { this.rowEls[key] = el; },
-                  dangerouslySetInnerHTML: { __html: rowHtml(r) },
-                  onFocus: () => { this.activeKey = key; this.saveSel(key); },
-                  onMouseUp: () => this.saveSel(key),
-                  onKeyUp: () => this.saveSel(key),
-                  onBlur: e => this.commitField(key, e.currentTarget.innerHTML),
-                  style: {
-                    minHeight: '30px', padding: '7px 10px', fontSize: '13.5px', lineHeight: 1.6,
-                    border: '1px solid var(--line)', borderRadius: '4px', outline: 'none',
-                    color: 'var(--ink-2)', background: 'var(--surface)', whiteSpace: 'pre-wrap'
-                  }
-                }),
-                del: () => this.delRow(i, bi, k)
-              };
-            }) : []
-          };
-        });
-      })(),
+      tabPanels: s.docTabs.map((t, i) => ({
+        label: '탭 ' + (i + 1) + ' / ' + s.docTabs.length,
+        name: t.name,
+        badge: i > 0 ? '필수' : '선택',
+        badgeStyle: i > 0
+          ? 'display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:9px;font-size:11px;font-weight:600;background:' + (DARK ? 'rgba(252,76,96,.22)' : '#FFECEC') + ';color:' + (DARK ? '#FF9AA5' : '#C8384A')
+          : 'display:inline-flex;align-items:center;height:18px;padding:0 7px;border-radius:9px;font-size:11px;font-weight:500;background:var(--surface-2);border:1px solid var(--line-2);color:var(--ink-3)',
+        panelStyle: 'border:1px solid ' + (i === s.tabIdx ? '#1C90FB' : 'var(--line)') + ';border-radius:7px;padding:15px 16px;display:flex;flex-direction:column;gap:14px;scroll-margin-top:12px',
+        panelRef: el => { if (!this.panelEls) this.panelEls = {}; this.panelEls[i] = el; },
+        onFocusPanel: () => { if (s.tabIdx !== i) this.setState({ tabIdx: i }); },
+        setName: e => this.patchTab(i, { name: e.target.value }),
+        addImage: () => this.addBlock(i, 'image'),
+        addTable: () => this.addBlock(i, 'table'),
+        blocks: this.buildBlocks(i, LOCKED)
+      })),
       addImageBlock: () => this.addBlock(s.tabIdx, 'image'),
       addTableBlock: () => this.addBlock(s.tabIdx, 'table'),
       tabNameRequired: s.tabIdx > 0,
@@ -2466,10 +2726,13 @@ ${(() => { let n = 0; const fi = tabBlocks(t).findIndex(x => x.type !== 'table')
       })(),
       diffRows: this.diffRows(),
       cmpLeft: this.cmpDocs().left, cmpRight: this.cmpDocs().right,
+      pvOverviewStyle: htmlToText(s.overview || '').trim() ? 'margin:0;font-size:14.5px;line-height:1.9;color:var(--ink-2);text-wrap:pretty' : 'display:none',
+      pvOverview: React.createElement('div', { className: 'rt', dangerouslySetInnerHTML: { __html: s.overview || '' }, style: { whiteSpace: 'pre-wrap' } }),
       pvTabs: s.docTabs.map((t, i) => {
         let n = 0;
         return {
           name: t.name, order: String(i + 1).padStart(2, '0'), overview: t.overview,
+          chipBg: DARK ? 'rgba(28,144,251,.18)' : '#EAF3FE',
           blocks: tabBlocks(t).map((b, bi, arr) => {
             const isTable = b.type === 'table';
             const firstImage = arr.findIndex(x => x.type !== 'table');
