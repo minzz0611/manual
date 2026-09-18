@@ -566,7 +566,7 @@
 
 <sc-if value="{{ isNotDiff }}" hint-placeholder-val="{{ true }}">
 <div ref="{{ stickySentinel }}" style="height:1px;margin-bottom:-1px"></div>
-<section style="{{ infoBarStyle }}">
+<section ref="{{ infoRef }}" style="{{ infoBarStyle }}">
 <sc-if value="{{ isNotDiff }}" hint-placeholder-val="{{ true }}">
 <div style="{{ infoTopStyle }}">
 <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -759,7 +759,7 @@
 <h3 style="margin:0;font-size:17px;font-weight:700;letter-spacing:-.015em">{{ t.name }}</h3>
 </div>
 <sc-for list="{{ t.blocks }}" as="b" hint-placeholder-count="2">
-<div style="display:flex;flex-direction:column;gap:12px">
+<div ref="{{ b.ref }}" style="{{ b.wrapStyle }}">
 <div style="{{ b.imgStyle }}"><span style="font:400 12.5px/1 'Pretendard Variable',Pretendard,sans-serif;color:var(--ink-3)">screen capture — 1440×900</span></div>
 <div style="{{ b.ovStyle }}">{{ b.ovBody }}</div>
 <div style="{{ b.tableStyle }}">
@@ -1065,11 +1065,12 @@ const CARD_C = {
 };
 const PEOPLE = ['김서준', '이도윤', '박하은', '최지우', '정민재', '강수아', '윤예린', '임지호'];
 const PREFIX = { '회계': 'AC', '인사': 'HR', '영업': 'SL', '구매자재': 'MM', '생산': 'PP', '시스템': 'SY' };
-const ROLE_ME = { '관리자': '시스템관리자', '사용자': '김서준' };
+const ROLE_ME = { '작성자': '김서준', '검수자': '이도윤', '관리자': '시스템관리자' };
+const ROLE_RANK = { '작성자': 1, '검수자': 2, '관리자': 3 };
 const ACCOUNTS = {
   admin: { role: '관리자', name: '시스템관리자', dept: '경영정보팀' },
-  kimsj: { role: '사용자', name: '김서준', dept: '경영정보팀' },
-  leedy: { role: '사용자', name: '이도윤', dept: '경영정보팀' }
+  kimsj: { role: '작성자', name: '김서준', dept: '경영정보팀' },
+  leedy: { role: '검수자', name: '이도윤', dept: '경영정보팀' }
 };
 
 const SEED_COMMENTS = {
@@ -1167,13 +1168,13 @@ class Component extends DCLogic {
     menu: '', writer: '', checker: '', page: 1, screen: 'list', cur: null,
     sortKey: '', sortDir: 'asc',
     users: [
-      { name: '김서준', dept: '경영정보팀', role: '사용자', mods: ['회계', '시스템'], active: true },
-      { name: '이도윤', dept: '경영정보팀', role: '사용자', mods: Object.keys(TREE), active: true },
-      { name: '박하은', dept: 'ERP컨설팅1팀', role: '사용자', mods: ['영업', '구매자재'], active: true },
-      { name: '최지우', dept: 'ERP컨설팅1팀', role: '사용자', mods: ['생산'], active: true },
-      { name: '정민재', dept: 'ERP컨설팅2팀', role: '사용자', mods: Object.keys(TREE), active: true },
-      { name: '강수아', dept: '품질보증팀', role: '사용자', mods: ['인사'], active: true },
-      { name: '윤예린', dept: '품질보증팀', role: '사용자', mods: ['회계'], active: false },
+      { name: '김서준', dept: '경영정보팀', role: '작성자', mods: ['회계', '시스템'], active: true },
+      { name: '이도윤', dept: '경영정보팀', role: '검수자', mods: Object.keys(TREE), active: true },
+      { name: '박하은', dept: 'ERP컨설팅1팀', role: '작성자', mods: ['영업', '구매자재'], active: true },
+      { name: '최지우', dept: 'ERP컨설팅1팀', role: '작성자', mods: ['생산'], active: true },
+      { name: '정민재', dept: 'ERP컨설팅2팀', role: '검수자', mods: Object.keys(TREE), active: true },
+      { name: '강수아', dept: '품질보증팀', role: '작성자', mods: ['인사'], active: true },
+      { name: '윤예린', dept: '품질보증팀', role: '작성자', mods: ['회계'], active: false },
       { name: '시스템관리자', dept: '경영정보팀', role: '관리자', mods: Object.keys(TREE), active: true }
     ],
     saved: false,
@@ -1214,7 +1215,7 @@ class Component extends DCLogic {
   logout() { this.setState({ authed: false, loginId: '', loginPw: '', screen: 'list', dlOpen: false }); }
 
   addUser() {
-    const n = { name: '', dept: '', role: '사용자', mods: [], active: true, isNew: true };
+    const n = { name: '', dept: '', role: '작성자', mods: [], active: true, isNew: true };
     this.setState({ users: this.state.users.concat([n]), saved: false });
   }
   removeUser(i) {
@@ -2013,7 +2014,11 @@ td.rt b,td.rt strong{color:#8168FF}
   perm(row) {
     const r = this.state.role, me = ROLE_ME[r];
     if (r === '관리자') return { edit: true, preview: true, diff: true };
-    if (r === '사용자') return {
+    if (r === '검수자') return {
+      edit: (row.writer === me || row.checker === me) && ['자동생성', '수정중', '검수반려', '검수중'].indexOf(row.status) >= 0,
+      preview: true, diff: true
+    };
+    if (r === '작성자') return {
       edit: row.writer === me && ['자동생성', '수정중', '검수반려'].indexOf(row.status) >= 0,
       preview: true, diff: true
     };
@@ -2021,7 +2026,8 @@ td.rt b,td.rt strong{color:#8168FF}
   }
   tip(ok, kind) {
     if (ok) return '';
-    if (this.state.role === '사용자') return '본인이 작성 담당자인 미완료 문서만 편집할 수 있습니다';
+    if (this.state.role === '작성자') return '본인이 작성 담당자인 미완료 문서만 편집할 수 있습니다';
+    if (this.state.role === '검수자') return '본인이 작성 또는 검수 담당자인 문서만 편집할 수 있습니다';
     return kind === 'edit' ? '편집 권한이 없습니다' : '권한이 없습니다';
   }
 
@@ -2058,12 +2064,26 @@ td.rt b,td.rt strong{color:#8168FF}
   }
   gotoAnchor(a) {
     if (!a) return;
-    const el = this.blockEls && this.blockEls[a.tab + ':' + a.block];
+    const key = a.tab + ':' + a.block;
+    const pv = this.state.screen === 'preview';
+    const map = pv ? this.pvEls : this.blockEls;
+    const el = map && map[key];
     if (!el) return this.setState({ toast: '연결된 영역을 찾을 수 없습니다' });
-    this.setState({ tabIdx: a.tab, cmFlash: a.tab + ':' + a.block });
-    const top = el.getBoundingClientRect().top;
-    const sc = document.scrollingElement || document.documentElement;
-    sc.scrollTo({ top: sc.scrollTop + top - 240, behavior: 'smooth' });
+    this.setState(pv ? { cmFlash: key } : { tabIdx: a.tab, cmFlash: key });
+    const scrollNow = () => {
+      const node = (pv ? this.pvEls : this.blockEls)[key];
+      if (!node) return;
+      const sc = document.scrollingElement || document.documentElement;
+      const bar = this.infoEl;
+      const HEAD = bar ? Math.max(0, bar.getBoundingClientRect().bottom) + 16 : 240;
+      const r = node.getBoundingClientRect();
+      const space = window.innerHeight - HEAD - 16;
+      let delta = r.top - HEAD;
+      if (r.height < space) delta = r.top - HEAD - (space - r.height) / 2;
+      sc.scrollTo({ top: Math.max(0, sc.scrollTop + delta), behavior: 'smooth' });
+    };
+    requestAnimationFrame(() => requestAnimationFrame(scrollNow));
+    setTimeout(scrollNow, 420);
     setTimeout(() => this.setState({ cmFlash: null }), 1600);
   }
   scrollToTab(i) {
@@ -2289,8 +2309,8 @@ td.rt b,td.rt strong{color:#8168FF}
         customStyle: r.custom
           ? 'padding:0;border:none;background:transparent;font:500 13px/1 inherit;color:#6B4FE0;cursor:pointer'
           : 'padding:0;border:none;background:transparent;font:400 13px/1 inherit;color:var(--ink-3);cursor:pointer',
-        toggleCustom: s.role === '관리자' ? () => this.setState({ overrides: Object.assign({}, s.overrides, { [r.code]: !r.custom }) }) : undefined,
-        customTip: s.role === '관리자' ? '클릭하여 패키지/커스텀 전환' : '커스텀 여부는 관리자만 변경할 수 있습니다',
+        toggleCustom: ROLE_RANK[s.role] >= 3 ? () => this.setState({ overrides: Object.assign({}, s.overrides, { [r.code]: !r.custom }) }) : undefined,
+        customTip: ROLE_RANK[s.role] >= 3 ? '클릭하여 패키지/커스텀 전환' : '커스텀 여부는 관리자만 변경할 수 있습니다',
         rowDlStyle: btn(canRowDl), dlOff: !canRowDl,
         dlTip: r.code + ' 매뉴얼 1건 내려받기',
         onDownload: canRowDl ? () => this.downloadOne(r) : undefined,
@@ -2317,10 +2337,10 @@ td.rt b,td.rt strong{color:#8168FF}
     const prevVers = this.versionsBelow(curVer);
     const cmpVer = prevVers.indexOf(s.cmpVersion) >= 0 ? s.cmpVersion : (prevVers[0] || curVer);
     const isWriter = cur.writer === me;
-    const reviewer = (s.role === '관리자' || cur.checker === me) && !isWriter;
+    const reviewer = (ROLE_RANK[s.role] >= 3 || (ROLE_RANK[s.role] >= 2 && cur.checker === me)) && !isWriter;
     const CN = cur.code + ' ' + (cur.name || '');
     const NARROW = (s.vw || (typeof window !== 'undefined' ? window.innerWidth : 1440)) < 1040;
-    const writerSide = s.role === '관리자' || isWriter;
+    const writerSide = ROLE_RANK[s.role] >= 3 || isWriter;
     const offBtn = 'height:32px;padding:0 15px;font-size:13.5px;border:1px solid var(--line);background:rgba(16,24,32,.03);color:var(--ink-3);border-radius:5px;cursor:not-allowed';
     const canExport = true;
     const editTabOn = ['수정중', '검수중'].indexOf((s.cur || {}).status) >= 0;
@@ -2391,9 +2411,9 @@ td.rt b,td.rt strong{color:#8168FF}
         avatarStyle: `width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12.5px;font-weight:600;background:${u.active ? '#E8F3FE' : 'rgba(16,24,32,.06)'};color:${u.active ? '#0B72D6' : 'var(--ink-3)'}`,
         setRole: e => {
           const role = e.target.value;
-          this.patchUser(i, role === '사용자' ? { role } : { role, mods: Object.keys(TREE) });
+          this.patchUser(i, role === '관리자' ? { role, mods: Object.keys(TREE) } : { role });
         },
-        modsFixed: u.role !== '작성자',
+        modsFixed: u.role === '관리자',
         modsFixedLabel: u.role === '조회자' ? '해당 없음 (조회 전용)' : '전체 모듈 (고정)',
         modsFixedStyle: u.role === '작성자' ? 'display:none' : 'font-size:13px;color:var(--ink-3)',
         modsListStyle: u.role === '작성자' ? 'display:flex;flex-wrap:wrap;gap:5px' : 'display:none',
@@ -2719,7 +2739,7 @@ td.rt b,td.rt strong{color:#8168FF}
       dlBtnStyle: 'height:30px;padding:0 13px;font-size:13.5px;font-weight:500;border:1px solid #1C90FB;background:var(--surface);border-radius:5px;color:#0B72D6;cursor:pointer',
       dlBtnTip: '',
       dlBtnClick: () => this.setState({ dlOpen: true, dlDone: false }),
-      canManageRole: s.role === '관리자',
+      canManageRole: ROLE_RANK[s.role] >= 3,
       isRestricted: s.role !== '관리자',
       roleBadgeStyle: 'display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-radius:5px;background:rgba(16,24,32,.05);color:var(--ink-2);font-size:13.5px;font-weight:500',
       roleHint: '권한 변경은 관리자만 가능합니다',
@@ -2822,6 +2842,7 @@ td.rt b,td.rt strong{color:#8168FF}
         }, { rootMargin: '-168px 0px 0px 0px', threshold: 0 });
         this.io.observe(el);
       },
+      infoRef: el => { this.infoEl = el; },
       infoBarStyle: 'margin-top:-14px;position:sticky;top:162px;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 -14px 0 0 var(--page),0 6px 14px rgba(23,28,36,.10);padding:' + (s.paneStuck ? '9px 16px' : '14px 16px') + ';display:flex;flex-direction:column;gap:' + (s.paneStuck ? '0px' : '13px') + ';transition:padding 180ms cubic-bezier(.2,0,0,1)',
       infoTopStyle: s.paneStuck
         ? 'display:flex;flex-direction:column;gap:0px'
@@ -2959,7 +2980,7 @@ td.rt b,td.rt strong{color:#8168FF}
           onClick: a.can ? a.run : undefined
         }));
       })(),
-      reviewerOpts: ['미지정'].concat(s.users.filter(u => u.active && u.name).map(u => u.name)),
+      reviewerOpts: ['미지정'].concat(s.users.filter(u => u.active && u.name && ROLE_RANK[u.role] >= 2).map(u => u.name)),
       curWriter: cur.writer || '미지정',
       writerOpts: ['미지정'].concat(s.users.filter(u => u.active && u.name).map(u => u.name)),
       writerLocked: s.role !== '관리자',
@@ -2971,7 +2992,7 @@ td.rt b,td.rt strong{color:#8168FF}
       setReviewerSel: e => this.setReviewer(cur.code, e.target.value),
 
       reviewNote: '모든 단계에서 댓글과 답글을 남길 수 있습니다.',
-      reviewerLocked: s.role !== '관리자',
+      reviewerLocked: ROLE_RANK[s.role] < 3,
       draft: s.draft,
       delAskOpen: s.delAsk !== null && s.delAsk !== undefined,
       delAskText: (() => {
@@ -3001,10 +3022,10 @@ td.rt b,td.rt strong{color:#8168FF}
           : 'display:none',
         cardStyle: 'padding:11px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:5px' + (c.done ? ';background:var(--surface-2);opacity:.62' : ''),
         doneBtnLabel: c.done ? '✓ 완료' : '완료',
-        doneBtnStyle: (reviewer ? '' : 'display:none;') + 'flex:none;height:22px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;font-size:11px;font-weight:600;border:1px solid ' + (c.done ? 'rgba(18,183,106,.45)' : 'var(--line-2)') + ';background:' + (c.done ? 'rgba(18,183,106,.12)' : 'var(--surface)') + ';border-radius:4px;color:' + (c.done ? '#0F8A53' : 'var(--ink-3)') + ';cursor:pointer',
+        doneBtnStyle: (ROLE_RANK[s.role] >= 2 ? '' : 'display:none;') + 'flex:none;height:22px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;font-size:11px;font-weight:600;border:1px solid ' + (c.done ? 'rgba(18,183,106,.45)' : 'var(--line-2)') + ';background:' + (c.done ? 'rgba(18,183,106,.12)' : 'var(--surface)') + ';border-radius:4px;color:' + (c.done ? '#0F8A53' : 'var(--ink-3)') + ';cursor:pointer',
         doneNote: c.done ? '완료' : '',
         doneNoteStyle: c.done ? 'flex:none;font-size:11px;font-weight:600;color:#0F8A53;white-space:nowrap' : 'display:none',
-        toggleDone: () => { if (!reviewer) return this.setState({ toast: '댓글 완료 처리는 검수 담당자·관리자만 가능합니다' }); this.toggleDone(cur.code, i); },
+        toggleDone: () => { if (ROLE_RANK[s.role] < 2) return this.setState({ toast: '댓글 완료 처리는 검수자 이상 권한만 가능합니다' }); this.toggleDone(cur.code, i); },
         anchorStyle: c.anchor ? 'align-self:flex-start;max-width:100%;height:20px;padding:0 8px;border-radius:4px;background:rgba(129,104,255,.10);border:1px solid rgba(129,104,255,.28);font-size:11px;font-weight:600;color:#6B4BE8;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis' : 'display:none',
         goAnchor: () => this.gotoAnchor(c.anchor),
         replies: (c.replies || []).map(r => ({ who: r.who, at: r.at, text: r.text })),
@@ -3014,10 +3035,10 @@ td.rt b,td.rt strong{color:#8168FF}
         replyBtnLabel: '↩',
         replyBtnTitle: s.replyOpen === i ? '답글 취소' : '답글',
         iconBtnStyle: 'width:22px;height:22px;display:grid;place-items:center;font-size:12px;border:0;background:transparent;border-radius:4px;color:var(--ink-3);cursor:pointer;padding:0',
-        ownBtnStyle: (c.who === me || s.role === '관리자')
+        ownBtnStyle: (c.who === me || ROLE_RANK[s.role] >= 3)
           ? 'width:22px;height:22px;display:grid;place-items:center;font-size:12px;border:0;background:transparent;border-radius:4px;color:var(--ink-3);cursor:pointer;padding:0'
           : 'display:none',
-        dangerBtnStyle: (c.who === me || s.role === '관리자')
+        dangerBtnStyle: (c.who === me || ROLE_RANK[s.role] >= 3)
           ? 'flex:none;width:22px;height:22px;padding:0;display:inline-flex;align-items:center;justify-content:center;line-height:1;font-size:12px;border:0;background:transparent;border-radius:4px;color:#D14343;cursor:pointer'
           : 'display:none',
         delLabel: '✕',
@@ -3217,8 +3238,14 @@ td.rt b,td.rt strong{color:#8168FF}
             const firstImage = arr.findIndex(x => x.type !== 'table');
             const start = n;
             if (isTable) n += (b.rows || []).length;
+            const key = i + ':' + bi;
+            if (!this.pvEls) this.pvEls = {};
+            const lit = s.cmFlash === key;
             return {
               isTable,
+              ref: el => { this.pvEls[key] = el; },
+              wrapStyle: 'display:flex;flex-direction:column;gap:12px;border-radius:7px;transition:box-shadow 220ms cubic-bezier(.2,0,0,1),background 220ms cubic-bezier(.2,0,0,1);'
+                + (lit ? 'background:rgba(129,104,255,.10);box-shadow:0 0 0 3px rgba(129,104,255,.35);padding:8px;margin:-8px' : ''),
               imgStyle: isTable ? 'display:none' : 'height:210px;border:1px dashed var(--line-2);border-radius:5px;background:repeating-linear-gradient(135deg,rgba(16,24,32,.035) 0 8px,transparent 8px 16px);display:grid;place-items:center',
               ovStyle: (!isTable && bi === firstImage && htmlToText(t.overview || '').trim()) ? 'margin:0;font-size:14px;line-height:1.8;color:var(--ink-2);text-wrap:pretty' : 'display:none',
               ovBody: React.createElement('div', { className: 'rt', dangerouslySetInnerHTML: { __html: t.overview || '' }, style: { whiteSpace: 'pre-wrap' } }),
